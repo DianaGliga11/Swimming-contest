@@ -5,8 +5,7 @@ public class Event extends Entity<Integer> {
     private String style;
     //private List<Participant>  participants;
 
-    public Event(Integer id, String style, int distance) {
-        super(id);
+    public Event(String style, int distance) {
         this.style = style;
         this.distance = distance;
         //this.participants = participants;
@@ -28,27 +27,12 @@ public class Event extends Entity<Integer> {
         this.style = style;
     }
 
-//    public List<Participant> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(List<Participant> participants) {
-//        this.participants = participants;
-//    }
-
     @Override
     public String toString() {
         return "Event{" + super.toString() +
                 ", distance=" + distance +
                 ", style='" + style + '\'' +
-                //               ", participants=" + participants.toString() +
                 '}';
     }
-
-    @Override
-    public Integer getId() {
-        return this.id;
-    }
-
 
 }

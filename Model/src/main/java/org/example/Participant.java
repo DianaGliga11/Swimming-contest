@@ -5,8 +5,7 @@ public class Participant extends Entity<Integer> {
     private int age;
 //    private List<Event> registeredEvents;
 
-    public Participant(int id, String name, int age) {
-        super(id);
+    public Participant(String name, int age) {
         this.name = name;
         this.age = age;
         //       this.registeredEvents = registeredEvents;
@@ -42,13 +41,7 @@ public class Participant extends Entity<Integer> {
         return "Participant{" + super.toString() +
                 " name='" + name + '\'' +
                 ", age=" + age +
-//                ", registeredEvents=" + registeredEvents.size() +
                 '}';
-    }
-
-    @Override
-    public Integer getId() {
-        return this.id;
     }
 
 }

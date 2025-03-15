@@ -6,8 +6,7 @@ public class Office extends Entity<Integer> {
     private List<Participant> participants;
     private List<Event> events;
 
-    public Office(int id, List<Participant> participants, List<Event> events) {
-        super(id);
+    public Office( List<Participant> participants, List<Event> events) {
         this.participants = participants;
         this.events = events;
     }
@@ -35,8 +34,4 @@ public class Office extends Entity<Integer> {
                 " events=" + (events != null ? events: "No events") +
                 '}';
     }
-
-    //    public String toString() {
-//        return super.toString() + " " + prticipants.toString() + events.toString();
-//    }
 }

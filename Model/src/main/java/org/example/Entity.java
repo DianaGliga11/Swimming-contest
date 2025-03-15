@@ -2,19 +2,16 @@ package org.example;
 
 import java.io.Serializable;
 
-public abstract class Entity<T> implements Serializable {
-    protected T id;
-    public Entity(T id){
-        this.id = id;
-    }
+public abstract class Entity<ID>  {
+    private ID id;
 
-    public T getId() {
+    public ID getId() {
         return id;
     }
 
-//    public void setId(T id) {
-//        this.id = id;
-//    }
+    public void setId(ID id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
