@@ -208,14 +208,14 @@ public class OfficeDBRepository implements OfficeRepository {
     }
 
     @Override
-    public void update(Office entity) throws EntityRepoException {
+    public void update(Integer id, Office entity) throws EntityRepoException {
         logger.traceEntry("update office {} ", entity);
         Connection connection = dbUtils.getConnection();
         String sql = "UPDATE Offices SET participants=?, events=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, serializeParticipants(entity.getParticipants()));
             ps.setString(2, serializeEvents(entity.getEvents()));
-            ps.setInt(3, entity.getId());
+            ps.setInt(3, id);
             ps.executeUpdate();
             logger.traceExit("task {} updated", entity);
         } catch (SQLException e) {

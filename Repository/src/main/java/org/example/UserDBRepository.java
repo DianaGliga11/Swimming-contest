@@ -103,7 +103,7 @@ public class UserDBRepository implements UserRepository{
     }
 
     @Override
-    public void update(User entity) throws EntityRepoException {
+    public void update(Integer id, User entity) throws EntityRepoException {
         logger.traceEntry("update user {}", entity);
         Connection connection = dbUtils.getConnection();
         String sql = "UPDATE Users SET username=?, password=? WHERE id=?";

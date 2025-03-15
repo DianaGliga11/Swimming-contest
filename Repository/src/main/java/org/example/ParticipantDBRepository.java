@@ -105,14 +105,17 @@ public class ParticipantDBRepository implements ParticipantRepository {
     }
 
     @Override
-    public void update(Participant entity) throws EntityRepoException {
+    public void update(Integer id, Participant entity) throws EntityRepoException {
         logger.traceEntry("update task {} ", entity);
+        if (entity.getId() == null || entity.getId() < 0) {
+            throw new EntityRepoException("Cannot update participant with null ID.");
+        }
         Connection connection = dbUtils.getConnection();
-        String sql = "UPDATE Participants SET style=?, distance=? WHERE id=?";
+        String sql = "UPDATE Participants SET name=?, age=? WHERE id=?";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, entity.getName());
             ps.setInt(2, entity.getAge());
-            ps.setInt(3, entity.getId());
+            ps.setInt(3, id);
             ps.executeUpdate();
             logger.traceExit("task {} updated", entity);
         }catch (SQLException e){

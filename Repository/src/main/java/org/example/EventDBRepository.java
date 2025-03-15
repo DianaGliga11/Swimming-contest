@@ -104,7 +104,7 @@ public class EventDBRepository implements EventRepository{
     }
 
     @Override
-    public void update(Event entity) throws EntityRepoException {
+    public void update(Integer id, Event entity) throws EntityRepoException {
         logger.traceEntry("update task {} ", entity);
         Connection connection = dbUtils.getConnection();
         String sql = "UPdate Events SET style=?, distance=? WHERE id=?";
