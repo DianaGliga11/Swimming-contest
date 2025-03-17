@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework> 
+        <OutputType>Exe</OutputType> 
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Model\Model.csproj" />
+        <ProjectReference Include="..\Repository\Repository.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="db.config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

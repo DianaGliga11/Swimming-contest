@@ -1,13 +1,14 @@
-﻿namespace mpp_proiect_csharp_DianaGliga11.Model
+﻿using System.Collections.Generic;
+
+namespace mpp_proiect_csharp_DianaGliga11.Model
 {
     public class Office : Entity<int>
     {
         public List<Participant> Participants { get; set; }
         public List<Event> Events { get; set; }
 
-        public Office(int id, List<Participant> participants, List<Event> events)
+        public Office(List<Participant> participants, List<Event> events)
         {   
-            Id = id;
             Participants = participants;
             Events = events;
         }

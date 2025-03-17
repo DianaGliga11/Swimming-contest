@@ -1,14 +1,15 @@
-﻿namespace mpp_proiect_csharp_DianaGliga11.Model
+﻿using System;
+
+namespace mpp_proiect_csharp_DianaGliga11.Model
 {
 
     public class User : Entity<int>
     {
-        private String UserName { get; set; }
-        private String Password { get; set; }
+        public String UserName { get; set; }
+        public String Password { get; set; }
 
-        public User(int id, String userName, String password)
+        public User(String userName, String password)
         {
-            Id = id;
             UserName = userName;
             Password = password;
         }

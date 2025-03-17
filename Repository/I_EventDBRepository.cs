@@ -5,6 +5,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
 {
 public interface I_EventDBRepository : I_Repository<Event>
 {
-    IEnumerable<Event> Events{get; }
+    //IEnumerable<Event> Events{get; }
 }
 }
