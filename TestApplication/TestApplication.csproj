@@ -14,7 +14,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="db.config">
+        <Content Update="SwimingContest.db">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="app.config">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

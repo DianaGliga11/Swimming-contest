@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using log4net;
-using log4net.Repository.Hierarchy;
 using Microsoft.Data.Sqlite;
 
 namespace mpp_proiect_csharp_DianaGliga11.Repository
@@ -11,19 +9,17 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
     public class DbConnectionUtils
     {
         private static IDbConnection instance = null;
-        private static readonly ILog log = LogManager.GetLogger(typeof(DbConnectionUtils));
-
 
         public static IDbConnection getConnection(IDictionary<string, string> props)
         {
-            string connectionString = props["ConnectionString"];
-            if (string.IsNullOrEmpty(connectionString))
+            
+            if (instance == null || instance.State == ConnectionState.Closed)
             {
-                log.Error("Connection string is null or empty");
+                instance = getNewConnection(props);
+                instance.Open();
             }
-            IDbConnection connection = new SqliteConnection(connectionString);
-            connection.Open();
-            return connection;
+
+            return instance;
         }
 
         private static Type GetType(string name)
@@ -41,23 +37,10 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
 
         private static IDbConnection getNewConnection(IDictionary<string, string> props)
         {
-            Type connectionType = GetType(props["ConnectionType"]);
-
-            if (connectionType == null)
-            {
-                throw new ArgumentException("Invalid connection type");
-            }
-
             string connectionString = props["ConnectionString"];
-            Console.WriteLine($"Se deschide o conexiune {connectionType} la  ... {connectionString}");
-            return Activator.CreateInstance(connectionType, new object[] { connectionString })
-                as IDbConnection;
+            return new SqliteConnection(connectionString);
         }
 
-        static DbConnectionUtils()
-        {
-            MakeAssembliesVisible();
-        }
 
         private static void MakeAssembliesVisible()
         {

@@ -19,7 +19,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Model
 
         public override String ToString()
         {
-            return $"ID={Id}, distance={Distance}, style={Style}";
+            return $"ID={this.Id}, distance={Distance}, style={Style}";
         }
     }
 }
