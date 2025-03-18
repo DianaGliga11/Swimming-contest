@@ -8,7 +8,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository;
 
 public class OfficeDBRepository : DatabaseRepoUtils<int, Office>, I_OfficeDBRepository
 {
-    private static readonly ILog log = LogManager.GetLogger(typeof(OfficeDBRepository));
 
     public OfficeDBRepository(IDictionary<string, string> props) : base(props)
     {

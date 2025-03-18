@@ -9,7 +9,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository;
 public class ParticipantDBRepository : DatabaseRepoUtils<int, Participant>, I_ParticipantDBRepository
 {
     
-    private static readonly ILog log = LogManager.GetLogger(typeof(ParticipantDBRepository));
     
     public ParticipantDBRepository(IDictionary<string, string> props) : base(props)
     {

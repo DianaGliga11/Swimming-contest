@@ -8,7 +8,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository;
 
 public class EventDBRepository: DatabaseRepoUtils<int, Event>, I_EventDBRepository
 {
-    private static readonly ILog log = LogManager.GetLogger(typeof(EventDBRepository));
     public EventDBRepository(IDictionary<string, string> props) : base(props)
     {
         log.Info($"{nameof(EventDBRepository)} constructed.");

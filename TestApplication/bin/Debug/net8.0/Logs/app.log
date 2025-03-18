@@ -1,0 +1,98 @@
+2025-03-18 16:59:16,506 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 16:59:16,517 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 16:59:16,517 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.EventDBRepository - EventDBRepository constructed.
+2025-03-18 16:59:16,518 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 16:59:16,518 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.ParticipantDBRepository - ParticipantDBRepository constructed.
+2025-03-18 16:59:16,518 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 16:59:16,519 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.UserDBRepository - UserDBRepository constructed.
+2025-03-18 16:59:16,519 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 16:59:16,558 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.OfficeDBRepository - OfficeDBRepository constructed.
+2025-03-18 16:59:16,558 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.EventDBRepository - Getting All Events
+2025-03-18 16:59:16,561 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 16:59:16,593 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.EventDBRepository - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 16:59:16,598 [1] INFO  mpp_proiect_csharp_DianaGliga11.Repository.EventDBRepository - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 16:59:16,600 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"
+2025-03-18 17:03:57,517 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 17:03:57,529 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:03:57,530 [1] INFO  DatabaseRepoUtils - EventDBRepository constructed.
+2025-03-18 17:03:57,530 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:03:57,530 [1] INFO  DatabaseRepoUtils - ParticipantDBRepository constructed.
+2025-03-18 17:03:57,531 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:03:57,531 [1] INFO  DatabaseRepoUtils - UserDBRepository constructed.
+2025-03-18 17:03:57,531 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:03:57,531 [1] INFO  DatabaseRepoUtils - OfficeDBRepository constructed.
+2025-03-18 17:03:57,531 [1] INFO  DatabaseRepoUtils - Getting All Events
+2025-03-18 17:03:57,534 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 17:03:57,571 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:03:57,577 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:03:57,579 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"
+2025-03-18 17:04:26,987 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 17:04:26,999 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:04:26,999 [1] INFO  DatabaseRepoUtils - EventDBRepository constructed.
+2025-03-18 17:04:26,999 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:04:27,000 [1] INFO  DatabaseRepoUtils - ParticipantDBRepository constructed.
+2025-03-18 17:04:27,000 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:04:27,000 [1] INFO  DatabaseRepoUtils - UserDBRepository constructed.
+2025-03-18 17:04:27,000 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:04:27,000 [1] INFO  DatabaseRepoUtils - OfficeDBRepository constructed.
+2025-03-18 17:04:27,001 [1] INFO  DatabaseRepoUtils - Getting All Events
+2025-03-18 17:04:27,003 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 17:04:27,033 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:04:27,038 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:04:27,040 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"
+2025-03-18 17:06:10,782 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 17:06:10,794 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:06:10,794 [1] INFO  DatabaseRepoUtils - EventDBRepository constructed.
+2025-03-18 17:06:10,794 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:06:10,795 [1] INFO  DatabaseRepoUtils - ParticipantDBRepository constructed.
+2025-03-18 17:06:10,795 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:06:10,795 [1] INFO  DatabaseRepoUtils - UserDBRepository constructed.
+2025-03-18 17:06:10,795 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:06:10,796 [1] INFO  DatabaseRepoUtils - OfficeDBRepository constructed.
+2025-03-18 17:06:10,796 [1] INFO  DatabaseRepoUtils - Getting All Events
+2025-03-18 17:06:10,798 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 17:06:10,833 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:06:10,838 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:06:10,840 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"
+2025-03-18 17:09:07,269 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 17:09:07,284 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:09:07,284 [1] INFO  DatabaseRepoUtils - EventDBRepository constructed.
+2025-03-18 17:09:07,284 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:09:07,285 [1] INFO  DatabaseRepoUtils - ParticipantDBRepository constructed.
+2025-03-18 17:09:07,285 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:09:07,285 [1] INFO  DatabaseRepoUtils - UserDBRepository constructed.
+2025-03-18 17:09:07,285 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:09:07,285 [1] INFO  DatabaseRepoUtils - OfficeDBRepository constructed.
+2025-03-18 17:09:07,286 [1] INFO  DatabaseRepoUtils - Getting All Events
+2025-03-18 17:09:07,288 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 17:09:07,323 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:09:07,329 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:09:07,330 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"
+2025-03-18 17:11:20,284 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 17:11:20,295 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:11:20,296 [1] INFO  DatabaseRepoUtils - EventDBRepository constructed.
+2025-03-18 17:11:20,296 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:11:20,296 [1] INFO  DatabaseRepoUtils - ParticipantDBRepository constructed.
+2025-03-18 17:11:20,297 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:11:20,297 [1] INFO  DatabaseRepoUtils - UserDBRepository constructed.
+2025-03-18 17:11:20,297 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:11:20,297 [1] INFO  DatabaseRepoUtils - OfficeDBRepository constructed.
+2025-03-18 17:11:20,297 [1] INFO  DatabaseRepoUtils - Getting All Events
+2025-03-18 17:11:20,300 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 17:11:20,332 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:11:20,338 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:11:20,340 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"
+2025-03-18 17:13:07,155 [1] INFO  DefaultNamespace.Program - App started
+2025-03-18 17:13:07,166 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:13:07,166 [1] INFO  DatabaseRepoUtils - EventDBRepository constructed.
+2025-03-18 17:13:07,167 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:13:07,167 [1] INFO  DatabaseRepoUtils - ParticipantDBRepository constructed.
+2025-03-18 17:13:07,167 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:13:07,167 [1] INFO  DatabaseRepoUtils - UserDBRepository constructed.
+2025-03-18 17:13:07,167 [1] INFO  DatabaseRepoUtils - Creating DatabaseRepoUtils 
+2025-03-18 17:13:07,168 [1] INFO  DatabaseRepoUtils - OfficeDBRepository constructed.
+2025-03-18 17:13:07,168 [1] INFO  DatabaseRepoUtils - Getting All Events
+2025-03-18 17:13:07,170 [1] INFO  DatabaseRepoUtils - Executing Select: select * from "Events"
+2025-03-18 17:13:07,201 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:13:07,206 [1] INFO  DatabaseRepoUtils - Decoding events from Microsoft.Data.Sqlite.SqliteDataReader
+2025-03-18 17:13:07,208 [1] INFO  DatabaseRepoUtils - Done Select: select * from "Events"

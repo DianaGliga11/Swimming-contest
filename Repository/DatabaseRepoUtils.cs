@@ -7,6 +7,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository;
 
  public abstract class DatabaseRepoUtils<ID, E> where E:Entity<ID>
     {
+        
         public static readonly ILog log = LogManager.GetLogger("DatabaseRepoUtils");
 
         IDictionary<string, string> Properties;

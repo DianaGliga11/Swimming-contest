@@ -9,7 +9,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository;
 public class UserDBRepository :DatabaseRepoUtils<int, User>, I_UserDBRepository
 {
     
-    private static readonly ILog log = LogManager.GetLogger(typeof(UserDBRepository));
     
     public UserDBRepository(IDictionary<string, string> props) : base(props)
     {
