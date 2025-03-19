@@ -11,6 +11,7 @@ Tot proiectul este legat folosind gradle: in settings.gradle se introduc modulel
 Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc un nou modul care imi permite rularea intregului proiect.
 
 --LAB 3--
+ -> In branch-ul lab3
 1. Implementarea Repository-lor care utilizeaza baze de date SQLite si fisiere de configurare 'db.config':
 - folosesc Sqlite
 - in db.config se ofera calea spre baza de date pentru a se crea conexiunea cu aceasta
