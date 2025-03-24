@@ -54,26 +54,8 @@ public class LoginController {
     // Deschide fereastra principală
     private void openMainWindow() {
         MainController mainController = new MainController(officeService);
-        TextField eventSearchField = new TextField();
-        eventSearchField.setLayoutX(100);
-        eventSearchField.setLayoutY(100);
-
-        Button searchButton = new Button("Căutare");
-        searchButton.setLayoutX(100);
-        searchButton.setLayoutY(150);
-
-        //searchButton.setOnAction(e -> mainController.searchParticipantsByEvent());
-
-        // Layout pentru fereastra principală
-        AnchorPane root = new AnchorPane();
-        root.getChildren().addAll(eventSearchField, searchButton);
-
-        // Crearea scenei pentru fereastra principală
-        Scene mainScene = new Scene(root, 400, 300);
-        Stage mainStage = new Stage();
-        mainStage.setScene(mainScene);
-        mainStage.setTitle("Main Window");
-        mainStage.show();
+       Stage mainStage = new Stage();
+       mainController.openMainWindow(mainStage);
     }
 
     // Verifică dacă datele de login sunt corecte

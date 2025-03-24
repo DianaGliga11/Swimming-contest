@@ -35,18 +35,9 @@ public class OfficeImplementationService implements OfficeService {
         return officeDBRepository.findById(id);
     }
 
-//    @Override
-//    public List<Participant> findParticipantsByEvent(Long eventId) {
-//        return officeDBRepository.findParticipantsByEvent(eventId);
-//    }
-//
-//    @Override
-//    public Map<Event, Integer> getEventsWithParticipantsCount() {
-//        return officeDBRepository.getEventsWithParticipantsCount();
-//    }
-//
-//    @Override
-//    public void registerParticipantToEvents(Long participantId, List<Long> eventIds) {
-//        officeDBRepository.registerParticipantToEvents(participantId, eventIds);
-//    }
+
+    @Override
+    public Map<Event, Integer> getEventParticipants() {
+        return officeDBRepository.getEventsWithParticipantsCount(1);
+    }
 }

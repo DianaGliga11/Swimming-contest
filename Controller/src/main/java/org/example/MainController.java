@@ -28,28 +28,28 @@ public class MainController {
     }
 
     // Metoda care se va apela pentru a încărca evenimentele și numărul de participanți
-//    public void loadEventsAndParticipants() {
-//        try {
-//            // Obținem lista de evenimente și numărul de participanți
-//            Map<Event, Integer> eventsWithParticipants = officeService.getEventsWithParticipantsCount();
-//
-//            // Verificăm dacă am găsit evenimente
-//            if (eventsWithParticipants.isEmpty()) {
-//                showErrorMessage("Nu au fost găsite evenimente", "Nu există evenimente în baza de date.");
-//            } else {
-//                // Actualizăm ListView cu evenimentele și numărul de participanți
-//                eventListView.getItems().clear();
-//                for (Map.Entry<Event, Integer> entry : eventsWithParticipants.entrySet()) {
-//                    Event event = entry.getKey();
-//                    int participantsCount = entry.getValue();
-//                    eventListView.getItems().add(event.getName() + " - " + participantsCount + " participanți");
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            showErrorMessage("Eroare", "A apărut o problemă la încărcarea evenimentelor.");
-//        }
-//    }
+    public void loadEventsAndParticipants() {
+        try {
+            // Obținem lista de evenimente și numărul de participanți
+            Map<Event, Integer> eventsWithParticipants = officeService.getEventParticipants();
+
+            // Verificăm dacă am găsit evenimente
+            if (eventsWithParticipants.isEmpty()) {
+                showErrorMessage("Nu au fost găsite evenimente", "Nu există evenimente în baza de date.");
+            } else {
+                // Actualizăm ListView cu evenimentele și numărul de participanți
+                eventListView.getItems().clear();
+                for (Map.Entry<Event, Integer> entry : eventsWithParticipants.entrySet()) {
+                    Event event = entry.getKey();
+                    int participantsCount = entry.getValue();
+                    eventListView.getItems().add(event.getStyle() + ", " + event.getDistance() + " - " + participantsCount + " participanți");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorMessage("Eroare", "A apărut o problemă la încărcarea evenimentelor.");
+        }
+    }
 
     // Metoda pentru a arăta mesajele de eroare
     private void showErrorMessage(String title, String message) {
