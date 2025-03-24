@@ -20,12 +20,12 @@ public class Main {
             Repository<Participant> participantRepo = new ParticipantDBRepository(props);
            OfficeRepository officeRepo = new OfficeDBRepository(props);
 
-            List<Participant> participantsFluture = officeRepo.findParticipantsByEvent(1L);
+            //List<Participant> participantsFluture = officeRepo.findParticipantsByEvent(1L);
             // officeRepo.add(new Office(participantRepo.findById(1), eventRepo.findById(1)));
             System.out.println("Participants at event fluture: ");
-            for (Participant participant : participantsFluture) {
-                System.out.println(participant);
-            }
+//            for (Participant participant : participantsFluture) {
+//                System.out.println(participant);
+//            }
             System.out.println("All events: ");
             for (Event event : eventRepo.getAll()) {
                 System.out.println(event);

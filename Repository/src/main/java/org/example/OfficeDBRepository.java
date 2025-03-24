@@ -1,5 +1,6 @@
 package org.example;
 
+import Utils.JdbcUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -158,78 +159,78 @@ public class OfficeDBRepository implements OfficeRepository {
         }
     }
 
-    @Override
-    public Map<Event, Integer> getEventsWithParticipantsCount() {
-        logger.info("Get events and number of participants");
-        Map<Event, Integer> eventsCount = new HashMap<>();
-        String query = "SELECT e.id, e.distance, e.style, COUNT(o.participant_id) as numParticipants " +
-                "FROM Events e " +
-                "LEFT JOIN Offices o ON e.id = o.event_id " +
-                "GROUP BY e.id";
+//    @Override
+//    public Map<Event, Integer> getEventsWithParticipantsCount() {
+//        logger.info("Get events and number of participants");
+//        Map<Event, Integer> eventsCount = new HashMap<>();
+//        String query = "SELECT e.id, e.distance, e.style, COUNT(o.participant_id) as numParticipants " +
+//                "FROM Events e " +
+//                "LEFT JOIN Offices o ON e.id = o.event_id " +
+//                "GROUP BY e.id";
+//
+//        try (Connection con = dbUtils.getConnection();
+//             PreparedStatement statement = con.prepareStatement(query);
+//             ResultSet resultSet = statement.executeQuery()) {
+//
+//            while (resultSet.next()) {
+//                Long eventId = resultSet.getLong("id");
+//                int distance = resultSet.getInt("distance");
+//                String style = resultSet.getString("style");
+//                int numParticipants = resultSet.getInt("numParticipants");
+//
+//                Event event = new Event(style, distance);
+//                event.setId(eventId);
+//                eventsCount.put(event, numParticipants);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return eventsCount;
+//    }
 
-        try (Connection con = dbUtils.getConnection();
-             PreparedStatement statement = con.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                Long eventId = resultSet.getLong("id");
-                int distance = resultSet.getInt("distance");
-                String style = resultSet.getString("style");
-                int numParticipants = resultSet.getInt("numParticipants");
-
-                Event event = new Event(style, distance);
-                event.setId(eventId);
-                eventsCount.put(event, numParticipants);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return eventsCount;
-    }
-
-    public List<Participant> findParticipantsByEvent(Long eventId) {
-        logger.info("Find participant by event {}", eventId);
-        List<Participant> participants = new ArrayList<>();
-        String query = "SELECT p.id, p.name, p.age FROM Participants p " +
-                "JOIN Offices o ON p.id = o.participant_id " +
-                "WHERE o.event_id = ?";
-
-        try (Connection con = dbUtils.getConnection();
-             PreparedStatement statement = con.prepareStatement(query)) {
-            statement.setLong(1, eventId);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                Long id = resultSet.getLong("id");
-                String name = resultSet.getString("name");
-                int age = resultSet.getInt("age");
-                Participant participant = new Participant(name, age);
-                participant.setId(id);
-                participants.add(participant);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return participants;
-    }
-
-    @Override
-    public void registerParticipantToEvents(Long participantId, List<Long> eventIds) {
-        String query = "INSERT INTO Offices (participant_id, event_id) VALUES (?, ?)";
-
-        try (Connection con = dbUtils.getConnection();
-             PreparedStatement statement = con.prepareStatement(query)) {
-
-            for (Long eventId : eventIds) {
-                statement.setLong(1, participantId);
-                statement.setLong(2, eventId);
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    public List<Participant> findParticipantsByEvent(Long eventId) {
+//        logger.info("Find participant by event {}", eventId);
+//        List<Participant> participants = new ArrayList<>();
+//        String query = "SELECT p.id, p.name, p.age FROM Participants p " +
+//                "JOIN Offices o ON p.id = o.participant_id " +
+//                "WHERE o.event_id = ?";
+//
+//        try (Connection con = dbUtils.getConnection();
+//             PreparedStatement statement = con.prepareStatement(query)) {
+//            statement.setLong(1, eventId);
+//            ResultSet resultSet = statement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                Long id = resultSet.getLong("id");
+//                String name = resultSet.getString("name");
+//                int age = resultSet.getInt("age");
+//                Participant participant = new Participant(name, age);
+//                participant.setId(id);
+//                participants.add(participant);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return participants;
+//    }
+//
+//    @Override
+//    public void registerParticipantToEvents(Long participantId, List<Long> eventIds) {
+//        String query = "INSERT INTO Offices (participant_id, event_id) VALUES (?, ?)";
+//
+//        try (Connection con = dbUtils.getConnection();
+//             PreparedStatement statement = con.prepareStatement(query)) {
+//
+//            for (Long eventId : eventIds) {
+//                statement.setLong(1, participantId);
+//                statement.setLong(2, eventId);
+//                statement.addBatch();
+//            }
+//            statement.executeBatch();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 }

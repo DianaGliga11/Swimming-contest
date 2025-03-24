@@ -1,10 +1,9 @@
-package org.example;
+package Utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.*;
 
 
 public class JdbcUtils {
