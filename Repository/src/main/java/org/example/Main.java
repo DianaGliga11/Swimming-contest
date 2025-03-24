@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 public class Main {
@@ -17,8 +18,14 @@ public class Main {
             Repository<Event> eventRepo = new EventDBRepository(props);
             Repository<User> userRepo = new UserDBRepository(props);
             Repository<Participant> participantRepo = new ParticipantDBRepository(props);
-            Repository<Office> officeRepo = new OfficeDBRepository(props);
+           OfficeRepository officeRepo = new OfficeDBRepository(props);
 
+            List<Participant> participantsFluture = officeRepo.findParticipantsByEvent(1L);
+            // officeRepo.add(new Office(participantRepo.findById(1), eventRepo.findById(1)));
+            System.out.println("Participants at event fluture: ");
+            for (Participant participant : participantsFluture) {
+                System.out.println(participant);
+            }
             System.out.println("All events: ");
             for (Event event : eventRepo.getAll()) {
                 System.out.println(event);
@@ -35,21 +42,6 @@ public class Main {
             for (Office office : officeRepo.getAll()) {
                 System.out.println(office);
             }
-//            List<Participant> participantList = new ArrayList<>();
-//            participantList.add(participantRepo.findById(2));
-//            List<Event> eventList = new ArrayList<>();
-//            eventList.add(eventRepo.findById(1));
-//            Office office = new Office(participantList,eventList);
-//            Participant participant = new Participant("Gliga Diana",20);
-//            participant.setId(1);
-//            participantRepo.update(1,participant); //la update da eroare indiferent de repo daca nu setez eu id ul
-//            officeRepo.add(office);
-//            eventList.add(eventRepo.findById(2));
-//            office.setEvents(eventList);
-//            office.setId(3);
-//            officeRepo.update(1,office);
-//            officeRepo.remove(office);
-//            System.out.println(officeRepo.getAll());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

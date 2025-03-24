@@ -1,6 +1,6 @@
 package org.example;
 
-public class User extends Entity<Integer> {
+public class User extends Entity<Long> {
     private String userName;
     private String password;
 
@@ -25,7 +25,11 @@ public class User extends Entity<Integer> {
         this.password = password;
     }
 
+    @Override
     public String toString() {
-        return this.userName + "," + this.password;
+        return "User{" + super.toString() +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

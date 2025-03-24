@@ -2,14 +2,14 @@ package org.example;
 
 import java.io.Serializable;
 
-public abstract class Entity<ID>  {
-    private ID id;
+public abstract class Entity<Long>  {
+    private  Long id;
 
-    public ID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

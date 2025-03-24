@@ -18,117 +18,50 @@ public class OfficeDBRepository implements OfficeRepository {
         dbUtils = new JdbcUtils(props);
     }
 
-    private String serializeParticipants(List<Participant> participants) {
-        StringBuilder builder = new StringBuilder();
-        for (Participant participant : participants) {
-            builder.append(participant.getId()).append("-").append(
-                    participant.getName()).append("-").append(participant.getAge()).append(";");
-        }
-        return builder.toString();
+    private String serializeParticipant(Participant participant) {
+        return participant.getId() + "-" + participant.getName() + "-" + participant.getAge();
     }
 
-    private String serializeEvents(List<Event> events) {
-        StringBuilder builder = new StringBuilder();
-        for (Event event : events) {
-            builder.append(event.getId()).append("-").append(
-                    event.getStyle()).append("-").append(event.getDistance()).append(";");
-        }
-        return builder.toString();
+    private String serializeEvent(Event event) {
+        return event.getId() + "-" + event.getStyle() + "-" + event.getDistance();
     }
 
-    private List<Participant> deserializeParticipants(String serializedParticipants) {
-        List<Participant> participants = new ArrayList<>();
-        String[] pairs = serializedParticipants.split(";");
-        for (String pair : pairs) {
-            if (!pair.isEmpty()) {
-                String[] parts = pair.split("-");
-                int id = Integer.parseInt(parts[0]);
-                String name = parts[1];
-                int age = Integer.parseInt(parts[2]);
-                Participant participant = new Participant(name, age);
-                participant.setId(id);
-                participants.add(participant);
-            }
+    private Participant deserializeParticipant(String serializedParticipant) {
+        if (serializedParticipant == null || serializedParticipant.isEmpty()) {
+            return null;
         }
-        return participants;
+        String[] parts = serializedParticipant.split("-");
+        long id = Long.parseLong(parts[0]);
+        String name = parts[1];
+        int age = Integer.parseInt(parts[2]);
+        Participant participant = new Participant(name, age);
+        participant.setId(id);
+        return participant;
     }
 
-    private List<Event> deserializeEvents(String serializedEvents) {
-        List<Event> events = new ArrayList<>();
-        String[] pairs = serializedEvents.split(";");
-        for (String pair : pairs) {
-            if (!pair.isEmpty()) {
-                String[] parts = pair.split("-");
-                int id = Integer.parseInt(parts[0]);
-                String style = parts[1];
-                int distance = Integer.parseInt(parts[2]);
-                Event event = new Event(style, distance);
-                event.setId(id);
-                events.add(event);
-            }
+    private Event deserializeEvent(String serializedEvent) {
+        if (serializedEvent == null || serializedEvent.isEmpty()) {
+            return null;
         }
-        return events;
+        String[] parts = serializedEvent.split("-");
+        long id = Long.parseLong(parts[0]);
+        String style = parts[1];
+        int distance = Integer.parseInt(parts[2]);
+        Event event = new Event(style, distance);
+        event.setId(id);
+        return event;
     }
-
-    private Map<Integer, Integer> countParticipantProbes(String data) {
-        Map<Integer, Integer> probesCount = new HashMap<>();
-        if (data == null || data.isEmpty()) return probesCount;
-
-        String[] events = data.split(",");
-        for (String event : events) {
-            String[] parts = event.split(":");
-            if (parts.length >= 2) {
-                int participantId = Integer.parseInt(parts[0]);
-                probesCount.put(participantId, probesCount.getOrDefault(participantId, 0) + 1);
-            }
-        }
-        return probesCount;
-    }
-
-
-//    @Override
-//    public List<Map<String,Object>> findParticipantsByEvent(Event event) throws EntityRepoException {
-//        logger.traceEntry("task findParticipantsByEvent {}", event);
-//        Connection connection = dbUtils.getConnection();
-//        List<Map<String, Object>> results = new ArrayList<>();
-//        String sql = "SELECT participants, events FROM Office WHERE events LIKE ?";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, "%" + event.getId() + ":" + event.getStyle() + "%");
-//            try (ResultSet rs = ps.executeQuery()) {
-//                while (rs.next()) {
-//                    String participantsStr = rs.getString("participants");
-//                    String eventsStr = rs.getString("events");
-//                    List<Participant> participants = deserializeParticipants(participantsStr);
-//                    Map<Integer, Integer> participantProbesCount = countParticipantProbes(eventsStr);
-//
-//                    for (Participant participant : participants) {
-//                        Map<String, Object> participantInfo = new HashMap<>();
-//                        participantInfo.put("Nume", participant.getName());
-//                        participantInfo.put("Vârstă", participant.getAge());
-//                        participantInfo.put("Număr Probele", participantProbesCount.getOrDefault(participant.getId(), 0));
-//
-//                        results.add(participantInfo);
-//                    }
-//                }
-//            }
-//        } catch (SQLException e) {
-//            logger.error(e);
-//            throw new EntityRepoException(e);
-//        }
-//
-//        return results;
-//    }
 
     @Override
     public void add(Office entity) throws EntityRepoException {
-        logger.traceEntry("add office {} ", entity);
+        logger.traceEntry("Adding office {} ", entity);
         Connection connection = dbUtils.getConnection();
-        String sql = "INSERT INTO Offices(participants, events) VALUES (?,?)";
+        String sql = "INSERT INTO Offices(participant, event) VALUES (?,?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, serializeParticipants(entity.getParticipants()));
-            ps.setString(2, serializeEvents(entity.getEvents()));
+            ps.setString(1, serializeParticipant(entity.getParticipant()));
+            ps.setString(2, serializeEvent(entity.getEvent()));
             ps.executeUpdate();
-            logger.traceExit("task {} added", entity);
+            logger.traceExit("Office {} added", entity);
         } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
@@ -137,14 +70,14 @@ public class OfficeDBRepository implements OfficeRepository {
     }
 
     @Override
-    public void remove(Office entity) throws EntityRepoException {
-        logger.traceEntry("remove office {} ", entity);
+    public void remove(long id) throws EntityRepoException {
+        logger.traceEntry("Removing office {} ", id);
         Connection connection = dbUtils.getConnection();
         String sql = "DELETE FROM Offices WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, entity.getId());
+            ps.setLong(1, id);
             ps.executeUpdate();
-            logger.traceExit("task {} removed", entity);
+            logger.traceExit("Office {} removed", id);
         } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
@@ -154,48 +87,48 @@ public class OfficeDBRepository implements OfficeRepository {
 
     @Override
     public List<Office> getAll() throws EntityRepoException {
-        logger.traceEntry("task getALL");
+        logger.traceEntry("Fetching all offices");
         Connection connection = dbUtils.getConnection();
         List<Office> offices = new ArrayList<>();
         String sql = "SELECT * FROM Offices";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String participants = rs.getString("participants");
-                    String events = rs.getString("events");
-                    List<Participant> participantsList = deserializeParticipants(participants);
-                    List<Event> eventsList = deserializeEvents(events);
-                    Office office = new Office(participantsList, eventsList);
-                    office.setId(id);
-                    offices.add(office);
-                    logger.traceExit("task getAll");
-                }
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                String participantStr = rs.getString("participant");
+                String eventStr = rs.getString("event");
+
+                Participant participant = deserializeParticipant(participantStr);
+                Event event = deserializeEvent(eventStr);
+
+                Office office = new Office(participant, event);
+                office.setId(id);
+                offices.add(office);
             }
         } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
         }
-        return List.of();
+        return offices;
     }
 
     @Override
-    public Office findById(int id) throws EntityRepoException {
-        logger.traceEntry("task findById {}", id);
+    public Office findById(long id) throws EntityRepoException {
+        logger.traceEntry("Finding office by ID {}", id);
         Connection connection = dbUtils.getConnection();
         String sql = "SELECT * FROM Offices WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    String participantsStr = rs.getString("participants");
-                    String eventsStr = rs.getString("events");
+                    String participantStr = rs.getString("participant");
+                    String eventStr = rs.getString("event");
 
-                    List<Participant> participants = deserializeParticipants(participantsStr);
-                    List<Event> events = deserializeEvents(eventsStr);
+                    Participant participant = deserializeParticipant(participantStr);
+                    Event event = deserializeEvent(eventStr);
 
-                    Office office = new Office(participants, events);
+                    Office office = new Office(participant, event);
                     office.setId(id);
                     return office;
                 }
@@ -208,20 +141,95 @@ public class OfficeDBRepository implements OfficeRepository {
     }
 
     @Override
-    public void update(Integer id, Office entity) throws EntityRepoException {
-        logger.traceEntry("update office {} ", entity);
+    public void update(long id, Office entity) throws EntityRepoException {
+        logger.traceEntry("Updating office {} ", entity);
         Connection connection = dbUtils.getConnection();
-        String sql = "UPDATE Offices SET participants=?, events=? WHERE id=?";
+        String sql = "UPDATE Offices SET participant=?, event=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, serializeParticipants(entity.getParticipants()));
-            ps.setString(2, serializeEvents(entity.getEvents()));
-            ps.setInt(3, id);
+            ps.setString(1, serializeParticipant(entity.getParticipant()));
+            ps.setString(2, serializeEvent(entity.getEvent()));
+            ps.setLong(3, id);
             ps.executeUpdate();
-            logger.traceExit("task {} updated", entity);
+            logger.traceExit("Office {} updated", entity);
         } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
         }
     }
+
+    @Override
+    public Map<Event, Integer> getEventsWithParticipantsCount() {
+        logger.info("Get events and number of participants");
+        Map<Event, Integer> eventsCount = new HashMap<>();
+        String query = "SELECT e.id, e.distance, e.style, COUNT(o.participant_id) as numParticipants " +
+                "FROM Events e " +
+                "LEFT JOIN Offices o ON e.id = o.event_id " +
+                "GROUP BY e.id";
+
+        try (Connection con = dbUtils.getConnection();
+             PreparedStatement statement = con.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Long eventId = resultSet.getLong("id");
+                int distance = resultSet.getInt("distance");
+                String style = resultSet.getString("style");
+                int numParticipants = resultSet.getInt("numParticipants");
+
+                Event event = new Event(style, distance);
+                event.setId(eventId);
+                eventsCount.put(event, numParticipants);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return eventsCount;
+    }
+
+    public List<Participant> findParticipantsByEvent(Long eventId) {
+        logger.info("Find participant by event {}", eventId);
+        List<Participant> participants = new ArrayList<>();
+        String query = "SELECT p.id, p.name, p.age FROM Participants p " +
+                "JOIN Offices o ON p.id = o.participant_id " +
+                "WHERE o.event_id = ?";
+
+        try (Connection con = dbUtils.getConnection();
+             PreparedStatement statement = con.prepareStatement(query)) {
+            statement.setLong(1, eventId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                String name = resultSet.getString("name");
+                int age = resultSet.getInt("age");
+                Participant participant = new Participant(name, age);
+                participant.setId(id);
+                participants.add(participant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return participants;
+    }
+
+    @Override
+    public void registerParticipantToEvents(Long participantId, List<Long> eventIds) {
+        String query = "INSERT INTO Offices (participant_id, event_id) VALUES (?, ?)";
+
+        try (Connection con = dbUtils.getConnection();
+             PreparedStatement statement = con.prepareStatement(query)) {
+
+            for (Long eventId : eventIds) {
+                statement.setLong(1, participantId);
+                statement.setLong(2, eventId);
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

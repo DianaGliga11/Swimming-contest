@@ -2,6 +2,12 @@ plugins {
     id 'java'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)  // Ensure Java 23 is used
+    }
+}
+
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
@@ -10,6 +16,12 @@ repositories {
 }
 
 dependencies {
+    implementation project(':Model')
+    implementation project(':Repository')
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
 }

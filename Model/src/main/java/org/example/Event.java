@@ -1,6 +1,6 @@
 package org.example;
 
-public class Event extends Entity<Integer> {
+public class Event extends Entity<Long> {
     private int distance;
     private String style;
     //private List<Participant>  participants;

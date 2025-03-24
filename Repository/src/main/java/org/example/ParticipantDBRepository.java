@@ -38,14 +38,14 @@ public class ParticipantDBRepository implements ParticipantRepository {
     }
 
     @Override
-    public void remove(Participant entity) throws EntityRepoException {
-        logger.traceEntry("remove task {} ", entity);
+    public void remove(long id) throws EntityRepoException {
+        logger.traceEntry("remove task {} ", id);
         Connection connection = dbUtils.getConnection();
         String sql = "DELETE FROM Participants WHERE id=?";
         try (var ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, entity.getId());
+            ps.setLong(1, id);
             ps.executeUpdate();
-            logger.traceExit("task {} removed", entity);
+            logger.traceExit("task {} removed", id);
         } catch (Exception e) {
             logger.error(e);
             System.err.println("Error DB " + e);
@@ -62,7 +62,7 @@ public class ParticipantDBRepository implements ParticipantRepository {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
+                    long id = rs.getInt("id");
                     String name = rs.getString("name");
                     int age = rs.getInt("age");
                     Participant participant = new Participant(name, age);
@@ -80,12 +80,12 @@ public class ParticipantDBRepository implements ParticipantRepository {
     }
 
     @Override
-    public Participant findById(int id) throws EntityRepoException {
+    public Participant findById(long id) throws EntityRepoException {
         logger.traceEntry("task findById {}", id);
         Connection connection = dbUtils.getConnection();
         String sql = "SELECT * FROM Participants WHERE id=?";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
                     String name = rs.getString("name");
@@ -105,7 +105,7 @@ public class ParticipantDBRepository implements ParticipantRepository {
     }
 
     @Override
-    public void update(Integer id, Participant entity) throws EntityRepoException {
+    public void update(long id, Participant entity) throws EntityRepoException {
         logger.traceEntry("update task {} ", entity);
         if (entity.getId() == null || entity.getId() < 0) {
             throw new EntityRepoException("Cannot update participant with null ID.");
@@ -115,7 +115,7 @@ public class ParticipantDBRepository implements ParticipantRepository {
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, entity.getName());
             ps.setInt(2, entity.getAge());
-            ps.setInt(3, id);
+            ps.setLong(3, id);
             ps.executeUpdate();
             logger.traceExit("task {} updated", entity);
         }catch (SQLException e){

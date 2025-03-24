@@ -1,37 +1,35 @@
 package org.example;
 
-import java.util.List;
+public class Office extends Entity<Long> {
+    private Participant participant;
+    private Event event;
 
-public class Office extends Entity<Integer> {
-    private List<Participant> participants;
-    private List<Event> events;
-
-    public Office( List<Participant> participants, List<Event> events) {
-        this.participants = participants;
-        this.events = events;
+    public Office(Participant participant, Event event) {
+        this.participant = participant;
+        this.event = event;
     }
 
-    public List<Participant> getParticipants() {
-        return this.participants;
+    public Participant getParticipant() {
+        return this.participant;
     }
 
-    public List<Event> getEvents() {
-        return this.events;
+    public Event getEvent() {
+        return this.event;
     }
 
-    public void setPrticipants(List<Participant> prticipants) {
-        this.participants = prticipants;
+    public void setParticipant(Participant participant) {
+        this.participant = participant;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @Override
     public String toString() {
         return "Office{" + super.toString() +
-                " prticipants=" + (participants != null ? participants: "No participants") +
-                " events=" + (events != null ? events: "No events") +
+                " participant=" + (participant != null ? participant : "No participant") +
+                ", event=" + (event != null ? event : "No event") +
                 '}';
     }
 }

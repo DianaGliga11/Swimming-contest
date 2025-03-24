@@ -38,20 +38,20 @@ public class EventDBRepository implements EventRepository {
     }
 
     @Override
-    public void remove(Event entity) throws EntityRepoException {
-        logger.traceEntry("remove task {} ", entity);
+    public void remove(long id) throws EntityRepoException {
+        logger.traceEntry("remove task {} ", id);
         Connection connection = dbUtils.getConnection();
         String sql = "DELETE FROM Events WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, entity.getId());
+            ps.setLong(1,id);
             ps.executeUpdate();
-            logger.traceExit("task {} removed", entity);
+            logger.traceExit("task {} removed", id);
         } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
         }
-        logger.traceExit("task {} removed", entity);
+        logger.traceExit("task {} removed", id);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class EventDBRepository implements EventRepository {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
+                    long id = rs.getInt("id");
                     String style = rs.getString("style");
                     int distance = rs.getInt("distance");
                     Event event = new Event(style, distance);
@@ -81,12 +81,12 @@ public class EventDBRepository implements EventRepository {
     }
 
     @Override
-    public Event findById(int id) throws EntityRepoException {
+    public Event findById(long id) throws EntityRepoException {
         logger.traceEntry("task findById {}", id);
         Connection connection = dbUtils.getConnection();
         String sql = "SELECT * FROM Events WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String style = rs.getString("style");
@@ -106,14 +106,14 @@ public class EventDBRepository implements EventRepository {
     }
 
     @Override
-    public void update(Integer id, Event entity) throws EntityRepoException {
+    public void update(long id, Event entity) throws EntityRepoException {
         logger.traceEntry("update task {} ", entity);
         Connection connection = dbUtils.getConnection();
         String sql = "UPdate Events SET style=?, distance=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getStyle());
             ps.setInt(2, entity.getDistance());
-            ps.setInt(3, entity.getId());
+            ps.setLong(3, entity.getId());
             ps.executeUpdate();
             logger.traceExit("task {} updated", entity);
         } catch (SQLException e) {

@@ -38,19 +38,19 @@ public class UserDBRepository implements UserRepository{
     }
 
     @Override
-    public void remove(User entity) throws EntityRepoException {
-        logger.traceEntry("remove user {} ", entity);
+    public void remove(long id) throws EntityRepoException {
+        logger.traceEntry("remove user {} ", id);
         Connection connection = dbUtils.getConnection();
         String sql = "DELETE FROM Users WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, entity.getId());
+            ps.setLong(1, id);
             ps.executeUpdate();
-            logger.traceExit("User {} removed", entity);
+            logger.traceExit("User {} removed", id);
         } catch (SQLException e) {
             logger.error(e);
             throw new EntityRepoException(e);
         }
-        logger.traceExit("User {} removed", entity);
+        logger.traceExit("User {} removed", id);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserDBRepository implements UserRepository{
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
+                    long id = rs.getInt("id");
                     String username = rs.getString("username");
                     String password = rs.getString("password");
                     User user = new User(username, password);
@@ -79,12 +79,12 @@ public class UserDBRepository implements UserRepository{
     }
 
     @Override
-    public User findById(int id) throws EntityRepoException {
+    public User findById(long id) throws EntityRepoException {
         logger.traceEntry("find user by id {}", id);
         Connection connection = dbUtils.getConnection();
         String sql = "SELECT * FROM Users WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String username = rs.getString("username");
@@ -103,14 +103,14 @@ public class UserDBRepository implements UserRepository{
     }
 
     @Override
-    public void update(Integer id, User entity) throws EntityRepoException {
+    public void update(long id, User entity) throws EntityRepoException {
         logger.traceEntry("update user {}", entity);
         Connection connection = dbUtils.getConnection();
         String sql = "UPDATE Users SET username=?, password=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getUserName());
             ps.setString(2, entity.getPassword());
-            ps.setInt(3, entity.getId());
+            ps.setLong(3, entity.getId());
             ps.executeUpdate();
             logger.traceExit("user {} updated", entity);
         } catch (SQLException e) {
