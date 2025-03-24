@@ -22,9 +22,12 @@ public class LoginController {
     @FXML
     private AnchorPane loginPane;
 
+    public LoginController() {}
+
     public LoginController(OfficeService officeService) {
         this.officeService = officeService;
     }
+
 
     // Metoda pentru verificarea parolei și schimbarea feronței
     @FXML

@@ -4,21 +4,21 @@ plugins {
   id 'application'
 }
 
-java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of(23))
-  }
-}
+//java {
+//  toolchain {
+//    languageVersion.set(JavaLanguageVersion.of(23))
+//  }
+//}
 
 group 'org.example'
-version 'unspecified'
+version '1.0-SNAPSHOT'
 
 repositories {
   mavenCentral()
 }
 
 javafx {
-  version = '17.0.6'
+  version = '21'
   modules = ['javafx.controls', 'javafx.fxml']
 }
 
@@ -33,9 +33,9 @@ dependencies {
   implementation project(':Repository')
   implementation project(':Service')
 
-  implementation 'org.openjfx:javafx-controls:20'
-  implementation 'org.openjfx:javafx-fxml:20'
-  implementation 'org.openjfx:javafx-graphics:17.0.1'
+//  implementation 'org.openjfx:javafx-controls:20'
+//  implementation 'org.openjfx:javafx-fxml:20'
+//  implementation 'org.openjfx:javafx-graphics:17.0.1'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -45,13 +45,12 @@ test {
   useJUnitPlatform()
 }
 
-jar {
-  duplicatesStrategy (DuplicatesStrategy.EXCLUDE)
-  manifest {
-    attributes('Main-Class': 'org.example.HelloApplication')
-  }
-  from {
-    configurations.runtimeClasspath.collect{it.isDirectory()?it:zipTree(it)}
-  }
+//jar {
+//  duplicatesStrategy (DuplicatesStrategy.EXCLUDE)
+//  manifest {
+//    attributes('Main-Class': 'org.example.HelloApplication')
+//  }
+//  from {
+//    configurations.runtimeClasspath.collect{it.isDirectory()?it:zipTree(it)}
+//  }
 
-}
