@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 public class ParticipantDBRepository implements ParticipantRepository {
@@ -63,11 +64,7 @@ public class ParticipantDBRepository implements ParticipantRepository {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    long id = rs.getInt("id");
-                    String name = rs.getString("name");
-                    int age = rs.getInt("age");
-                    Participant participant = new Participant(name, age);
-                    participant.setId(id);
+                    Participant participant = extract(rs);
                     participants.add(participant);
                     logger.traceExit("task {} added", participant);
                 }
@@ -85,19 +82,16 @@ public class ParticipantDBRepository implements ParticipantRepository {
         logger.traceEntry("task findById {}", id);
         Connection connection = dbUtils.getConnection();
         String sql = "SELECT * FROM Participants WHERE id=?";
-        try(PreparedStatement ps = connection.prepareStatement(sql)){
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, id);
-            try(ResultSet rs = ps.executeQuery()){
-                if(rs.next()){
-                    String name = rs.getString("name");
-                    int age = rs.getInt("age");
-                    Participant participant = new Participant(name, age);
-                    participant.setId(id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Participant participant = extract(rs);
                     logger.traceExit("task {} found", participant);
                     return participant;
                 }
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
@@ -113,17 +107,49 @@ public class ParticipantDBRepository implements ParticipantRepository {
         }
         Connection connection = dbUtils.getConnection();
         String sql = "UPDATE Participants SET name=?, age=? WHERE id=?";
-        try(PreparedStatement ps = connection.prepareStatement(sql)){
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setInt(2, entity.getAge());
             ps.setLong(3, id);
             ps.executeUpdate();
             logger.traceExit("task {} updated", entity);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
         }
     }
+
+    private Participant extract(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getLong("id");
+        String name = resultSet.getString("name");
+        int age = resultSet.getInt("age");
+        Participant participant = new Participant(name, age);
+        participant.setId(id);
+        return participant;
+    }
+
+    @Override
+    public Optional<Participant> getParticipantByData(Participant participant) {
+        logger.traceEntry("task getParticipantByData {}", participant);
+        Connection connection = dbUtils.getConnection();
+        String sql = "SELECT * FROM Participants WHERE name=? AND age=?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1,participant.getName());
+            preparedStatement.setInt(2,participant.getAge());
+            try(ResultSet rs = preparedStatement.executeQuery()){
+                if(rs.next()){
+                    Participant part = extract(rs);
+                    logger.traceExit("task {} found", participant);
+                    return Optional.of(part);
+                }
+            }
+        }catch (SQLException e){
+            logger.error(e);
+            System.err.println("Error DB " + e);
+        }
+        return Optional.empty();
+    }
+
 }
 

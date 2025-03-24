@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserImplementationService implements UserService {
     private final UserRepository userRepository;
@@ -12,6 +13,11 @@ public class UserImplementationService implements UserService {
     @Override
     public boolean login(String username, String password) {
         return userRepository.checkUserPassword(new User(username,password));
+    }
+
+    @Override
+    public Optional<User> getLogin(String username, String password) {
+        return userRepository.getByUsernameAndPassword(username,password);
     }
 
     @Override

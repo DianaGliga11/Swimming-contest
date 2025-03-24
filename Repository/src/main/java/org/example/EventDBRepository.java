@@ -64,11 +64,7 @@ public class EventDBRepository implements EventRepository {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    long id = rs.getInt("id");
-                    String style = rs.getString("style");
-                    int distance = rs.getInt("distance");
-                    Event event = new Event(style, distance);
-                    event.setId(id);
+                    Event event = extract(rs);
                     events.add(event);
                     logger.traceExit("task {} added", event);
                 }
@@ -78,7 +74,7 @@ public class EventDBRepository implements EventRepository {
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
         }
-        return List.of();
+        return events;
     }
 
     @Override
@@ -90,10 +86,7 @@ public class EventDBRepository implements EventRepository {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    String style = rs.getString("style");
-                    int distance = rs.getInt("distance");
-                    Event event = new Event(style, distance);
-                    event.setId(id);
+                    Event event = extract(rs);
                     logger.traceExit("task {} found", event);
                     return event;
                 }
@@ -122,5 +115,14 @@ public class EventDBRepository implements EventRepository {
             System.err.println("Error DB " + e);
             throw new EntityRepoException(e);
         }
+    }
+
+    private Event extract(ResultSet resultSet) throws SQLException{
+        Long id = resultSet.getLong("id");
+        String style = resultSet.getString("style");
+        int distance = resultSet.getInt("distance");
+        Event event = new Event(style, distance);
+        event.setId(id);
+        return event;
     }
 }

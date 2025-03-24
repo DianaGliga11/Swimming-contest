@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomeController">
+    <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <Label fx:id="usernameLabel" />
+            <Button text="Logout" onAction="#onLogoutClicked" />
+        </HBox>
+
+        <Label text="Events" />
+        <TableView fx:id="eventTable">
+            <columns>
+                <TableColumn fx:id="eventStyle" text="Style" />
+                <TableColumn fx:id="eventDistance" text="Distance" />
+                <TableColumn fx:id="eventParticipantsCount" text="Participants" />
+            </columns>
+        </TableView>
+
+        <Label text="Participants" />
+        <TableView fx:id="participantTable">
+            <columns>
+                <TableColumn fx:id="participantName" text="Name" />
+                <TableColumn fx:id="participantAge" text="Age" />
+            </columns>
+        </TableView>
+
+        <HBox spacing="10.0">
+            <Button fx:id="newParticipantButton" text="New Participant" onAction="#onParticipantButtonClicked" />
+            <Button fx:id="newEntryButton" text="New Entry" onAction="#onNewEntryClicked" />
+        </HBox>
+    </VBox>
+</AnchorPane>

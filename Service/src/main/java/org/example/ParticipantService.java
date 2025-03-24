@@ -1,5 +1,7 @@
 package org.example;
 
-public interface ParticipantService  extends Service<Long, Participant>{
+import java.util.Optional;
 
+public interface ParticipantService  extends Service<Long, Participant>{
+    Optional<Participant> getParticipantByData(Participant participant);
 }

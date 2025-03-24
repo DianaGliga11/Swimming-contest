@@ -15,10 +15,10 @@ public class Main {
                 System.out.println("Cannot find db.config " + e);
                 e.printStackTrace();
             }
-            Repository<Event> eventRepo = new EventDBRepository(props);
+            EventRepository eventRepo = new EventDBRepository(props);
             Repository<User> userRepo = new UserDBRepository(props);
-            Repository<Participant> participantRepo = new ParticipantDBRepository(props);
-           OfficeRepository officeRepo = new OfficeDBRepository(props);
+            ParticipantRepository participantRepo = new ParticipantDBRepository(props);
+           OfficeRepository officeRepo = new OfficeDBRepository(props, participantRepo,eventRepo);
 
             //List<Participant> participantsFluture = officeRepo.findParticipantsByEvent(1L);
             // officeRepo.add(new Office(participantRepo.findById(1), eventRepo.findById(1)));

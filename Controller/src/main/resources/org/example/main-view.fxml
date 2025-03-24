@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.MainController">
-    <children>
-        <TextField fx:id="eventSearchField" layoutX="100" layoutY="100" />
-        <Button text="Căutare" layoutX="100" layoutY="150" onAction="#searchParticipantsByEvent"/>
-        <ListView fx:id="participantListView" layoutX="100" layoutY="200"/>
-        <Button text="Înregistrează participant" layoutX="100" layoutY="300" onAction="#registerParticipant"/>
-    </children>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainController">
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label text="Swimming Contest Login" styleClass="header">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <TextField fx:id="usernameTextField" promptText="Username" />
+        <PasswordField fx:id="passwordTextField" promptText="Password" />
+        <Button fx:id="loginButton" text="Login" onAction="#onLoginButtonClick" />
+    </VBox>
 </AnchorPane>

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 public class UserDBRepository implements UserRepository{
@@ -137,4 +138,39 @@ public class UserDBRepository implements UserRepository{
         logger.traceExit("check user credentials for {}", user.getUserName());
         return false;
     }
+
+    @Override
+    public Optional<User> getByUsernameAndPassword(String username, String password) {
+        logger.traceEntry("getByUsernameAndPassword with username {} ", username);
+        Connection connection = dbUtils.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM Users WHERE username=? AND password=?")) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    User user = extract(resultSet);
+                    logger.traceExit(user);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException sqlException) {
+            logger.error(sqlException);
+            System.err.println("DB Error : " + sqlException);
+        }
+        logger.traceExit("null");
+        return Optional.empty();
+    }
+
+    private User extract(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getLong("id");
+        String username = resultSet.getString("username");
+        String passwordToken = resultSet.getString("password");
+
+        User user = new User(username, passwordToken);
+        user.setId(id);
+        user.setPassword(passwordToken);
+        return user;
+    }
+
 }

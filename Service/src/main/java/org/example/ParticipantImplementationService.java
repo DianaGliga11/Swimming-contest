@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ParticipantImplementationService implements ParticipantService {
     private final ParticipantRepository participantRepository;
@@ -32,5 +33,10 @@ public class ParticipantImplementationService implements ParticipantService {
     @Override
     public Participant findById(Long id) throws EntityRepoException {
         return participantRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Participant> getParticipantByData(Participant participant) {
+        return participantRepository.getParticipantByData(participant);
     }
 }
