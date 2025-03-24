@@ -82,7 +82,7 @@ public class HomeController extends AnchorPane {
     @FXML
     protected void onParticipantButtonClicked() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/new_participant.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/new-participant.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             NewParticipantController controller = fxmlLoader.getController();
             controller.init(properties, currentUser, currentStage);
@@ -108,7 +108,7 @@ public class HomeController extends AnchorPane {
     }
 
     public void init(Properties properties, User currentUser, Stage currentStage) throws EntityRepoException {
-        currentStage.setTitle("Swiming_Contest Admin Panel - Home");
+        currentStage.setTitle("Swiming Contest");
         this.currentUser = currentUser;
         ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
         participantService = new ParticipantImplementationService(participantRepository);
@@ -137,7 +137,7 @@ public class HomeController extends AnchorPane {
         eventTable.setPlaceholder(new Label("No Events"));
         eventStyle.setCellValueFactory(new PropertyValueFactory<>("style"));
         eventDistance.setCellValueFactory(new PropertyValueFactory<>("distance"));
-        eventParticipantsCount.setCellValueFactory(new PropertyValueFactory<>("participants"));
+        eventParticipantsCount.setCellValueFactory(new PropertyValueFactory<>("participantsCount"));
         Collection<EventDTO> events = eventService.getEventsWithParticipantsCount();
         eventTable.getItems().addAll(events);
     }

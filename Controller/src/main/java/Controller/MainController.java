@@ -57,7 +57,7 @@ public class MainController extends  AnchorPane {
     }
 
     public void init(Properties properties, Stage currentStage) {
-        currentStage.setTitle("Admin Panel - Login");
+        currentStage.setTitle("Login");
         UserRepository userRepository = new UserDBRepository(properties);
         userService = new UserImplementationService(userRepository);
         this.properties = properties;

@@ -199,24 +199,22 @@ public class OfficeDBRepository implements OfficeRepository {
     }
 
     private Office extract(ResultSet resultSet) throws SQLException, EntityRepoException {
-        Long id = resultSet.getLong("id");
-        Long participantId = resultSet.getLong("idParticipant");
         Long eventId = resultSet.getLong("idEvent");
-
-        final Event event = eventRepository.findById(eventId);
-        final Participant participant = participantRepository.findById(participantId);
-
-        if (participant != null && event != null) {
-            Office entry = new Office(participant, event);
-            entry.setId(id);
-            return entry;
-        } else {
-            throw new SQLException("Database error: Unable to reference participant and/or event for EventParticipantEntry");
-        }
+        String eventStyle = resultSet.getString("style");
+        Integer eventDistance = resultSet.getInt("distance");
+        Event event = new Event(eventStyle, eventDistance);
+        event.setId(eventId);
+        Long participantId = resultSet.getLong("idParticipant");
+        String participantName = resultSet.getString("name");
+        Integer participantAge = resultSet.getInt("age");
+        Participant participant = new Participant(participantName, participantAge);
+        participant.setId(participantId);
+        Office entry = new Office(participant, event);
+        return entry;
     }
 
     private Event extractEvent(ResultSet resultSet) throws SQLException, EntityRepoException {
-        Long id = resultSet.getLong("id");
+        Long id = resultSet.getLong("idEvent");
         String style = resultSet.getString("style");
         Integer distance = resultSet.getInt("distance");
         Event event = new Event(style, distance);
