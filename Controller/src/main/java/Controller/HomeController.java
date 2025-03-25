@@ -77,49 +77,103 @@ public class HomeController extends AnchorPane {
     @FXML
     private VBox searchResultsContainer;
 
+    @FXML
+    private void onCloseSearchResults() {
+        searchResultsContainer.setVisible(false);
+    }
+
+
+//    @FXML
+//    protected void onSearchClicked() {
+//        try {
+//            Event selectedEvent = eventComboBox.getValue();
+//            if (selectedEvent == null) {
+//                showSearchMessage("Select an Event first!", true);
+//                return;
+//            }
+//            Collection<ParticipantDTO> results = eventService
+//                    .getParticipantsForEventWithCount(selectedEvent.getId());
+//
+//            if (results.isEmpty()) {
+//                showSearchMessage("No participants :(", true);
+//            } else {
+//                searchResultsTable.getItems().clear();
+//                searchResultsTable.getItems().addAll(results);
+//            }
+//            showSearchResults();
+//        } catch (EntityRepoException e) {
+//            showAlert("Error", "Search failed: " + e.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            showAlert("Error", "Unexpected error: " + e.getMessage());
+//        }
+//    }
 
     @FXML
     protected void onSearchClicked() {
         try {
             Event selectedEvent = eventComboBox.getValue();
             if (selectedEvent == null) {
-                showSearchMessage("Select an Event first!", true);
+                showSearchMessage("Please select an event first!", true);
                 return;
             }
 
-            Collection<ParticipantDTO> results = eventService
-                    .getParticipantsForEventWithCount(selectedEvent.getId());
+            Collection<ParticipantDTO> results = eventService.getParticipantsForEventWithCount(selectedEvent.getId());
 
-            if (results.isEmpty()) {
-                showSearchMessage("No participants :(", true);
+            if (results == null || results.isEmpty()) {
+                showSearchMessage("No participants found for this event.", true);
+                searchResultsContainer.setVisible(false);
             } else {
-                searchResultsTable.getItems().clear();
-                searchResultsTable.getItems().addAll(results);
-                //showSearchResults();
+                updateSearchResults(results);
+                showSearchResults();
             }
-
         } catch (EntityRepoException e) {
-            showAlert("Error", "Search failed: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Error", "Unexpected error: " + e.getMessage());
+            showAlert("Search Error", "An error occurred: " + e.getMessage());
+            searchResultsContainer.setVisible(false);
+        }
+    }
+
+    private void updateSearchResults(Collection<ParticipantDTO> results) {
+        if (searchResultsTable != null) {
+            searchResultsTable.getItems().clear();
+            searchResultsTable.getItems().addAll(results);
+        } else {
+            System.err.println("searchResultsTable is null!");
+        }
+    }
+
+    private void handleSearchMessage(String message, boolean isError) {
+        searchMessageLabel.setText(message);
+        searchMessageLabel.setStyle(isError ? "-fx-text-fill: #a80c0c;" : "-fx-text-fill: #006400;");
+        searchMessageLabel.setVisible(true);
+
+        searchResultsTable.setVisible(false);
+    }
+
+    private void showSearchResults() {
+        if (searchResultsContainer != null && searchResultsTable != null) {
+            searchResultsContainer.setVisible(true);
+            searchResultsTable.setVisible(true);
+            searchMessageLabel.setVisible(false);
+        } else {
+            System.err.println("Search results components not initialized!");
         }
     }
 
 
-    @FXML
-    protected void onEventClicked() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/newEvent-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            NewEventController controller = fxmlLoader.getController();
-            controller.init(properties, eventService, currentUser, currentStage);
-            currentStage.setScene(scene);
-            currentStage.show();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
+//    @FXML
+//    protected void onEventClicked() {
+//        try {
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/newEvent-view.fxml"));
+//            Scene scene = new Scene(fxmlLoader.load());
+//            NewEventController controller = fxmlLoader.getController();
+//            controller.init(properties, eventService, currentUser, currentStage);
+//            currentStage.setScene(scene);
+//            currentStage.show();
+//        } catch (IOException e) {
+//            System.out.println(e);
+//        }
+//    }
 
     @FXML
     protected void onLogoutClicked() {
@@ -140,24 +194,15 @@ public class HomeController extends AnchorPane {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/new-participant-view.fxml"));
             Parent root = loader.load();
-
-            // Inițializează controllerul pentru fereastra nouă
             NewParticipantController controller = loader.getController();
-//            controller.init(participantService, () -> {
-//                try {
-//                    initialiseParticipantsTable();
-//                } catch (EntityRepoException e) {
-//                    showAlert("Error", "Failed to refresh participants: " + e.getMessage());
-//                }
-//            });
+            controller.init(properties, currentUser, new Stage());
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Add New Participant");
-            stage.initModality(Modality.APPLICATION_MODAL); // Blochează interacțiunea cu alte ferestre
             stage.showAndWait();
-
-        } catch (IOException e) {
+            initialiseParticipantsTable();
+        } catch (IOException | EntityRepoException e) {
             showAlert("Error", "Cannot open participant form: " + e.getMessage());
         }
     }
@@ -194,9 +239,10 @@ public class HomeController extends AnchorPane {
         this.properties = properties;
 
         usernameLabel.setText(" (" + currentUser.getUserName() + ")");
-        searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
-        searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("eventCount"));
+        searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+        searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("Age"));
+        searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("Events"));
+        searchResultsContainer.setVisible(false);
         initializeEventComboBox();
         initialiseParticipantsTable();
         initialiseEventTable();
@@ -234,18 +280,24 @@ public class HomeController extends AnchorPane {
         alert.showAndWait();
     }
 
-
-    private void showSearchResults() {
-        searchResultsTable.setVisible(true);
-        searchMessageLabel.setVisible(true);
-    }
-
+    //
+//    private void showSearchResults() {
+//        searchResultsTable.setVisible(true);
+//        searchMessageLabel.setVisible(false);
+//    }
+//
     private void showSearchMessage(String message, boolean isError) {
-        searchMessageLabel.setText(message);
-        searchMessageLabel.setStyle(isError ? "-fx-text-fill: #a80c0c;" : "-fx-text-fill: black;");
-        searchMessageLabel.setVisible(true);
-        searchResultsTable.setVisible(true);
+        if (searchMessageLabel != null) {
+            searchMessageLabel.setText(message);
+            searchMessageLabel.setStyle(isError ? "-fx-text-fill: #a80c0c;" : "-fx-text-fill: #006400;");
+            searchMessageLabel.setVisible(true);
+        }
+        if (searchResultsContainer != null) {
+            searchResultsContainer.setVisible(false);
+        }
     }
+
+
 
 }
 

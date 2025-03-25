@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
 
-public class MainController extends  AnchorPane {
+public class MainController extends AnchorPane {
     private UserService userService;
     private Properties properties;
     private Stage currentStage;
@@ -30,15 +30,15 @@ public class MainController extends  AnchorPane {
     protected void onLoginButtonClick() {
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();
-        try{
+        try {
             Optional<User> user = userService.getLogin(username, password);
-            if(user.isPresent()) {
+            if (user.isPresent()) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/home-view.fxml"));
                 AnchorPane root = fxmlLoader.load();
                 HomeController controller = fxmlLoader.getController();
                 controller.init(properties, user.get(), currentStage);
                 currentStage.getScene().setRoot(root);
-            }else{
+            } else {
                 showAlert("Login failed", "Invalid username or password");
             }
         } catch (EntityRepoException e) {

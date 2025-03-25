@@ -38,17 +38,17 @@ public class EventEntriesController extends AnchorPane {
     protected void onConfirmClicked() throws EntityRepoException {
         ObservableList<Event> eventsSelected = eventListView.getSelectionModel().getSelectedItems();
         for (Event event : eventsSelected) {
-            eventService.saveEventEntry(new Office(currentParticipant,event));
+            eventService.saveEventEntry(new Office(currentParticipant, event));
         }
 
-        try{
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/home-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             HomeController controller = fxmlLoader.getController();
-            controller.init(properties,currentUser,currentStage);
+            controller.init(properties, currentUser, currentStage);
             currentStage.setScene(scene);
             currentStage.show();
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -60,7 +60,7 @@ public class EventEntriesController extends AnchorPane {
     }
 
     public void init(Properties properties, Stage currentStage, User currentUser) throws EntityRepoException {
-        initialise(properties,currentStage,currentUser);
+        initialise(properties, currentStage, currentUser);
         setParticipants();
         eventListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         loadEvents();
@@ -76,7 +76,7 @@ public class EventEntriesController extends AnchorPane {
 
     public void init(Properties properties, Stage currentStage, Participant currentParticipant, User currentUser) throws EntityRepoException {
         currentStage.setTitle("Event Entries");
-        initialise(properties,currentStage,currentUser);
+        initialise(properties, currentStage, currentUser);
         setNewlyCreatedParticipant(currentParticipant);
         eventListView.getSelectionModel().getSelectionMode();
         loadEvents();
@@ -102,9 +102,9 @@ public class EventEntriesController extends AnchorPane {
         this.properties = properties;
         final EventRepository eventRepository = new EventDBRepository(properties);
         final ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
-        final OfficeRepository officeRepository = new OfficeDBRepository(properties,participantRepository,eventRepository);
-        eventService=new EventImplementationService(eventRepository,officeRepository);
-        participantService=new ParticipantImplementationService(participantRepository);
-        this.currentStage=currentStage;
+        final OfficeRepository officeRepository = new OfficeDBRepository(properties, participantRepository, eventRepository);
+        eventService = new EventImplementationService(eventRepository, officeRepository);
+        participantService = new ParticipantImplementationService(participantRepository);
+        this.currentStage = currentStage;
     }
 }

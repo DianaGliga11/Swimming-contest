@@ -17,6 +17,7 @@ public class NewParticipantController extends AnchorPane {
     private Stage currentStage;
     private User currentUser;
 
+
     @FXML
     private TextField nameTextField;
 
@@ -37,8 +38,7 @@ public class NewParticipantController extends AnchorPane {
             }
             Participant participant = new Participant(name, age);
             participantService.add(participant);
-
-            onParticipantAdded.run(); // Reîncarcă tabela în HomeController
+            onParticipantAdded.run();
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
 

@@ -6,6 +6,6 @@ public class EntityRepoException extends Exception {
     }
 
     public EntityRepoException(Exception e) {
-        super("Inner exception thrown:\n"+e.getMessage());
+        super("Inner exception thrown:\n" + e.getMessage());
     }
 }

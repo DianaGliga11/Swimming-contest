@@ -12,12 +12,12 @@ public class UserImplementationService implements UserService {
 
     @Override
     public boolean login(String username, String password) {
-        return userRepository.checkUserPassword(new User(username,password));
+        return userRepository.checkUserPassword(new User(username, password));
     }
 
     @Override
     public Optional<User> getLogin(String username, String password) {
-        return userRepository.getByUsernameAndPassword(username,password);
+        return userRepository.getByUsernameAndPassword(username, password);
     }
 
     @Override
@@ -32,11 +32,11 @@ public class UserImplementationService implements UserService {
 
     @Override
     public void update(Long id, User entity) throws EntityRepoException {
-        userRepository.update(id,entity);
+        userRepository.update(id, entity);
     }
 
     @Override
-    public List<User> getAll() throws EntityRepoException{
+    public List<User> getAll() throws EntityRepoException {
         return userRepository.getAll();
     }
 

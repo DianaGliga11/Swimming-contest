@@ -24,16 +24,13 @@ public class OfficeDBRepository implements OfficeRepository {
     }
 
     @Override
-    public Collection<Participant> findParticipantsByEvent(Long eventId) throws EntityRepoException {
+    public Collection<Participant> findParticipantsByEvent(Long eventId) {
         String sql = "SELECT idParticipant, name, age FROM Offices WHERE idEvent = ?";
-
-        try (Connection conn = dbUtils.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setLong(1, eventId);
-            ResultSet rs = stmt.executeQuery();
-
-            List<Participant> participants = new ArrayList<>();
+        Connection connection = dbUtils.getConnection();
+        List<Participant> participants = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, eventId);
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Long id = rs.getLong("idParticipant");
                 String name = rs.getString("name");
@@ -42,63 +39,26 @@ public class OfficeDBRepository implements OfficeRepository {
                 participant.setId(id);
                 participants.add(participant);
             }
-            return participants;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return participants;
     }
 
     @Override
     public int countEventsForParticipant(Long participantId) throws EntityRepoException {
         String sql = "SELECT COUNT(*) FROM Offices WHERE idParticipant = ?";
+        Connection connection = dbUtils.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, participantId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        try (Connection conn = dbUtils.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setLong(1, participantId);
-            ResultSet rs = stmt.executeQuery();
-
-            return rs.next() ? rs.getInt(1) : 0;
-
+            return resultSet.next() ? resultSet.getInt(1) : 0;
         } catch (SQLException e) {
             throw new EntityRepoException(e);
         }
     }
 
-//    private String serializeParticipant(Participant participant) {
-//        return participant.getId() + "-" + participant.getName() + "-" + participant.getAge();
-//    }
-//
-//    private String serializeEvent(Event event) {
-//        return event.getId() + "-" + event.getStyle() + "-" + event.getDistance();
-//    }
-//
-//    private Participant deserializeParticipant(String serializedParticipant) {
-//        if (serializedParticipant == null || serializedParticipant.isEmpty()) {
-//            return null;
-//        }
-//        String[] parts = serializedParticipant.split("-");
-//        long id = Long.parseLong(parts[0]);
-//        String name = parts[1];
-//        int age = Integer.parseInt(parts[2]);
-//        Participant participant = new Participant(name, age);
-//        participant.setId(id);
-//        return participant;
-//    }
-//
-//    private Event deserializeEvent(String serializedEvent) {
-//        if (serializedEvent == null || serializedEvent.isEmpty()) {
-//            return null;
-//        }
-//        String[] parts = serializedEvent.split("-");
-//        long id = Long.parseLong(parts[0]);
-//        String style = parts[1];
-//        int distance = Integer.parseInt(parts[2]);
-//        Event event = new Event(style, distance);
-//        event.setId(id);
-//        return event;
-//    }
 
     @Override
     public void add(Office entity) throws EntityRepoException {
@@ -182,7 +142,7 @@ public class OfficeDBRepository implements OfficeRepository {
     public void update(long id, Office entity) throws EntityRepoException {
         logger.traceEntry("Updating office {} ", entity);
         Connection connection = dbUtils.getConnection();
-        String sql ="UPDATE Offices SET idEvent=?, style=?, distance=?, idParticipant=?, name=?, age=? WHERE id=?";
+        String sql = "UPDATE Offices SET idEvent=?, style=?, distance=?, idParticipant=?, name=?, age=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, entity.getEvent().getId());
             ps.setString(2, entity.getEvent().getStyle());
@@ -226,16 +186,15 @@ public class OfficeDBRepository implements OfficeRepository {
 
     @Override
     public void deleteByIDs(Long participantID, Long eventID) {
-        logger.traceEntry("deleting task of participantID={}, eventID={} ", participantID,eventID);
-        Connection connection=dbUtils.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement(
-                "Delete from Offices where idParticipant=? and idEvent=?")){
-            preparedStatement.setLong(1,participantID);
-            preparedStatement.setLong(2,eventID);
+        logger.traceEntry("deleting task of participantID={}, eventID={} ", participantID, eventID);
+        Connection connection = dbUtils.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "Delete from Offices where idParticipant=? and idEvent=?")) {
+            preparedStatement.setLong(1, participantID);
+            preparedStatement.setLong(2, eventID);
             preparedStatement.executeUpdate();
             logger.traceExit("Offices {} deleted", participantID);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error deleting task of participantID=" + participantID);
         }

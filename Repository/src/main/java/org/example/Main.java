@@ -18,7 +18,7 @@ public class Main {
             EventRepository eventRepo = new EventDBRepository(props);
             Repository<User> userRepo = new UserDBRepository(props);
             ParticipantRepository participantRepo = new ParticipantDBRepository(props);
-           OfficeRepository officeRepo = new OfficeDBRepository(props, participantRepo,eventRepo);
+            OfficeRepository officeRepo = new OfficeDBRepository(props, participantRepo, eventRepo);
 
             //List<Participant> participantsFluture = officeRepo.findParticipantsByEvent(1L);
             // officeRepo.add(new Office(participantRepo.findById(1), eventRepo.findById(1)));

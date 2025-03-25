@@ -11,7 +11,15 @@ public class ParticipantDTO {
         this.eventCount = eventCount;
     }
 
-    public String getName() { return name; }
-    public int getAge() { return age; }
-    public int getEventCount() { return eventCount; }
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getEventCount() {
+        return eventCount;
+    }
 }

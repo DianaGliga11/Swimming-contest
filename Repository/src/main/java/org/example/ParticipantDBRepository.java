@@ -134,17 +134,17 @@ public class ParticipantDBRepository implements ParticipantRepository {
         logger.traceEntry("task getParticipantByData {}", participant);
         Connection connection = dbUtils.getConnection();
         String sql = "SELECT * FROM Participants WHERE name=? AND age=?";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setString(1,participant.getName());
-            preparedStatement.setInt(2,participant.getAge());
-            try(ResultSet rs = preparedStatement.executeQuery()){
-                if(rs.next()){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, participant.getName());
+            preparedStatement.setInt(2, participant.getAge());
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
                     Participant part = extract(rs);
                     logger.traceExit("task {} found", participant);
                     return Optional.of(part);
                 }
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             logger.error(e);
             System.err.println("Error DB " + e);
         }

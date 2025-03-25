@@ -45,8 +45,7 @@ public class NewEventController extends AnchorPane {
         }
     }
 
-    public void init(Properties properties, EventImplementationService eventService,
-                     User currentUser, Stage currentStage) {
+    public void init(Properties properties, EventImplementationService eventService, User currentUser, Stage currentStage) {
         currentStage.setTitle("Register New Event");
         this.properties = properties;
         this.eventService = eventService;

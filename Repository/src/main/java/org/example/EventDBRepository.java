@@ -44,7 +44,7 @@ public class EventDBRepository implements EventRepository {
         Connection connection = dbUtils.getConnection();
         String sql = "DELETE FROM Events WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1,id);
+            ps.setLong(1, id);
             ps.executeUpdate();
             logger.traceExit("task {} removed", id);
         } catch (SQLException e) {
@@ -117,7 +117,7 @@ public class EventDBRepository implements EventRepository {
         }
     }
 
-    private Event extract(ResultSet resultSet) throws SQLException{
+    private Event extract(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
         String style = resultSet.getString("style");
         int distance = resultSet.getInt("distance");

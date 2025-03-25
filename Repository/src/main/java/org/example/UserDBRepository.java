@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-public class UserDBRepository implements UserRepository{
+public class UserDBRepository implements UserRepository {
     private JdbcUtils dbUtils;
     private static final Logger logger = (Logger) LogManager.getLogger();
 
