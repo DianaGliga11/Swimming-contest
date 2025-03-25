@@ -10,13 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.*;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 public class HomeController extends AnchorPane {
@@ -69,45 +67,12 @@ public class HomeController extends AnchorPane {
     private TableColumn<ParticipantDTO, Integer> searchEventCountColumn;
 
     @FXML
-    private Button newParticipantButton;
-
-    @FXML
-    private Button newEntryButton;
-
-    @FXML
     private VBox searchResultsContainer;
 
     @FXML
     private void onCloseSearchResults() {
         searchResultsContainer.setVisible(false);
     }
-
-
-//    @FXML
-//    protected void onSearchClicked() {
-//        try {
-//            Event selectedEvent = eventComboBox.getValue();
-//            if (selectedEvent == null) {
-//                showSearchMessage("Select an Event first!", true);
-//                return;
-//            }
-//            Collection<ParticipantDTO> results = eventService
-//                    .getParticipantsForEventWithCount(selectedEvent.getId());
-//
-//            if (results.isEmpty()) {
-//                showSearchMessage("No participants :(", true);
-//            } else {
-//                searchResultsTable.getItems().clear();
-//                searchResultsTable.getItems().addAll(results);
-//            }
-//            showSearchResults();
-//        } catch (EntityRepoException e) {
-//            showAlert("Error", "Search failed: " + e.getMessage());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            showAlert("Error", "Unexpected error: " + e.getMessage());
-//        }
-//    }
 
     @FXML
     protected void onSearchClicked() {
@@ -142,14 +107,6 @@ public class HomeController extends AnchorPane {
         }
     }
 
-    private void handleSearchMessage(String message, boolean isError) {
-        searchMessageLabel.setText(message);
-        searchMessageLabel.setStyle(isError ? "-fx-text-fill: #a80c0c;" : "-fx-text-fill: #006400;");
-        searchMessageLabel.setVisible(true);
-
-        searchResultsTable.setVisible(false);
-    }
-
     private void showSearchResults() {
         if (searchResultsContainer != null && searchResultsTable != null) {
             searchResultsContainer.setVisible(true);
@@ -160,20 +117,6 @@ public class HomeController extends AnchorPane {
         }
     }
 
-
-//    @FXML
-//    protected void onEventClicked() {
-//        try {
-//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/newEvent-view.fxml"));
-//            Scene scene = new Scene(fxmlLoader.load());
-//            NewEventController controller = fxmlLoader.getController();
-//            controller.init(properties, eventService, currentUser, currentStage);
-//            currentStage.setScene(scene);
-//            currentStage.show();
-//        } catch (IOException e) {
-//            System.out.println(e);
-//        }
-//    }
 
     @FXML
     protected void onLogoutClicked() {
@@ -222,7 +165,6 @@ public class HomeController extends AnchorPane {
             stage.show();
         } catch (IOException | EntityRepoException e) {
             showAlert("Error", "Failed to open new entry form: " + e.getMessage());
-            e.printStackTrace();
         }
         initialiseEventTable();
     }
@@ -239,9 +181,9 @@ public class HomeController extends AnchorPane {
         this.properties = properties;
 
         usernameLabel.setText(" (" + currentUser.getUserName() + ")");
-        searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
-        searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("Age"));
-        searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("Events"));
+        searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("eventCount"));
         searchResultsContainer.setVisible(false);
         initializeEventComboBox();
         initialiseParticipantsTable();
@@ -280,12 +222,6 @@ public class HomeController extends AnchorPane {
         alert.showAndWait();
     }
 
-    //
-//    private void showSearchResults() {
-//        searchResultsTable.setVisible(true);
-//        searchMessageLabel.setVisible(false);
-//    }
-//
     private void showSearchMessage(String message, boolean isError) {
         if (searchMessageLabel != null) {
             searchMessageLabel.setText(message);
@@ -296,7 +232,6 @@ public class HomeController extends AnchorPane {
             searchResultsContainer.setVisible(false);
         }
     }
-
 
 
 }

@@ -1883,3 +1883,176 @@
 2025-03-25 22:01:38 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
 2025-03-25 22:01:38 [JavaFX Application Thread] INFO  JdbcUtils - user: root
 2025-03-25 22:01:38 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:04:00 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:04:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:06:52 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:06:58 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:06:58 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:06:58 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:07:04 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:07:07 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:07:09 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:07:50 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:07:57 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:07:57 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:07:57 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:03 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:32 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:08:42 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:11:01 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:11:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:12:59 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:13:06 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:13:26 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:16:03 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:16:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:20:35 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:20:41 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:20:52 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:02 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:02 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:02 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:08 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - user: root
+2025-03-25 22:21:15 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-03-25 22:21:28 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 

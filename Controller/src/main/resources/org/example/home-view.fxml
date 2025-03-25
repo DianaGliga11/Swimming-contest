@@ -97,8 +97,7 @@
             <DropShadow color="#d5a8ff55" radius="10" spread="0.1"/>
         </effect>
 
-        <!-- Titlu și buton de închidere -->
-        <HBox alignment="CENTER" spacing="10" style="-fx-background-color: #ba55d3; -fx-background-radius: 5; -fx-padding: 8;">
+        <HBox alignment="CENTER" spacing="10" style="-fx-background-color: #d8bfd8; -fx-background-radius: 5; -fx-padding: 8;">
             <Label text="PARTICIPANTS IN SELECTED EVENT"
                    style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;"/>
             <Button text="Close"
@@ -106,23 +105,21 @@
                     onAction="#onCloseSearchResults"/>
         </HBox>
 
-        <!-- Mesaj de stare -->
         <Label fx:id="searchMessageLabel" visible="false"
-               style="-fx-text-fill: #9f79ee; -fx-font-style: italic; -fx-padding: 5;"/>
+               style="-fx-text-fill: #ba55d3; -fx-font-style: italic; -fx-padding: 5;"/>
 
-        <!-- Tabela de rezultate -->
         <TableView fx:id="searchResultsTable"
                    style="-fx-background-color: transparent; -fx-border-color: #d8bfd8;"
                    prefHeight="200">
             <columns>
                 <TableColumn text="Name" fx:id="searchNameColumn"
-                             style="-fx-background-color: #9370db; -fx-text-fill: white; -fx-font-weight: bold;"
+                             style="-fx-background-color: #e6e6fa; -fx-text-fill: black; -fx-font-weight: bold;"
                              prefWidth="200"/>
                 <TableColumn text="Age" fx:id="searchAgeColumn"
-                             style="-fx-background-color: #9370db; -fx-text-fill: white; -fx-font-weight: bold;"
+                             style="-fx-background-color: #e6e6fa; -fx-text-fill: black; -fx-font-weight: bold;"
                              prefWidth="100"/>
                 <TableColumn text="Events" fx:id="searchEventCountColumn"
-                             style="-fx-background-color: #9370db; -fx-text-fill: white; -fx-font-weight: bold;"
+                             style="-fx-background-color: #e6e6fa; -fx-text-fill: black; -fx-font-weight: bold;"
                              prefWidth="120"/>
             </columns>
             <styleClass>
@@ -131,7 +128,6 @@
             </styleClass>
         </TableView>
     </VBox>
-
 
     <Circle centerX="100" centerY="100" radius="50" fill="#ffd6e755" stroke="#ffb6c155" strokeWidth="2"/>
     <Circle centerX="750" centerY="500" radius="70" fill="#c1f0fd55" stroke="#add8e655" strokeWidth="2"/>

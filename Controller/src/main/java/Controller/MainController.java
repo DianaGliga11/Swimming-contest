@@ -24,9 +24,6 @@ public class MainController extends AnchorPane {
     private PasswordField passwordTextField;
 
     @FXML
-    private Button loginButton;
-
-    @FXML
     protected void onLoginButtonClick() {
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();

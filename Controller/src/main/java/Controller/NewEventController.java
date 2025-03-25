@@ -27,9 +27,6 @@ public class NewEventController extends AnchorPane {
     private TextField distanceField;
 
     @FXML
-    private Button confirmButton;
-
-    @FXML
     protected void onConfirmClicked() throws EntityRepoException {
         String style = styleField.getText();
         Integer distance = Integer.valueOf(distanceField.getText());
@@ -45,11 +42,4 @@ public class NewEventController extends AnchorPane {
         }
     }
 
-    public void init(Properties properties, EventImplementationService eventService, User currentUser, Stage currentStage) {
-        currentStage.setTitle("Register New Event");
-        this.properties = properties;
-        this.eventService = eventService;
-        this.currentStage = currentStage;
-        this.currentUser = currentUser;
-    }
 }

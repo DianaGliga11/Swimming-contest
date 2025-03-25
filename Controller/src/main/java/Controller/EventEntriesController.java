@@ -29,12 +29,6 @@ public class EventEntriesController extends AnchorPane {
     private ListView<Event> eventListView;
 
     @FXML
-    private Button confirmButton;
-
-    @FXML
-    private Label eventFoundLavel;
-
-    @FXML
     protected void onConfirmClicked() throws EntityRepoException {
         ObservableList<Event> eventsSelected = eventListView.getSelectionModel().getSelectedItems();
         for (Event event : eventsSelected) {
@@ -74,28 +68,12 @@ public class EventEntriesController extends AnchorPane {
         currentParticipant = participantBox.getValue();
     }
 
-    public void init(Properties properties, Stage currentStage, Participant currentParticipant, User currentUser) throws EntityRepoException {
-        currentStage.setTitle("Event Entries");
-        initialise(properties, currentStage, currentUser);
-        setNewlyCreatedParticipant(currentParticipant);
-        eventListView.getSelectionModel().getSelectionMode();
-        loadEvents();
-    }
-
     private void loadEvents() throws EntityRepoException {
         eventListView.getItems().clear();
         Collection<Event> events = eventService
                 .getAll();
         eventListView.getItems().addAll(events);
     }
-
-    private void setNewlyCreatedParticipant(Participant participant) {
-        currentParticipant = participant;
-        participantBox.getItems().clear();
-        participantBox.getItems().addAll(currentParticipant);
-        participantBox.getSelectionModel().clearAndSelect(0);
-    }
-
 
     private void initialise(Properties properties, Stage currentStage, User currentUser) {
         this.currentUser = currentUser;
