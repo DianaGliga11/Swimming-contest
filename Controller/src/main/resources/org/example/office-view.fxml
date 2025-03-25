@@ -2,13 +2,52 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.OfficeController">
-    <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Label text="Office Management" />
-        <ComboBox fx:id="participantComboBox" onAction="#onParticipantSelected" />
-        <Label fx:id="eventFoundLabel" />
-        <ListView fx:id="eventListView" />
-        <Button fx:id="confirmButton" text="Confirm" onAction="#onConfirmClicked" />
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.OfficeController"
+            style="-fx-background-color: #faf2ff;"
+            prefWidth="600" prefHeight="500">
+
+    <Rectangle width="600" height="500"
+               fill="linear-gradient(from 25% 25% to 100% 100%, #ffd6e7, #c1f0fd)"
+               opacity="0.3"/>
+
+    <VBox spacing="20"
+          style="-fx-background-color: rgba(255,255,255,0.7); -fx-background-radius: 20; -fx-padding: 20;"
+          AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+        <effect>
+            <InnerShadow color="#d5a8ff55" radius="10"/>
+        </effect>
+
+        <Label text="OFFICE MANAGEMENT"
+               style="-fx-text-fill: #9370db; -fx-font-weight: bold; -fx-font-size: 18;"/>
+
+        <ComboBox fx:id="participantComboBox"
+                  promptText="Select Participant"
+                  style="-fx-background-color: white; -fx-border-color: #d8bfd8; -fx-pref-width: 300;"
+                  onAction="#onParticipantSelected"/>
+
+        <Label fx:id="eventFoundLabel"
+               style="-fx-text-fill: #ba55d3; -fx-font-style: italic;"/>
+
+        <ListView fx:id="eventListView"
+                  style="-fx-background-color: transparent; -fx-border-color: #d8bfd8;"
+                  prefHeight="200">
+            <effect>
+                <DropShadow color="#d5a8ff33" radius="5" spread="0.1"/>
+            </effect>
+        </ListView>
+
+        <Button fx:id="confirmButton" text="Confirm"
+                style="-fx-background-color: #ba55d3; -fx-text-fill: white; -fx-font-weight: bold;"
+                onAction="#onConfirmClicked"/>
     </VBox>
+
+    <Circle centerX="50" centerY="100" radius="40" fill="#ffd6e755" stroke="#ffb6c155" strokeWidth="2"/>
+    <Circle centerX="550" centerY="400" radius="60" fill="#c1f0fd55" stroke="#add8e655" strokeWidth="2"/>
 </AnchorPane>

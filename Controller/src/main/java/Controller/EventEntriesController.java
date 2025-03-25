@@ -96,6 +96,7 @@ public class EventEntriesController extends AnchorPane {
         participantBox.getSelectionModel().clearAndSelect(0);
     }
 
+
     private void initialise(Properties properties, Stage currentStage, User currentUser) {
         this.currentUser = currentUser;
         this.properties = properties;

@@ -1,17 +1,22 @@
 package Controller;
 
 import DTO.EventDTO;
+import DTO.ParticipantDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.*;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 public class HomeController extends AnchorPane {
@@ -22,7 +27,13 @@ public class HomeController extends AnchorPane {
     private Properties properties;
 
     @FXML
+    private ComboBox<Event> eventComboBox;
+
+    @FXML
     private Label usernameLabel;
+
+    @FXML
+    private Label searchMessageLabel;
 
     @FXML
     private TableView<EventDTO> eventTable;
@@ -46,10 +57,55 @@ public class HomeController extends AnchorPane {
     private TableColumn<Participant, Integer> participantAge;
 
     @FXML
+    private TableView<ParticipantDTO> searchResultsTable;
+
+    @FXML
+    private TableColumn<ParticipantDTO, String> searchNameColumn;
+
+    @FXML
+    private TableColumn<ParticipantDTO, Integer> searchAgeColumn;
+
+    @FXML
+    private TableColumn<ParticipantDTO, Integer> searchEventCountColumn;
+
+    @FXML
     private Button newParticipantButton;
 
     @FXML
     private Button newEntryButton;
+
+    @FXML
+    private VBox searchResultsContainer;
+
+
+    @FXML
+    protected void onSearchClicked() {
+        try {
+            Event selectedEvent = eventComboBox.getValue();
+            if (selectedEvent == null) {
+                showSearchMessage("Select an Event first!", true);
+                return;
+            }
+
+            Collection<ParticipantDTO> results = eventService
+                    .getParticipantsForEventWithCount(selectedEvent.getId());
+
+            if (results.isEmpty()) {
+                showSearchMessage("No participants :(", true);
+            } else {
+                searchResultsTable.getItems().clear();
+                searchResultsTable.getItems().addAll(results);
+                //showSearchResults();
+            }
+
+        } catch (EntityRepoException e) {
+            showAlert("Error", "Search failed: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Unexpected error: " + e.getMessage());
+        }
+    }
+
 
     @FXML
     protected void onEventClicked() {
@@ -82,29 +138,48 @@ public class HomeController extends AnchorPane {
     @FXML
     protected void onParticipantButtonClicked() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/new-participant.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            NewParticipantController controller = fxmlLoader.getController();
-            controller.init(properties, currentUser, currentStage);
-            currentStage.setScene(scene);
-            currentStage.show();
-        } catch (IOException ioException) {
-            System.out.println(ioException.getMessage());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/new-participant-view.fxml"));
+            Parent root = loader.load();
+
+            // Inițializează controllerul pentru fereastra nouă
+            NewParticipantController controller = loader.getController();
+//            controller.init(participantService, () -> {
+//                try {
+//                    initialiseParticipantsTable();
+//                } catch (EntityRepoException e) {
+//                    showAlert("Error", "Failed to refresh participants: " + e.getMessage());
+//                }
+//            });
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Add New Participant");
+            stage.initModality(Modality.APPLICATION_MODAL); // Blochează interacțiunea cu alte ferestre
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            showAlert("Error", "Cannot open participant form: " + e.getMessage());
         }
     }
 
     @FXML
-    protected void onNewEntryClicked() {
+    protected void onNewEntryClicked() throws EntityRepoException {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/event-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            OfficeController controller = fxmlLoader.getController();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/event-view.fxml"));
+            Parent root = loader.load();
+            EventEntriesController controller = loader.getController();
             controller.init(properties, currentStage, currentUser);
-            currentStage.setScene(scene);
-            currentStage.show();
-        } catch (IOException | EntityRepoException ioException) {
-            System.out.println(ioException.getMessage());
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("New Event Registration");
+            stage.initOwner(currentStage);
+            stage.show();
+        } catch (IOException | EntityRepoException e) {
+            showAlert("Error", "Failed to open new entry form: " + e.getMessage());
+            e.printStackTrace();
         }
+        initialiseEventTable();
     }
 
     public void init(Properties properties, User currentUser, Stage currentStage) throws EntityRepoException {
@@ -119,8 +194,17 @@ public class HomeController extends AnchorPane {
         this.properties = properties;
 
         usernameLabel.setText(" (" + currentUser.getUserName() + ")");
+        searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("eventCount"));
+        initializeEventComboBox();
         initialiseParticipantsTable();
         initialiseEventTable();
+    }
+
+    private void initializeEventComboBox() throws EntityRepoException {
+        eventComboBox.getItems().clear();
+        eventComboBox.getItems().addAll(eventService.getAll());
     }
 
     private void initialiseParticipantsTable() throws EntityRepoException {
@@ -141,4 +225,27 @@ public class HomeController extends AnchorPane {
         Collection<EventDTO> events = eventService.getEventsWithParticipantsCount();
         eventTable.getItems().addAll(events);
     }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+    private void showSearchResults() {
+        searchResultsTable.setVisible(true);
+        searchMessageLabel.setVisible(true);
+    }
+
+    private void showSearchMessage(String message, boolean isError) {
+        searchMessageLabel.setText(message);
+        searchMessageLabel.setStyle(isError ? "-fx-text-fill: #a80c0c;" : "-fx-text-fill: black;");
+        searchMessageLabel.setVisible(true);
+        searchResultsTable.setVisible(true);
+    }
+
 }
+

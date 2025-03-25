@@ -2,17 +2,56 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainController">
-    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Label text="Swimming Contest Login" styleClass="header">
-            <font>
-                <Font size="24.0" />
-            </font>
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.MainController"
+            style="-fx-background-color: #faf2ff;"
+            prefWidth="400" prefHeight="500">
+
+    <Rectangle width="400" height="500"
+               fill="linear-gradient(from 25% 25% to 100% 100%, #ffd6e7, #c1f0fd)"
+               opacity="0.4"/>
+
+    <VBox alignment="CENTER" spacing="25"
+          style="-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 25; -fx-padding: 40;"
+          AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="50"
+          AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+        <effect>
+            <DropShadow color="#d5a8ff55" radius="15" spread="0.1"/>
+        </effect>
+
+        <Label text="SWIMMING CONTEST"
+               style="-fx-text-fill: #9370db; -fx-font-weight: bold; -fx-font-size: 24;">
+            <effect>
+                <DropShadow color="#d5a8ff99" radius="3" spread="0.3"/>
+            </effect>
         </Label>
-        <TextField fx:id="usernameTextField" promptText="Username" />
-        <PasswordField fx:id="passwordTextField" promptText="Password" />
-        <Button fx:id="loginButton" text="Login" onAction="#onLoginButtonClick" />
+
+        <VBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10;">
+            <VBox spacing="5">
+                <Label text="Username:" style="-fx-text-fill: #6a3093; -fx-font-weight: bold;"/>
+                <TextField fx:id="usernameTextField" promptText="Enter your username"
+                           style="-fx-background-color: white; -fx-border-color: #d8bfd8; -fx-pref-width: 250;"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Password:" style="-fx-text-fill: #6a3093; -fx-font-weight: bold;"/>
+                <PasswordField fx:id="passwordTextField" promptText="Enter your password"
+                               style="-fx-background-color: white; -fx-border-color: #d8bfd8; -fx-pref-width: 250;"/>
+            </VBox>
+
+            <Button fx:id="loginButton" text="LOGIN"
+                    style="-fx-background-color: #ba55d3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-pref-width: 120;"
+                    onAction="#onLoginButtonClick"
+            />
+        </VBox>
     </VBox>
+
+    <Circle centerX="350" centerY="100" radius="40" fill="#ffd6e755" stroke="#ffb6c155" strokeWidth="2"/>
+    <Circle centerX="50" centerY="400" radius="50" fill="#c1f0fd55" stroke="#add8e655" strokeWidth="2"/>
+    <Circle centerX="200" centerY="450" radius="30" fill="#e6e6fa55" stroke="#9370db55" strokeWidth="2"/>
 </AnchorPane>

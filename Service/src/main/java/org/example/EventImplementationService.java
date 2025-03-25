@@ -1,6 +1,7 @@
 package org.example;
 
 import DTO.EventDTO;
+import DTO.ParticipantDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,5 +70,21 @@ public class EventImplementationService implements EventService {
     @Override
     public void deleteByIDs(Long participantID, Long eventID) throws EntityRepoException {
         officeRepository.deleteByIDs(participantID,eventID);
+    }
+
+    @Override
+    public Collection<ParticipantDTO> getParticipantsForEventWithCount(Long eventId) throws EntityRepoException {
+        Collection<Participant> participants = officeRepository.findParticipantsByEvent(eventId);
+        List<ParticipantDTO> result = new ArrayList<>();
+        for (Participant p : participants) {
+            int eventCount = officeRepository.countEventsForParticipant(p.getId());
+            result.add(new ParticipantDTO(
+                    p.getName(),
+                    p.getAge(),
+                    eventCount
+            ));
+        }
+
+        return result;
     }
 }

@@ -23,6 +23,49 @@ public class OfficeDBRepository implements OfficeRepository {
         this.eventRepository = eventRepository;
     }
 
+    @Override
+    public Collection<Participant> findParticipantsByEvent(Long eventId) throws EntityRepoException {
+        String sql = "SELECT idParticipant, name, age FROM Offices WHERE idEvent = ?";
+
+        try (Connection conn = dbUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, eventId);
+            ResultSet rs = stmt.executeQuery();
+
+            List<Participant> participants = new ArrayList<>();
+            while (rs.next()) {
+                Long id = rs.getLong("idParticipant");
+                String name = rs.getString("name");
+                int age = rs.getInt("age");
+                Participant participant = new Participant(name, age);
+                participant.setId(id);
+                participants.add(participant);
+            }
+            return participants;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int countEventsForParticipant(Long participantId) throws EntityRepoException {
+        String sql = "SELECT COUNT(*) FROM Offices WHERE idParticipant = ?";
+
+        try (Connection conn = dbUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, participantId);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next() ? rs.getInt(1) : 0;
+
+        } catch (SQLException e) {
+            throw new EntityRepoException(e);
+        }
+    }
+
 //    private String serializeParticipant(Participant participant) {
 //        return participant.getId() + "-" + participant.getName() + "-" + participant.getAge();
 //    }

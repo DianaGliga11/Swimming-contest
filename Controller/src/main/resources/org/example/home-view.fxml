@@ -2,34 +2,123 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomeController">
-    <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox alignment="CENTER_RIGHT" spacing="10.0">
-            <Label fx:id="usernameLabel" />
-            <Button text="Logout" onAction="#onLogoutClicked" />
+<?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.HomeController"
+            style="-fx-background-color: #faf2ff;"
+            prefWidth="850" prefHeight="650">
+
+    <Rectangle fx:id="bgDecoration" width="850" height="650"
+               fill="linear-gradient(from 25% 25% to 100% 100%, #ffd6e7, #c1f0fd)"
+               opacity="0.3"/>
+
+    <HBox alignment="CENTER_RIGHT" spacing="15"
+          style="-fx-background-color: rgba(255,255,255,0.3); -fx-background-radius: 15; -fx-padding: 12;"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+        <effect>
+            <DropShadow color="#d5a8ff33" radius="15" spread="0.2"/>
+        </effect>
+
+        <Label fx:id="usernameLabel" style="-fx-text-fill: #6a3093; -fx-font-weight: bold; -fx-font-size: 14;"/>
+        <Button text="Logout" style="-fx-background-color: #ffb6c1; -fx-text-fill: white; -fx-font-weight: bold;"
+                onAction="#onLogoutClicked"/>
+    </HBox>
+
+    <VBox spacing="20" layoutX="20" layoutY="80"
+          style="-fx-background-color: rgba(255,255,255,0.7); -fx-background-radius: 20; -fx-padding: 20;"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="80" AnchorPane.bottomAnchor="20">
+        <effect>
+            <InnerShadow color="#d5a8ff55" radius="10"/>
+        </effect>
+
+        <VBox spacing="8">
+            <Label text="EVENTS" style="-fx-text-fill: #9370db; -fx-font-weight: bold; -fx-font-size: 16;"/>
+            <TableView fx:id="eventTable" style="-fx-background-color: transparent; -fx-border-color: #d8bfd8;"
+                       prefHeight="150">
+                <columns>
+                    <TableColumn fx:id="eventStyle" text="Style" style="-fx-background-color: #e6e6fa;"
+                                 prefWidth="200"/>
+                    <TableColumn fx:id="eventDistance" text="Distance" style="-fx-background-color: #e6e6fa;"
+                                 prefWidth="150"/>
+                    <TableColumn fx:id="eventParticipantsCount" text="Participants" style="-fx-background-color: #e6e6fa;"
+                                 prefWidth="150"/>
+                </columns>
+                <styleClass>
+                    <String fx:value="custom-table" />
+                    <String fx:value="alternating-row-colors" />
+                </styleClass>
+            </TableView>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="PARTICIPANTS" style="-fx-text-fill: #ba55d3; -fx-font-weight: bold; -fx-font-size: 16;"/>
+            <TableView fx:id="participantTable" style="-fx-background-color: transparent; -fx-border-color: #d8bfd8;"
+                       prefHeight="150">
+                <columns>
+                    <TableColumn fx:id="participantName" text="Name" style="-fx-background-color: #e6e6fa;"
+                                 prefWidth="200"/>
+                    <TableColumn fx:id="participantAge" text="Age" style="-fx-background-color: #e6e6fa;"
+                                 prefWidth="150"/>
+                </columns>
+                <styleClass>
+                    <String fx:value="custom-table" />
+                    <String fx:value="alternating-row-colors" />
+                </styleClass>
+            </TableView>
+        </VBox>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="newParticipantButton" text="New Participant"
+                    style="-fx-background-color: #ffb6c1; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;"
+                    onAction="#onParticipantButtonClicked"/>
+            <Button fx:id="newEntryButton" text="New Entry"
+                    style="-fx-background-color: #9370db; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;"
+                    onAction="#onNewEntryClicked"/>
         </HBox>
 
-        <Label text="Events" />
-        <TableView fx:id="eventTable">
-            <columns>
-                <TableColumn fx:id="eventStyle" text="Style" />
-                <TableColumn fx:id="eventDistance" text="Distance" />
-                <TableColumn fx:id="eventParticipantsCount" text="Participants" />
-            </columns>
-        </TableView>
-
-        <Label text="Participants" />
-        <TableView fx:id="participantTable">
-            <columns>
-                <TableColumn fx:id="participantName" text="Name" />
-                <TableColumn fx:id="participantAge" text="Age" />
-            </columns>
-        </TableView>
-
-        <HBox spacing="10.0">
-            <Button fx:id="newParticipantButton" text="New Participant" onAction="#onParticipantButtonClicked" />
-            <Button fx:id="newEntryButton" text="New Entry" onAction="#onNewEntryClicked" />
+        <HBox spacing="15" alignment="CENTER">
+            <ComboBox fx:id="eventComboBox" promptText="Select Event"
+                      style="-fx-background-color: white; -fx-border-color: #d8bfd8; -fx-pref-width: 250;"/>
+            <Button text="Search"
+                    style="-fx-background-color: #ba55d3; -fx-text-fill: white; -fx-font-weight: bold;"
+                    onAction="#onSearchClicked"/>
         </HBox>
     </VBox>
+
+    <VBox fx:id="searchResultsContainer" visible="false"
+          style="-fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 15; -fx-padding: 15;"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+        <effect>
+            <DropShadow color="#d5a8ff55" radius="10" spread="0.1"/>
+        </effect>
+
+        <Label text="SEARCH RESULTS" style="-fx-text-fill: #9f79ee; -fx-font-weight: bold; -fx-font-size: 14;"/>
+        <TableView fx:id="searchResultsTable" style="-fx-background-color: transparent; -fx-border-color: #d8bfd8;"
+                   prefHeight="150">
+            <columns>
+                <TableColumn text="Name" fx:id="searchNameColumn" style="-fx-background-color: #e6e6fa;"
+                             prefWidth="200"/>
+                <TableColumn text="Age" fx:id="searchAgeColumn" style="-fx-background-color: #e6e6fa;"
+                             prefWidth="100"/>
+                <TableColumn text="Events" fx:id="searchEventCountColumn" style="-fx-background-color: #e6e6fa;"
+                             prefWidth="120"/>
+                <TableColumn text="Style" fx:id="searchStyleColumn" style="-fx-background-color: #e6e6fa;"
+                             prefWidth="150"/>
+                <TableColumn text="Distance" fx:id="searchDistanceColumn" style="-fx-background-color: #e6e6fa;"
+                             prefWidth="120"/>
+            </columns>
+            <styleClass>
+                <String fx:value="custom-table" />
+                <String fx:value="alternating-row-colors" />
+            </styleClass>
+        </TableView>
+    </VBox>
+
+    <Circle centerX="100" centerY="100" radius="50" fill="#ffd6e755" stroke="#ffb6c155" strokeWidth="2"/>
+    <Circle centerX="750" centerY="500" radius="70" fill="#c1f0fd55" stroke="#add8e655" strokeWidth="2"/>
 </AnchorPane>

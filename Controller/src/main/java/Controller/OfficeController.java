@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.example.*;
 
@@ -40,11 +41,10 @@ public class OfficeController {
         }
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/home-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
+            AnchorPane root = fxmlLoader.load();
             HomeController controller = fxmlLoader.getController();
             controller.init(properties, currentUser, currentStage);
-            currentStage.setScene(scene);
-            currentStage.show();
+            currentStage.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
