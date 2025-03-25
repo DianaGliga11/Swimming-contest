@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class OfficeDBRepository implements OfficeRepository {
-    private JdbcUtils dbUtils;
+    private final JdbcUtils dbUtils;
     private ParticipantRepository participantRepository;
     private EventRepository eventRepository;
     private static final Logger logger = LogManager.getLogger();

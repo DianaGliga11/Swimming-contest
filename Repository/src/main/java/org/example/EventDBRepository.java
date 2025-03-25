@@ -12,7 +12,7 @@ import java.util.*;
 
 public class EventDBRepository implements EventRepository {
 
-    private JdbcUtils dbUtils;
+    private final JdbcUtils dbUtils;
     private static final Logger logger = LogManager.getLogger();
 
     public EventDBRepository(Properties props) {

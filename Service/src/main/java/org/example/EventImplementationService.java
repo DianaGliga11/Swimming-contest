@@ -68,7 +68,7 @@ public class EventImplementationService implements EventService {
     }
 
     @Override
-    public void deleteByIDs(Long participantID, Long eventID) throws EntityRepoException {
+    public void deleteByIDs(Long participantID, Long eventID) {
         officeRepository.deleteByIDs(participantID, eventID);
     }
 

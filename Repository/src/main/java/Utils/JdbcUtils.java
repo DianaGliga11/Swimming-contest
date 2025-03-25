@@ -9,7 +9,7 @@ import java.util.*;
 
 public class JdbcUtils {
 
-    private Properties jdbcProps;
+    private final Properties jdbcProps;
 
     private static final Logger logger = LogManager.getLogger();
 

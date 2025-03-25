@@ -232,7 +232,5 @@ public class HomeController extends AnchorPane {
             searchResultsContainer.setVisible(false);
         }
     }
-
-
 }
 

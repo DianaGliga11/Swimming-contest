@@ -1,9 +1,7 @@
 package org.example;
 
-import java.io.Serializable;
-
-public abstract class Entity<Long>  {
-    private  Long id;
+public abstract class Entity<Long> {
+    private Long id;
 
     public Long getId() {
         return id;

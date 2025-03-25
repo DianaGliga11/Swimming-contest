@@ -3,12 +3,10 @@ package org.example;
 public class Event extends Entity<Long> {
     private int distance;
     private String style;
-    //private List<Participant>  participants;
 
     public Event(String style, int distance) {
         this.style = style;
         this.distance = distance;
-        //this.participants = participants;
     }
 
     public int getDistance() {

@@ -3,12 +3,10 @@ package org.example;
 public class Participant extends Entity<Long> {
     private String name;
     private int age;
-//    private List<Event> registeredEvents;
 
     public Participant(String name, int age) {
         this.name = name;
         this.age = age;
-        //       this.registeredEvents = registeredEvents;
     }
 
     public String getName() {
@@ -27,14 +25,6 @@ public class Participant extends Entity<Long> {
     public void setAge(int age) {
         this.age = age;
     }
-
-//    public List<Event> getRegisteredEvents() {
-//        return registeredEvents;
-//    }
-//
-//    public void setRegisteredEvents(List<Event> registeredEvents) {
-//        this.registeredEvents = registeredEvents;
-//    }
 
     @Override
     public String toString() {

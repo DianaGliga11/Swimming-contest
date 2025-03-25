@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.Entity;
-
 import java.util.List;
 
 public interface Service<ID, E extends Entity<ID>> {

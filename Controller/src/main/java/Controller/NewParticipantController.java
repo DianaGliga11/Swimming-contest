@@ -17,7 +17,6 @@ public class NewParticipantController extends AnchorPane {
     private Stage currentStage;
     private User currentUser;
 
-
     @FXML
     private TextField nameTextField;
 
@@ -42,12 +41,9 @@ public class NewParticipantController extends AnchorPane {
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
 
-        } catch (NumberFormatException e) {
-            showAlert("Invalid Age", "Please enter a valid number for ageTextField.");
-        } catch (EntityRepoException e) {
-            showAlert("Database Error", "Failed to save participant: " + e.getMessage());
+        } catch (Exception e) {
+            showAlert("Error ", e.getMessage());
         }
-
     }
 
     public void init(Properties properties, User currentUser, Stage currentStage) {

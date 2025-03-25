@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 public class ParticipantDBRepository implements ParticipantRepository {
-    private JdbcUtils dbUtils;
+    private final JdbcUtils dbUtils;
     private static final Logger logger = LogManager.getLogger();
 
     public ParticipantDBRepository(Properties props) {

@@ -4,7 +4,6 @@ import DTO.EventDTO;
 import DTO.ParticipantDTO;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface EventService extends Service<Long, Event> {
     Collection<Office> getEntriesByEvent(Long eventID);

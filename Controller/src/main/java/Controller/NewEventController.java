@@ -2,6 +2,7 @@ package Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -29,7 +30,7 @@ public class NewEventController extends AnchorPane {
     @FXML
     protected void onConfirmClicked() throws EntityRepoException {
         String style = styleField.getText();
-        Integer distance = Integer.valueOf(distanceField.getText());
+        int distance = Integer.parseInt(distanceField.getText());
         eventService.add(new Event(style, distance));
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/home-view.fxml"));
@@ -38,8 +39,16 @@ public class NewEventController extends AnchorPane {
             controller.init(properties, currentUser, currentStage);
             currentStage.getScene().setRoot(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("IOException ", e.getMessage());
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }
