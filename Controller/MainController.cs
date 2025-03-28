@@ -142,13 +142,8 @@ namespace Controller
         private void MainController_FormClosing(object sender, FormClosingEventArgs e)
         {
             log.Info("Aplicația se închide...");
-        
-            // Eliberează resurse (opțional, dar recomandat)
-            // Exemplu: închide conexiuni la baza de date, fișiere deschise, etc.
-        
-            // Forțează închiderea completă
-            LogManager.Shutdown();  // Închide logger-ul log4net
-            Application.Exit();     // Închide toate ferestrele
+            LogManager.Shutdown();  
+            Application.Exit();  
         }
     }
 }
