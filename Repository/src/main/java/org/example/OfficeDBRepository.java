@@ -215,12 +215,4 @@ public class OfficeDBRepository implements OfficeRepository {
         return entry;
     }
 
-    private Event extractEvent(ResultSet resultSet) throws SQLException, EntityRepoException {
-        Long id = resultSet.getLong("idEvent");
-        String style = resultSet.getString("style");
-        Integer distance = resultSet.getInt("distance");
-        Event event = new Event(style, distance);
-        event.setId(id);
-        return event;
-    }
 }

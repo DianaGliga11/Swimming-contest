@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class NewParticipantController extends AnchorPane {
     private ParticipantService participantService;
-    private Runnable onParticipantAdded;
+    //private Runnable onParticipantAdded;
     private Properties properties;
     private Stage currentStage;
     private User currentUser;
@@ -37,7 +37,7 @@ public class NewParticipantController extends AnchorPane {
             }
             Participant participant = new Participant(name, age);
             participantService.add(participant);
-            onParticipantAdded.run();
+            //onParticipantAdded.run();
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
 
