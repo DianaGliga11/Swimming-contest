@@ -118,7 +118,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
                 throw new EntityRepoException(ex);
             }
         }
-
+        
         public void Add(Office entity)
         {
             log.Info($"Adding office: {entity}");
@@ -143,7 +143,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
                     
                     var distanceParam = command.CreateParameter();
                     distanceParam.ParameterName = "@distance";
-                    styleParam.Value = entity.Event.Distance;
+                    distanceParam.Value = entity.Event.Distance;
                     command.Parameters.Add(distanceParam);
                     
                     var idParticipantParam = command.CreateParameter();
