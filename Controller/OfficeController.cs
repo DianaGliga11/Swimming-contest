@@ -125,7 +125,14 @@ namespace SwimmingCompetitionController
 
         private void OnParticipantSelected(object sender, EventArgs e)
         {
-            currentParticipant = (Participant)participantComboBox.SelectedItem;
+            try
+            {
+                currentParticipant = (Participant)participantComboBox.SelectedItem;
+            }
+            catch (Exception ex)
+            {
+                ShowAlert("Error", ex.Message);
+            }
         }
 
         private void OnConfirmClicked(object sender, EventArgs e)

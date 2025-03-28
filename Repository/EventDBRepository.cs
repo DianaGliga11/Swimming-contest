@@ -10,9 +10,9 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
     public class EventDBRepository : I_EventDBRepository
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EventDBRepository));
-        private readonly IDictionary<string, string?> Props;
+        private readonly IDictionary<string, string> Props;
         
-        public EventDBRepository(IDictionary<string, string?> props) 
+        public EventDBRepository(IDictionary<string, string> props) 
         {
             log.Info($"{nameof(EventDBRepository)} constructed.");
             Props = props;
@@ -21,7 +21,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Add(Event entity)
         {
             log.Info($"Adding Event: {entity}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
 
             try
             {
@@ -52,7 +52,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Remove(long id)
         {
             log.Info($"Removing Event: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -76,7 +76,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Update(long id, Event entity)
         {
             log.Info($"Updating Event: {entity}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -112,7 +112,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public Event findById(long id)
         {
             log.Info($"Finding Event: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -147,7 +147,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<Event> getAll()
         {
             log.Info("Getting All Events");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             IList<Event> events = new List<Event>();
             
             using (var command = connection.CreateCommand())

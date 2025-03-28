@@ -10,11 +10,11 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
     public class OfficeDBRepository : I_OfficeDBRepository
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(OfficeDBRepository));
-        private readonly IDictionary<string, string?> Props;
+        private readonly IDictionary<string, string> Props;
         private readonly ParticipantDBRepository participantRepository;
         private readonly EventDBRepository eventRepository;
         
-        public OfficeDBRepository(IDictionary<string, string?> props, 
+        public OfficeDBRepository(IDictionary<string, string> props, 
                                 ParticipantDBRepository participantRepo,
                                 EventDBRepository eventRepo) 
         {
@@ -27,7 +27,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<Participant> findParticipantsByEvent(long eventId)
         {
             log.Info($"Finding participants for event: {eventId}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             List<Participant> participants = new List<Participant>();
             
             try
@@ -65,7 +65,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void deleteByIDs(long participantID, long eventID)
         {
             log.Info($"Deleting task for participantID={participantID}, eventID={eventID}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
 
             try
             {
@@ -96,7 +96,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public int countEventsForParticipant(long participantId)
         {
             log.Info($"Counting events for participant: {participantId}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -122,7 +122,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Add(Office entity)
         {
             log.Info($"Adding office: {entity}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -174,7 +174,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Remove(long id)
         {
             log.Info($"Removing office: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -199,7 +199,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Update(long id, Office entity)
         {
             log.Info($"Updating office: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -257,7 +257,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public Office findById(long id)
         {
             log.Info($"Finding office by ID: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -290,7 +290,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<Office> getAll()
         {
             log.Info("Getting all offices");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             List<Office> offices = new List<Office>();
             
             try
@@ -320,7 +320,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<Office> getEntriesByEvent(long eventId)
         {
             log.Info($"Getting offices for event: {eventId}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             List<Office> offices = new List<Office>();
             
             try

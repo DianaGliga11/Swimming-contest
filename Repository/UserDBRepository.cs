@@ -10,9 +10,9 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
     public class UserDBRepository : I_UserDBRepository
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(UserDBRepository));
-        private readonly IDictionary<string, string?> Props;
+        private readonly IDictionary<string, string> Props;
         
-        public UserDBRepository(IDictionary<string, string?> props) 
+        public UserDBRepository(IDictionary<string, string> props) 
         {
             log.Info($"{nameof(UserDBRepository)} constructed.");
             Props = props;
@@ -21,7 +21,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Add(User entity)
         {
             log.Info($"Adding User: {entity}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
 
             try
             {
@@ -52,7 +52,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Remove(long id)
         {
             log.Info($"Removing User: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -76,7 +76,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Update(long id, User entity)
         {
             log.Info($"Updating User: {entity}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -112,7 +112,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public User findById(long id)
         {
             log.Info($"Finding User: {id}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {
@@ -147,7 +147,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<User> getAll()
         {
             log.Info("Getting All Users");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             IList<User> users = new List<User>();
             
             using (var command = connection.CreateCommand())
@@ -171,7 +171,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public User GetUserByCredentials(string username, string password)
         {
             log.Info($"Searching for User: Username={username}");
-            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            var connection = DBUtils.getConnection(Props);
             
             try
             {

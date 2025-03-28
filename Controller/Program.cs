@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using DefaultNamespace.Properties;
 using SwimmingCompetitionController;
 
 static class Program
@@ -7,10 +8,7 @@ static class Program
     [STAThread]
     static void Main()
     {
-        IDictionary<string, string> properties = new Dictionary<string, string>
-        {
-            { "ConnectionString", "Data Source=SwimingContest.db" }
-        };
+        IDictionary<string, string> properties = Config.DatabaseProperties;
         
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);

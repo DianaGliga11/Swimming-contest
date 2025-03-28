@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using DefaultNamespace.Properties;
 using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 
@@ -17,7 +16,7 @@ class Program
     static void Main(string[] args)
     {
         
-        var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+       /*ar logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
         XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         log.Info("App started");
         var eventRepository = new EventDBRepository(Config.DatabaseProperties);
@@ -31,5 +30,7 @@ class Program
         {
             Console.WriteLine(ev.ToString());
         }
+        */
     }
+
 }
