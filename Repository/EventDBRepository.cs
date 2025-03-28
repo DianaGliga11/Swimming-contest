@@ -174,7 +174,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
             long id = dataReader.GetInt64(0);
             string style = dataReader.GetString(1);
             int distance = dataReader.GetInt32(2);
-
             Event evt = new Event(style, distance)
             {
                 Id = id

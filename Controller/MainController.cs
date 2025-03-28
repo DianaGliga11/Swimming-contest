@@ -1,11 +1,9 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Drawing;
+﻿using log4net;
 using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
 
-namespace SwimmingCompetitionController
+namespace Controller
 {
     public class MainController : Form
     {
@@ -17,6 +15,7 @@ namespace SwimmingCompetitionController
         private Button loginButton;
         private Label errorLabel;
 
+        private static readonly ILog log = LogManager.GetLogger(typeof(MainController));
         private UserService userService;
         private IDictionary<string, string> properties;
 
@@ -25,11 +24,11 @@ namespace SwimmingCompetitionController
             this.properties = props;
             InitializeComponents();
             InitializeServices();
+            this.FormClosing += MainController_FormClosing; 
         }
 
         private void InitializeComponents()
         {
-            // Form setup
             this.Text = "Login - Swimming Competition";
             this.Size = new Size(500, 400);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -37,7 +36,6 @@ namespace SwimmingCompetitionController
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.White;
 
-            // Title Label
             label1 = new Label
             {
                 Text = "SWIMMING COMPETITION",
@@ -46,7 +44,6 @@ namespace SwimmingCompetitionController
                 Location = new Point(100, 50)
             };
 
-            // Username Label
             label2 = new Label
             {
                 Text = "Username:",
@@ -55,7 +52,6 @@ namespace SwimmingCompetitionController
                 AutoSize = true
             };
 
-            // Username TextField
             usernameTextField = new TextBox
             {
                 Font = new Font("Segoe UI", 12F),
@@ -65,7 +61,6 @@ namespace SwimmingCompetitionController
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            // Password Label
             label3 = new Label
             {
                 Text = "Password:",
@@ -74,7 +69,6 @@ namespace SwimmingCompetitionController
                 AutoSize = true
             };
 
-            // Password TextField
             passwordTextField = new TextBox
             {
                 Font = new Font("Segoe UI", 12F),
@@ -85,7 +79,6 @@ namespace SwimmingCompetitionController
                 PasswordChar = '*'
             };
 
-            // Login Button
             loginButton = new Button
             {
                 Text = "LOGIN",
@@ -99,7 +92,6 @@ namespace SwimmingCompetitionController
             loginButton.FlatAppearance.BorderSize = 0;
             loginButton.Click += OnLoginButtonClick;
 
-            // Error Label
             errorLabel = new Label
             {
                 ForeColor = Color.Red,
@@ -108,7 +100,6 @@ namespace SwimmingCompetitionController
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-            // Add controls to form
             this.Controls.Add(label1);
             this.Controls.Add(label2);
             this.Controls.Add(label3);
@@ -134,7 +125,6 @@ namespace SwimmingCompetitionController
                 User user = userService.getLogin(username, password);
                 if (user != null)
                 {
-                    // Close current form and open main form (HomeController)
                     this.Hide();
                     var homeController = new HomeController(properties, user);
                     homeController.Show();
@@ -148,6 +138,17 @@ namespace SwimmingCompetitionController
             {
                 errorLabel.Text = "Database error: " + ex.Message;
             }
+        }
+        private void MainController_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            log.Info("Aplicația se închide...");
+        
+            // Eliberează resurse (opțional, dar recomandat)
+            // Exemplu: închide conexiuni la baza de date, fișiere deschise, etc.
+        
+            // Forțează închiderea completă
+            LogManager.Shutdown();  // Închide logger-ul log4net
+            Application.Exit();     // Închide toate ferestrele
         }
     }
 }

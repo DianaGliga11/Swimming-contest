@@ -1,10 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
 
-namespace SwimmingCompetitionController
+namespace Controller
 {
     public class NewEventController : Form
     {
@@ -23,14 +21,12 @@ namespace SwimmingCompetitionController
 
         private void InitializeComponents()
         {
-            // Form setup
             this.Text = "Add New Event";
             this.Size = new System.Drawing.Size(300, 200);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterParent;
 
-            // Style Label
             Label styleLabel = new Label
             {
                 Text = "Style:",
@@ -39,7 +35,6 @@ namespace SwimmingCompetitionController
                 Width = 80
             };
 
-            // Style TextField
             styleField = new TextBox
             {
                 Left = 110,
@@ -47,7 +42,6 @@ namespace SwimmingCompetitionController
                 Width = 150
             };
 
-            // Distance Label
             Label distanceLabel = new Label
             {
                 Text = "Distance:",
@@ -56,7 +50,6 @@ namespace SwimmingCompetitionController
                 Width = 80
             };
 
-            // Distance TextField
             distanceField = new TextBox
             {
                 Left = 110,
@@ -64,7 +57,6 @@ namespace SwimmingCompetitionController
                 Width = 150
             };
 
-            // Confirm Button
             btnConfirm = new Button
             {
                 Text = "Confirm",
@@ -74,22 +66,11 @@ namespace SwimmingCompetitionController
             };
             btnConfirm.Click += OnConfirmClicked;
 
-            // Add controls to form
             this.Controls.Add(styleLabel);
             this.Controls.Add(styleField);
             this.Controls.Add(distanceLabel);
             this.Controls.Add(distanceField);
             this.Controls.Add(btnConfirm);
-        }
-
-        public void Init(IDictionary<string,string> properties, User currentUser)
-        {
-            this.properties = properties;
-            this.currentUser = currentUser;
-            ParticipantDBRepository participantRepository = new ParticipantDBRepository(properties);
-            EventDBRepository eventRepository = new EventDBRepository(properties);
-            OfficeDBRepository officeRepository = new OfficeDBRepository(properties,participantRepository , eventRepository);
-            eventService = new EventService(eventRepository,officeRepository);
         }
 
         private void OnConfirmClicked(object sender, EventArgs e)
@@ -111,7 +92,6 @@ namespace SwimmingCompetitionController
 
                 eventService.add(new Event(style, distance));
                 
-                // Close this form and return to home
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

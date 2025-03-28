@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Drawing;
-using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
+using Controller;
 
-namespace SwimmingCompetitionController
+namespace Controller
 {
     public class HomeController : Form
     {
@@ -39,12 +36,10 @@ namespace SwimmingCompetitionController
 
         private void InitializeComponents()
         {
-            // Main form setup
             this.Text = "Swimming Contest";
             this.Size = new Size(800, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Username Label
             usernameLabel = new Label
             {
                 Text = $"User: {currentUser.UserName}",
@@ -52,7 +47,6 @@ namespace SwimmingCompetitionController
                 AutoSize = true
             };
 
-            // Event ComboBox
             eventComboBox = new ComboBox
             {
                 Location = new Point(20, 50),
@@ -60,7 +54,6 @@ namespace SwimmingCompetitionController
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
 
-            // Search Button
             btnSearch = new Button
             {
                 Text = "Search",
@@ -69,7 +62,6 @@ namespace SwimmingCompetitionController
             };
             btnSearch.Click += OnSearchClicked;
 
-            // Search Message Label
             searchMessageLabel = new Label
             {
                 Location = new Point(320, 55),
@@ -77,7 +69,6 @@ namespace SwimmingCompetitionController
                 Visible = false
             };
 
-            // Event Table
             eventTable = new DataGridView
             {
                 Location = new Point(20, 100),
@@ -90,7 +81,6 @@ namespace SwimmingCompetitionController
             eventTable.Columns.Add("Distance", "Distance");
             eventTable.Columns.Add("ParticipantsCount", "Participants Count");
 
-            // Participant Table
             participantTable = new DataGridView
             {
                 Location = new Point(20, 270),
@@ -102,7 +92,6 @@ namespace SwimmingCompetitionController
             participantTable.Columns.Add("Name", "Name");
             participantTable.Columns.Add("Age", "Age");
 
-            // Search Results Container
             searchResultsContainer = new Panel
             {
                 Location = new Point(450, 100),
@@ -111,7 +100,6 @@ namespace SwimmingCompetitionController
                 Visible = false
             };
 
-            // Search Results Table
             searchResultsTable = new DataGridView
             {
                 Dock = DockStyle.Fill,
@@ -123,7 +111,6 @@ namespace SwimmingCompetitionController
             searchResultsTable.Columns.Add("EventsCount", "Events Count");
             searchResultsContainer.Controls.Add(searchResultsTable);
 
-            // Close Search Results Button
             btnCloseSearchResults = new Button
             {
                 Text = "Close",
@@ -132,7 +119,6 @@ namespace SwimmingCompetitionController
             btnCloseSearchResults.Click += OnCloseSearchResults;
             searchResultsContainer.Controls.Add(btnCloseSearchResults);
 
-            // Action Buttons
             btnAddParticipant = new Button
             {
                 Text = "Add Participant",
@@ -157,7 +143,6 @@ namespace SwimmingCompetitionController
             };
             btnLogout.Click += OnLogoutClicked;
 
-            // Add controls to form
             this.Controls.Add(usernameLabel);
             this.Controls.Add(eventComboBox);
             this.Controls.Add(btnSearch);

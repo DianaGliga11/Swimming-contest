@@ -1,10 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
 
-namespace SwimmingCompetitionController
+namespace Controller
 {
     public class NewParticipantController : Form
     {
@@ -25,14 +23,12 @@ namespace SwimmingCompetitionController
 
         private void InitializeComponents()
         {
-            // Form setup
             this.Text = "Add New Participant";
             this.Size = new System.Drawing.Size(300, 200);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterParent;
 
-            // Name Label
             Label nameLabel = new Label
             {
                 Text = "Name:",
@@ -41,7 +37,6 @@ namespace SwimmingCompetitionController
                 Width = 80
             };
 
-            // Name TextField
             nameTextField = new TextBox
             {
                 Left = 110,
@@ -49,7 +44,6 @@ namespace SwimmingCompetitionController
                 Width = 150
             };
 
-            // Age Label
             Label ageLabel = new Label
             {
                 Text = "Age:",
@@ -58,7 +52,6 @@ namespace SwimmingCompetitionController
                 Width = 80
             };
 
-            // Age TextField
             ageTextField = new TextBox
             {
                 Left = 110,
@@ -66,7 +59,6 @@ namespace SwimmingCompetitionController
                 Width = 150
             };
 
-            // Confirm Button
             confirmButton = new Button
             {
                 Text = "Confirm",
@@ -76,7 +68,6 @@ namespace SwimmingCompetitionController
             };
             confirmButton.Click += OnConfirmClicked;
 
-            // Add controls to form
             this.Controls.Add(nameLabel);
             this.Controls.Add(nameTextField);
             this.Controls.Add(ageLabel);
@@ -116,10 +107,8 @@ namespace SwimmingCompetitionController
                 Participant participant = new Participant(name, age);
                 participantService.add(participant);
 
-                // Execute the callback to notify the parent form
                 onParticipantAdded?.Invoke();
 
-                // Close the form
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Linq;
-using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
 
-namespace SwimmingCompetitionController
+namespace Controller
 {
     public class EventEntriesController : Form
     {
@@ -42,12 +37,10 @@ namespace SwimmingCompetitionController
 
         private void InitializeComponents()
         {
-            // Form setup
             this.Text = "Event Registration";
             this.Size = new Size(400, 500);
             this.StartPosition = FormStartPosition.CenterParent;
 
-            // Participant Label
             Label participantLabel = new Label
             {
                 Text = "Participant:",
@@ -55,17 +48,15 @@ namespace SwimmingCompetitionController
                 AutoSize = true
             };
 
-            // Participant ComboBox
             participantBox = new ComboBox
             {
                 Location = new Point(120, 20),
                 Width = 250,
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                DisplayMember = "Name" // Display the Name property of Participant
+                DisplayMember = "Name" 
             };
             participantBox.SelectedIndexChanged += OnParticipantSelected;
 
-            // Events Label
             Label eventsLabel = new Label
             {
                 Text = "Available Events:",
@@ -73,16 +64,14 @@ namespace SwimmingCompetitionController
                 AutoSize = true
             };
 
-            // Events CheckedListBox
             eventListView = new CheckedListBox
             {
                 Location = new Point(20, 90),
                 Size = new Size(350, 300),
                 CheckOnClick = true,
-                DisplayMember = "Style" // Display the Style property of Event
+                DisplayMember = "Style" 
             };
 
-            // Confirm Button
             confirmButton = new Button
             {
                 Text = "Confirm Registration",
@@ -91,7 +80,6 @@ namespace SwimmingCompetitionController
             };
             confirmButton.Click += OnConfirmClicked;
 
-            // Add controls to form
             this.Controls.Add(participantLabel);
             this.Controls.Add(participantBox);
             this.Controls.Add(eventsLabel);
@@ -103,12 +91,10 @@ namespace SwimmingCompetitionController
         {
             try
             {
-                // Load participants
                 var participants = participantService.getAll();
                 participantBox.DataSource = participants;
                 participantBox.SelectedIndex = participants.Any() ? 0 : -1;
 
-                // Load events
                 var events = eventService.getAll();
                 eventListView.DataSource = events;
             }
@@ -152,7 +138,6 @@ namespace SwimmingCompetitionController
 
                 foreach (var ev in selectedEvents)
                 {
-                    // Create new Office with participant and event objects
                     var registration = new Office(currentParticipant, ev);
                     eventService.saveEventEntry(registration);
                 }
