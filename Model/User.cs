@@ -3,7 +3,7 @@
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
 
-    public class User : Entity<int>
+    public class User : Entity<long>
     {
         public String UserName { get; set; }
         public String Password { get; set; }

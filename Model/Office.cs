@@ -2,20 +2,20 @@
 
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
-    public class Office : Entity<int>
+    public class Office : Entity<long>
     {
-        public List<Participant> Participants { get; set; }
-        public List<Event> Events { get; set; }
+        public Participant Participant { get; set; }
+        public Event Event { get; set; }
 
-        public Office(List<Participant> participants, List<Event> events)
+        public Office(Participant participants, Event events)
         {   
-            Participants = participants;
-            Events = events;
+            Participant = participants;
+            Event = events;
         }
 
         public override string ToString()
         {
-            return $"ID={Id}, Participants={Participants}, Events={Events}";
+            return $"ID={Id}, Participants={Participant}, Events={Event}";
         }
     }
 }

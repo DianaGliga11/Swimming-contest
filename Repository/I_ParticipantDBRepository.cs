@@ -5,6 +5,6 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
 {
 public interface I_ParticipantDBRepository : I_Repository<Participant>
 {
-    //IEnumerable<Participant> Participants{get; }
+    Participant ?  GetParticipantsByData(Participant participant);
 }
 }

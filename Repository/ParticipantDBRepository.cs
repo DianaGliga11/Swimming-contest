@@ -2,91 +2,205 @@
 using System.Collections.Generic;
 using System.Data;
 using log4net;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using mpp_proiect_csharp_DianaGliga11.Model;
+using NLog.Fluent;
 
 namespace mpp_proiect_csharp_DianaGliga11.Repository;
 
-public class ParticipantDBRepository : DatabaseRepoUtils<int, Participant>, I_ParticipantDBRepository
+public class ParticipantDBRepository : I_ParticipantDBRepository
 {
     
-    
-    public ParticipantDBRepository(IDictionary<string, string> props) : base(props)
+    private static readonly ILog log = LogManager.GetLogger(typeof(ParticipantDBRepository));
+    private readonly IDictionary<string, string?> Props;
+    public ParticipantDBRepository(IDictionary<string, string?> props) 
     {
         log.Info($"{nameof(ParticipantDBRepository)} constructed.");
-    }
-
-    protected override Participant DecodeReader(IDataReader reader)
-    {
-        log.Info($"Decoding Participant from DB: {reader}");
-        var id = Convert.ToInt32(reader["id"]);
-        var name = Convert.ToString(reader["name"]);
-        var age = Convert.ToInt32(reader["age"]);
-        var participant = new Participant(name, age);
-        participant.Id = id;
-        return participant;
+        Props = props;
     }
 
     public void Add(Participant entity)
     {
         log.Info($"Adding Participant: {entity}");
-        int result = ExecuteNonQuery("insert into \"Participants\" (\"name\", \"age\") " +
-                                     "values (@name, @age)", new Dictionary<string, object>
+        IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+
+        try
         {
-            { "@name", entity.Name },
-            { "@age", entity.Age }
-            
-        });
-        if (result == 0)
-        {
-            log.Error($"Participant was not added: {entity}");
-            throw new EntityRepoException("Participant was not added");
+            using var command = connection.CreateCommand();
+            command.CommandText = @"INSERT INTO Participants (name, age) VALUES (@name, @age)";
+
+            var nameParam = command.CreateParameter();
+            nameParam.ParameterName = "@name";
+            nameParam.Value = entity.Name;
+            command.Parameters.Add(nameParam);
+
+            var ageParam = command.CreateParameter();
+            ageParam.ParameterName = "@age";
+            ageParam.Value = entity.Age;
+            command.Parameters.Add(ageParam);
+
+            var result = command.ExecuteNonQuery();
         }
-        log.Info($"Added successful");    
+        catch (Exception ex)
+        {
+            log.Error("Error while adding new Participant ", ex);
+            throw new EntityRepoException(ex);
+        }
+
+        Log.Info($"Added Participant: {entity}");
     }
     
 
-    public void Remove(Participant entity)
+    public void Remove(long id)
     {
-        log.Info($"Removing Participant: {entity}");
-        var r = ExecuteNonQuery("delete from \"Participants\" where \"Id\"=@id", new Dictionary<string, object>
-        {
-            { "@id", entity.Id },
-        });
-        if(r>0)
-            log.Info($"Participant was removed: {entity}");
-        else
-        {
-            log.Error($"Participant was not removed");
-            throw new EntityRepoException("Participant was not removed");
-        }
+        log.Info($"Removing Participant: {id}");
+       IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+       try
+       {
+           using var command = connection.CreateCommand();
+           command.CommandText = @"DELETE FROM Participants WHERE id = @id";
+           var idParam = command.CreateParameter();
+           idParam.ParameterName = "@id";
+           idParam.Value =id;
+           command.Parameters.Add(idParam);
+           var result = command.ExecuteNonQuery();
+       }
+       catch (Exception ex)
+       {
+           log.Error("Error while removing Participant ", ex);
+           throw new EntityRepoException(ex);
+       }
+       Log.Info($"Removed Participant: {id}");
     }
 
-    public void Update(int id, Participant entity)
+    public void Update(long id, Participant entity)
     {
         log.Info($"Updating Participant: {entity}");
-        int result = ExecuteNonQuery(
-            "update \"Participants\" set \"name\"=@name, \"age\"=@age where \"Id\"=@id",
-            new Dictionary<string, object>
-            {
-                { "@name", entity.Name },
-                { "@age", entity.Age },
-                { "@id", id }
-            });
-        if( result ==0){
-            log.Error($"Participant was not updated: {entity}");
-            throw new EntityRepoException("Participant was not updated");
-        }
-        log.Info($"Updated successful");       }
+        IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+        try
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = "UPDATE Participants SET name = @name, age = @age WHERE id = @id";
 
-    public Participant findById(int id)
+            var nameParam = command.CreateParameter();
+            nameParam.ParameterName = "@name";
+            nameParam.Value = entity.Name;
+            command.Parameters.Add(nameParam);
+            
+            var ageParam = command.CreateParameter();
+            ageParam.ParameterName = "@age";
+            ageParam.Value = entity.Age;
+            command.Parameters.Add(ageParam);
+            var result = command.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            log.Error("Error while updating Participant ", ex);
+            throw new EntityRepoException(ex);
+        }
+        Log.Info($"Updated Participant: {entity}");
+    }
+
+    public Participant findById(long id)
     {
         log.Info($"Finding Participant: {id}");
-        return SelectFirst("select * from \"Participants\" where \"Id\"=@id", new Dictionary<string, object>{
-            {"@id", id},
-        });    }
+        IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+        try
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "select * from \"Participants\" where \"Id\"=@id";
+                var paramID = command.CreateParameter();
+                paramID.ParameterName = "@id";
+                paramID.Value = id;
+                command.Parameters.Add(paramID);
+                using (var dataReader = command.ExecuteReader())
+                {
+                    if (dataReader.Read())
+                    {
+                        Participant participant = Extract(dataReader);
+                        Log.Info("Exiting Finding Participant: {id}");
+                        return participant;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            log.Error("Participant was not found ", e);
+            throw new EntityRepoException("Participant was not found");
+        }
+
+        return null;
+    }
 
     public IEnumerable<Participant> getAll()
     {
         log.Info($"Getting All Participants");
-        return Select("select * from \"Participants\"");    }
+        IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+        IList<Participant> participants = new List<Participant>();
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = "select * from \"Participants\"";
+            using (var dataReader = command.ExecuteReader())
+            {
+                while (dataReader.Read())
+                {
+                    Participant participant = Extract(dataReader);
+                    participants.Add(participant);
+                }
+            }
+        }
+        log.Info("Exiting Get All Participants");
+        return participants;
+    }
+
+    public Participant GetParticipantsByData(Participant participant)
+    {
+        log.Info($"Searching for Participant: {participant}");
+        IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+        try
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText =
+                    "select * from \"Participants\" where \"Id\"=@id and name name=@name and age age=@age";
+                var nameParam = command.CreateParameter();
+                nameParam.ParameterName = "@name";
+                nameParam.Value = participant.Name;
+                command.Parameters.Add(nameParam);
+
+                var ageParam = command.CreateParameter();
+                ageParam.ParameterName = "@age";
+                ageParam.Value = participant.Age;
+                command.Parameters.Add(ageParam);
+                using (var dataReader = command.ExecuteReader())
+                {
+                    if (dataReader.Read())
+                    {
+                        Participant extracted = Extract(dataReader);
+                        Log.Info("Exiting Finding Participant: {id}");
+                        return extracted;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            log.Error("Participant was not found ", e);
+            throw new EntityRepoException("Participant was not found");
+        }
+        return null;
+    }
+
+    private Participant Extract(IDataReader dataReader)
+    {
+        var id = dataReader.GetInt64(0);
+        var name = dataReader.GetString(1);
+        var age = dataReader.GetInt32(2);
+        var participant = new Participant(name, age);
+        participant.Id = id;
+        return participant;
+    }
 }

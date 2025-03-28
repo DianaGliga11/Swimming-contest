@@ -3,150 +3,368 @@ using System.Collections.Generic;
 using System.Data;
 using log4net;
 using mpp_proiect_csharp_DianaGliga11.Model;
+using mpp_proiect_csharp_DianaGliga11.Repository;
 
-namespace mpp_proiect_csharp_DianaGliga11.Repository;
-
-public class OfficeDBRepository : DatabaseRepoUtils<int, Office>, I_OfficeDBRepository
+namespace mpp_proiect_csharp_DianaGliga11.Repository
 {
-
-    public OfficeDBRepository(IDictionary<string, string> props) : base(props)
+    public class OfficeDBRepository : I_OfficeDBRepository
     {
-        log.Info($"{nameof(OfficeDBRepository)} constructed.");
-    }
-        private string SerializeParticipants(List<Participant> participants)
+        private static readonly ILog log = LogManager.GetLogger(typeof(OfficeDBRepository));
+        private readonly IDictionary<string, string?> Props;
+        private readonly ParticipantDBRepository participantRepository;
+        private readonly EventDBRepository eventRepository;
+        
+        public OfficeDBRepository(IDictionary<string, string?> props, 
+                                ParticipantDBRepository participantRepo,
+                                EventDBRepository eventRepo) 
         {
-            return string.Join(";", participants.ConvertAll(p => $"{p.Id}-{p.Name}-{p.Age}"));
+            log.Info($"{nameof(OfficeDBRepository)} constructed.");
+            Props = props;
+            participantRepository = participantRepo;
+            eventRepository = eventRepo;
         }
 
-        private string SerializeEvents(List<Event> events)
+        public IEnumerable<Participant> findParticipantsByEvent(long eventId)
         {
-            return string.Join(";", events.ConvertAll(e => $"{e.Id}-{e.Style}-{e.Distance}"));
-        }
-
-        private List<Participant> DeserializeParticipants(string data)
-        {
-            List<Participant> participants = new();
-            if (string.IsNullOrEmpty(data)) return participants;
-
-            foreach (var pair in data.Split(";"))
+            log.Info($"Finding participants for event: {eventId}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            List<Participant> participants = new List<Participant>();
+            
+            try
             {
-                if (!string.IsNullOrEmpty(pair))
+                using (var command = connection.CreateCommand())
                 {
-                    var parts = pair.Split("-");
-                    int id = int.Parse(parts[0]);
-                    string name = parts[1];
-                    int age = int.Parse(parts[2]);
+                    command.CommandText = "SELECT idParticipant, name, age FROM Offices WHERE idEvent = @eventId";
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@eventId";
+                    param.Value = eventId;
+                    command.Parameters.Add(param);
 
-                    var participant = new Participant(name, age) { Id = id };
-                    participants.Add(participant);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            string name = reader.GetString(1);
+                            int age = reader.GetInt32(2);
+                            Participant participant = new Participant(name, age) { Id = id };
+                            participants.Add(participant);
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                log.Error("Error finding participants by event", ex);
+                throw new EntityRepoException(ex);
+            }
+            
             return participants;
         }
 
-        private List<Event> DeserializeEvents(string data)
+        public void deleteByIDs(long participantID, long eventID)
         {
-            List<Event> events = new();
-            if (string.IsNullOrEmpty(data)) return events;
+            log.Info($"Deleting task for participantID={participantID}, eventID={eventID}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
 
-            foreach (var pair in data.Split(";"))
+            try
             {
-                if (!string.IsNullOrEmpty(pair))
-                {
-                    var parts = pair.Split("-");
-                    int id = int.Parse(parts[0]);
-                    string style = parts[1];
-                    int distance = int.Parse(parts[2]);
+                using var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM Offices WHERE idParticipant = @idParticipant AND idEvent = @idEvent";
 
-                    var eventObj = new Event(style, distance) { Id = id };
-                    events.Add(eventObj);
-                }
+                var param1 = command.CreateParameter();
+                param1.ParameterName = "@idParticipant";
+                param1.Value = participantID;
+                command.Parameters.Add(param1);
+
+                var param2 = command.CreateParameter();
+                param2.ParameterName = "@idEvent";
+                param2.Value = eventID;
+                command.Parameters.Add(param2);
+
+                command.ExecuteNonQuery();
+                log.Info($"Deleted task for participantID={participantID}");
             }
-            return events;
+            catch (Exception ex)
+            {
+                log.Error($"Error deleting task for participantID={participantID}", ex);
+                throw new EntityRepoException("Error deleting task");
+            }
         }
 
-        protected override Office DecodeReader(IDataReader reader)
+
+        public int countEventsForParticipant(long participantId)
         {
-            log.Info("Decoding Office from DB");
-            int id = Convert.ToInt32(reader["id"]);
-            string participantsData = reader["participants"] as string;
-            string eventsData = reader["events"] as string;
+            log.Info($"Counting events for participant: {participantId}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SELECT COUNT(*) FROM Offices WHERE idParticipant = @participantId";
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@participantId";
+                    param.Value = participantId;
+                    command.Parameters.Add(param);
 
-            List<Participant> participants = DeserializeParticipants(participantsData);
-            List<Event> events = DeserializeEvents(eventsData);
-
-            var office = new Office(participants, events) { Id = id };
-            return office;
+                    var result = command.ExecuteScalar();
+                    return Convert.ToInt32(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error counting events for participant", ex);
+                throw new EntityRepoException(ex);
+            }
         }
 
         public void Add(Office entity)
         {
-            log.Info($"Adding Office: {entity}");
-            int result = ExecuteNonQuery(
-                "INSERT INTO \"Offices\" (\"participants\", \"events\") VALUES (@participants, @events)",
-                new Dictionary<string, object>
+            log.Info($"Adding office: {entity}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
+            {
+                using (var command = connection.CreateCommand())
                 {
-                    { "@participants", SerializeParticipants(entity.Participants) },
-                    { "@events", SerializeEvents(entity.Events) }
-                });
-
-            if (result == 0)
-            {
-                log.Error($"Office was not added: {entity}");
-                throw new EntityRepoException("Office was not added");
+                    command.CommandText = @"INSERT INTO Offices(idEvent, style, distance, idParticipant, name, age) 
+                                          VALUES (@idEvent, @style, @distance, @idParticipant, @name, @age)";
+                    
+                    var idEventParam = command.CreateParameter();
+                    idEventParam.ParameterName = "@idEvent";
+                    idEventParam.Value = entity.Event.Id;
+                    command.Parameters.Add(idEventParam);
+                    
+                    var styleParam = command.CreateParameter();
+                    styleParam.ParameterName = "@style";
+                    styleParam.Value = entity.Event.Style;
+                    command.Parameters.Add(styleParam);
+                    
+                    var distanceParam = command.CreateParameter();
+                    distanceParam.ParameterName = "@distance";
+                    styleParam.Value = entity.Event.Distance;
+                    command.Parameters.Add(distanceParam);
+                    
+                    var idParticipantParam = command.CreateParameter();
+                    idParticipantParam.ParameterName = "@idParticipant";
+                    idParticipantParam.Value = entity.Participant.Id;
+                    command.Parameters.Add(idParticipantParam);
+                    
+                    var nameParam = command.CreateParameter();
+                    nameParam.ParameterName = "@name";
+                    nameParam.Value = entity.Participant.Name;
+                    command.Parameters.Add(nameParam);
+                    
+                    var ageParam = command.CreateParameter();
+                    ageParam.ParameterName = "@age";
+                    ageParam.Value = entity.Participant.Age;
+                    command.Parameters.Add(ageParam);
+                    
+                    command.ExecuteNonQuery();
+                }
             }
-            log.Info("Added successfully");
+            catch (Exception ex)
+            {
+                log.Error("Error adding office", ex);
+                throw new EntityRepoException(ex);
+            }
         }
 
-        public void Remove(Office entity)
+        public void Remove(long id)
         {
-            log.Info($"Removing Office: {entity}");
-            int result = ExecuteNonQuery(
-                "DELETE FROM \"Offices\" WHERE \"Id\"=@id",
-                new Dictionary<string, object> { { "@id", entity.Id } });
-
-            if (result > 0)
+            log.Info($"Removing office: {id}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
             {
-                log.Info($"Office was removed: {entity}");
-            }
-            else
-            {
-                log.Error("Office was not removed");
-                throw new EntityRepoException("Office was not removed");
-            }
-        }
-
-        public void Update(int id, Office entity)
-        {
-            log.Info($"Updating Office: {entity}");
-            int result = ExecuteNonQuery(
-                "UPDATE \"Offices\" SET \"participants\"=@participants, \"events\"=@events WHERE \"Id\"=@id",
-                new Dictionary<string, object>
+                using (var command = connection.CreateCommand())
                 {
-                    { "@participants", SerializeParticipants(entity.Participants) },
-                    { "@events", SerializeEvents(entity.Events) },
-                    { "@id", id }
-                });
-
-            if (result == 0)
-            {
-                log.Error($"Office was not updated: {entity}");
-                throw new EntityRepoException("Office was not updated");
+                    command.CommandText = "DELETE FROM Offices WHERE id = @id";
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@id";
+                    param.Value = id;
+                    command.Parameters.Add(param);
+                    
+                    command.ExecuteNonQuery();
+                }
             }
-            log.Info("Updated successfully");
+            catch (Exception ex)
+            {
+                log.Error("Error removing office", ex);
+                throw new EntityRepoException(ex);
+            }
         }
 
-        public Office findById(int id)
+        public void Update(long id, Office entity)
         {
-            log.Info($"Finding Office by ID: {id}");
-            return SelectFirst(
-                "SELECT * FROM \"Offices\" WHERE \"Id\"=@id",
-                new Dictionary<string, object> { { "@id", id } });
+            log.Info($"Updating office: {id}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = @"UPDATE Offices SET 
+                                          idEvent = @idEvent, 
+                                          style = @style, 
+                                          distance = @distance, 
+                                          idParticipant = @idParticipant, 
+                                          name = @name, 
+                                          age = @age 
+                                          WHERE id = @id";
+                    
+                    var idEventParam = command.CreateParameter();
+                    idEventParam.ParameterName = "@idEvent";
+                    idEventParam.Value = entity.Event.Id;
+                    command.Parameters.Add(idEventParam);
+                    
+                    var styleParam = command.CreateParameter();
+                    styleParam.ParameterName = "@style";
+                    styleParam.Value = entity.Event.Style;
+                    command.Parameters.Add(styleParam);
+                    
+                    var distanceParam = command.CreateParameter();
+                    distanceParam.ParameterName = "@distance";
+                    styleParam.Value = entity.Event.Distance;
+                    command.Parameters.Add(distanceParam);
+                    
+                    var idParticipantParam = command.CreateParameter();
+                    idParticipantParam.ParameterName = "@idParticipant";
+                    idParticipantParam.Value = entity.Participant.Id;
+                    command.Parameters.Add(idParticipantParam);
+                    
+                    var nameParam = command.CreateParameter();
+                    nameParam.ParameterName = "@name";
+                    nameParam.Value = entity.Participant.Name;
+                    command.Parameters.Add(nameParam);
+                    
+                    var ageParam = command.CreateParameter();
+                    ageParam.ParameterName = "@age";
+                    ageParam.Value = entity.Participant.Age;
+                    command.Parameters.Add(ageParam);
+                    
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error updating office", ex);
+                throw new EntityRepoException(ex);
+            }
+        }
+
+        public Office findById(long id)
+        {
+            log.Info($"Finding office by ID: {id}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SELECT * FROM Offices WHERE id = @id";
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@id";
+                    param.Value = id;
+                    command.Parameters.Add(param);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return Extract(reader);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error finding office by ID", ex);
+                throw new EntityRepoException(ex);
+            }
+
+            return null;
         }
 
         public IEnumerable<Office> getAll()
         {
-            log.Info("Getting all Offices");
-            return Select("SELECT * FROM \"Offices\"");
+            log.Info("Getting all offices");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            List<Office> offices = new List<Office>();
+            
+            try
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SELECT * FROM Offices";
+                    
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            offices.Add(Extract(reader));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting all offices", ex);
+                throw new EntityRepoException(ex);
+            }
+            
+            return offices;
+        }
+
+        public IEnumerable<Office> getEntriesByEvent(long eventId)
+        {
+            log.Info($"Getting offices for event: {eventId}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            List<Office> offices = new List<Office>();
+            
+            try
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SELECT * FROM Offices WHERE idEvent = @eventId";
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@eventId";
+                    param.Value = eventId;
+                    command.Parameters.Add(param);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            offices.Add(Extract(reader));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting offices by event", ex);
+                throw new EntityRepoException(ex);
+            }
+            
+            return offices;
+        }
+        
+
+        private Office Extract(IDataReader reader)
+        {
+            long eventId = reader.GetInt64(reader.GetOrdinal("idEvent"));
+            string style = reader.GetString(reader.GetOrdinal("style"));
+            int distance = reader.GetInt32(reader.GetOrdinal("distance"));
+            Event evt = new Event(style, distance) { Id = eventId };
+
+            long participantId = reader.GetInt64(reader.GetOrdinal("idParticipant"));
+            string name = reader.GetString(reader.GetOrdinal("name"));
+            int age = reader.GetInt32(reader.GetOrdinal("age"));
+            Participant participant = new Participant(name, age) { Id = participantId };
+
+            return new Office(participant, evt);
         }
     }
+}

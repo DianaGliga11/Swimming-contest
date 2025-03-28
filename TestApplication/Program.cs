@@ -23,8 +23,9 @@ class Program
         var eventRepository = new EventDBRepository(Config.DatabaseProperties);
         var participantRepository = new ParticipantDBRepository(Config.DatabaseProperties);
         var userRepository = new UserDBRepository(Config.DatabaseProperties);
-        var officeRepository = new OfficeDBRepository(Config.DatabaseProperties);
-       //eventRepository.Add(new Event("mixt",800));
+        var officeRepository = new OfficeDBRepository(Config.DatabaseProperties,participantRepository , eventRepository);
+      
+        //eventRepository.Add(new Event("mixt",1500));
         //eventRepository.Add(new Event("fluture",150));
         foreach (var ev in eventRepository.getAll())
         {

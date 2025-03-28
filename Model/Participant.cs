@@ -3,7 +3,7 @@
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
 
-    public class Participant : Entity<int>
+    public class Participant : Entity<long>
     {
         public String Name { get; set; }
 

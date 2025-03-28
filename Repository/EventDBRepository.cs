@@ -3,97 +3,184 @@ using System.Collections.Generic;
 using System.Data;
 using log4net;
 using mpp_proiect_csharp_DianaGliga11.Model;
+using mpp_proiect_csharp_DianaGliga11.Repository;
 
-namespace mpp_proiect_csharp_DianaGliga11.Repository;
-
-public class EventDBRepository: DatabaseRepoUtils<int, Event>, I_EventDBRepository
+namespace mpp_proiect_csharp_DianaGliga11.Repository
 {
-    public EventDBRepository(IDictionary<string, string> props) : base(props)
+    public class EventDBRepository : I_EventDBRepository
     {
-        log.Info($"{nameof(EventDBRepository)} constructed.");
-    }
-
-    protected override Event DecodeReader(IDataReader reader)
-    {
-        log.Info($"Decoding events from {reader}");
-        var id = Convert.ToInt32(reader["id"]);
-        var style = reader["style"] as string;
-        var distance = Convert.ToInt32(reader["distance"]);
-        var eventEvent = new Event(style, distance);
-        return eventEvent;
-    }
-
-    public void Add(Event entity)
-    {
-        log.Info($"Adding Event: {entity}");
-        int result = ExecuteNonQuery("insert into \"Events\" (\"style\", \"distance\") " +
-                                     "values (@style, @distance)", new Dictionary<string, object>
+        private static readonly ILog log = LogManager.GetLogger(typeof(EventDBRepository));
+        private readonly IDictionary<string, string?> Props;
+        
+        public EventDBRepository(IDictionary<string, string?> props) 
         {
-            { "@style", entity.Style },
-            { "@distance", entity.Distance }
-            
-        });
-        if (result == 0)
-        {
-            log.Error($"Event was not added: {entity}");
-            throw new EntityRepoException("Event was not added");
+            log.Info($"{nameof(EventDBRepository)} constructed.");
+            Props = props;
         }
-        log.Info($"Added successful");    
-    }
 
-
-    public void Remove(Event entity)
-    {
-        log.Info($"Removing Event: {entity}");
-        var r = ExecuteNonQuery("delete from \"Events\" where \"Id\"=@id", new Dictionary<string, object>
+        public void Add(Event entity)
         {
-            { "@id", entity.Id },
-        });
-        if(r>0)
-            log.Info($"Event was removed: {entity}");
-        else
-        {
-            log.Error($"Event was not removed: {entity}");
-            throw new EntityRepoException("Event was not removed");
-        }
-    }
+            log.Info($"Adding Event: {entity}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
 
-    public void Update(int id, Event entity)
-    {
-        log.Info($"Updating Event: {entity}");
-        int result = ExecuteNonQuery(
-            "update \"Events\" set \"style\"=@style, \"distance\"=@distance where \"Id\"=@id",
-            new Dictionary<string, object>
+            try
             {
-                { "@style", entity.Style },
-                { "@distance", entity.Distance },
-                { "@id", id }
-            });
-        if( result ==0){
-            log.Error($"Event was not updated: {entity}");
-            throw new EntityRepoException("Event was not updated");
-        }
-        log.Info($"Updated successful");        }
+                using var command = connection.CreateCommand();
+                command.CommandText = @"INSERT INTO Events (style, distance) VALUES (@style, @distance)";
 
-    public Event findById(int id)
-    {
-        try
+                var styleParam = command.CreateParameter();
+                styleParam.ParameterName = "@style";
+                styleParam.Value = entity.Style;
+                command.Parameters.Add(styleParam);
+
+                var distanceParam = command.CreateParameter();
+                distanceParam.ParameterName = "@distance";
+                distanceParam.Value = entity.Distance;
+                command.Parameters.Add(distanceParam);
+
+                var result = command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error while adding new Event ", ex);
+                throw new EntityRepoException(ex);
+            }
+
+            log.Info($"Added Event: {entity}");
+        }
+
+        public void Remove(long id)
+        {
+            log.Info($"Removing Event: {id}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = @"DELETE FROM Events WHERE id = @id";
+                var idParam = command.CreateParameter();
+                idParam.ParameterName = "@id";
+                idParam.Value = id;
+                command.Parameters.Add(idParam);
+                var result = command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error while removing Event ", ex);
+                throw new EntityRepoException(ex);
+            }
+            
+            log.Info($"Removed Event: {id}");
+        }
+
+        public void Update(long id, Event entity)
+        {
+            log.Info($"Updating Event: {entity}");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "UPDATE Events SET style = @style, distance = @distance WHERE id = @id";
+
+                var styleParam = command.CreateParameter();
+                styleParam.ParameterName = "@style";
+                styleParam.Value = entity.Style;
+                command.Parameters.Add(styleParam);
+
+                var distanceParam = command.CreateParameter();
+                distanceParam.ParameterName = "@distance";
+                distanceParam.Value = entity.Distance;
+                command.Parameters.Add(distanceParam);
+
+                var idParam = command.CreateParameter();
+                idParam.ParameterName = "@id";
+                idParam.Value = id;
+                command.Parameters.Add(idParam);
+
+                var result = command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error while updating Event ", ex);
+                throw new EntityRepoException(ex);
+            }
+            
+            log.Info($"Updated Event: {entity}");
+        }
+        
+        public Event findById(long id)
         {
             log.Info($"Finding Event: {id}");
-            return SelectFirst("select * from \"Events\" where \"Id\"=@id", new Dictionary<string, object>
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            
+            try
             {
-                { "@id", id },
-            });
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SELECT * FROM Events WHERE id = @id";
+                    var paramID = command.CreateParameter();
+                    paramID.ParameterName = "@id";
+                    paramID.Value = id;
+                    command.Parameters.Add(paramID);
+
+                    using (var dataReader = command.ExecuteReader())
+                    {
+                        if (dataReader.Read())
+                        {
+                            Event evt = Extract(dataReader);
+                            log.Info($"Found Event: {evt}");
+                            return evt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error while finding Event ", ex);
+                throw new EntityRepoException("Event was not found");
+            }
+
+            return null;
         }
-        catch (EntityRepoException e)
+
+        public IEnumerable<Event> getAll()
         {
-            log.Error($"Event was not found: {e.Message}");
-            throw new EntityRepoException("Event was not found");
+            log.Info("Getting All Events");
+            IDbConnection connection = DbConnectionUtils.GetConnection(Props);
+            IList<Event> events = new List<Event>();
+            
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM Events";
+                
+                using (var dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        Event evt = Extract(dataReader);
+                        events.Add(evt);
+                    }
+                }
+            }
+            
+            log.Info($"Retrieved {events.Count} events");
+            return events;
+        }
+        
+
+        private Event Extract(IDataReader dataReader)
+        {
+            long id = dataReader.GetInt64(0);
+            string style = dataReader.GetString(1);
+            int distance = dataReader.GetInt32(2);
+
+            Event evt = new Event(style, distance)
+            {
+                Id = id
+            };
+
+            return evt;
         }
     }
-
-    public IEnumerable<Event> getAll()
-    {
-        log.Info($"Getting All Events");
-        return Select("select * from \"Events\"");    }
 }

@@ -8,45 +8,20 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
 {
     public class DbConnectionUtils
     {
-        private static IDbConnection instance = null;
+        private static IDbConnection? _connection = null;
 
-        public static IDbConnection getConnection(IDictionary<string, string> props)
+        public static IDbConnection GetConnection(IDictionary<string, string?> props)
         {
-            
-            if (instance == null || instance.State == ConnectionState.Closed)
-            {
-                instance = getNewConnection(props);
-                instance.Open();
-            }
+            if (_connection != null && _connection.State != System.Data.ConnectionState.Closed) return _connection;
+            _connection = GetNewConnection(props);
+            _connection.Open();
 
-            return instance;
+            return _connection;
         }
 
-        private static Type GetType(string name)
+        private static IDbConnection GetNewConnection(IDictionary<string, string?> props)
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                var type = assembly.GetType(name);
-                if (type != null)
-                    return type;
-
-            }
-
-            return null;
+            return ConnectionFactory.GetInstance().CreateConnection(props);
         }
-
-        private static IDbConnection getNewConnection(IDictionary<string, string> props)
-        {
-            string connectionString = props["ConnectionString"];
-            return new SqliteConnection(connectionString);
-        }
-
-
-        private static void MakeAssembliesVisible()
-        {
-            IDbConnection con = new SqliteConnection();
-            Console.WriteLine(con.ToString().Substring(0, 0));
-        }
-
     }
 }

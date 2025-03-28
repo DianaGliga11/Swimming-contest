@@ -3,12 +3,12 @@ using mpp_proiect_csharp_DianaGliga11.Model;
 
 namespace mpp_proiect_csharp_DianaGliga11.Repository
 {
-public interface I_Repository<E> where E : Entity<int>
+public interface I_Repository<E> where E : Entity<long>
 {
     void Add(E entity);
-    void Remove(E entity);
-    void Update(int id, E entity);
-    E findById(int id);
+    void Remove(long id);
+    void Update(long id, E entity);
+    E findById(long id);
     IEnumerable<E> getAll();
 }
 }
