@@ -1,0 +1,9 @@
+rootProject.name = 'mpp-proiect-java-DianaGliga11'
+include 'Model'
+include 'Repository'
+include 'Service'
+//include 'Controller'
+include 'ClientFX'
+include 'Networking'
+include 'Server'
+
