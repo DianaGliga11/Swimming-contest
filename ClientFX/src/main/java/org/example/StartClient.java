@@ -19,10 +19,10 @@ public class StartClient extends Application {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
         final Properties clientProperties = new Properties();
         try {
-            clientProperties.load(StartClient.class.getResourceAsStream("/org/example/client.properties"));
+            clientProperties.load(StartClient.class.getResourceAsStream("/client.properties"));
             logger.info("Client properties loaded");
             clientProperties.list(System.out);
         } catch (IOException e) {
@@ -42,7 +42,7 @@ public class StartClient extends Application {
         logger.info("Using IP: " + serverIP + " on port " + port);
         IContestServices server = new ServicesProxy(serverIP, port);
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("org/example/main-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/main-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             MainController controller = fxmlLoader.getController();
             controller.init(server, stage);
@@ -54,7 +54,7 @@ public class StartClient extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
     }
 
 }

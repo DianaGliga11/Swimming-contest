@@ -4,9 +4,10 @@ import DTO.EventDTO;
 import DTO.ParticipantDTO;
 import contestUtils.IContestServices;
 import contestUtils.IMainObserver;
-import org.example.Office;
-import org.example.Participant;
-import org.example.User;
+import example.example.Event;
+import example.example.Office;
+import example.example.Participant;
+import example.example.User;
 import request.*;
 import response.*;
 import org.apache.logging.log4j.LogManager;
@@ -69,50 +70,65 @@ public class ServicesProxy implements IContestServices {
     }
 
     @Override
-    public Collection<EventDTO> getEventsWithParticipantsCount() {
+    public Collection<EventDTO> getEventsWithParticipantsCount() throws Exception {
         sendRequest(new GetEventsWithParticipantsCounRequest());
         Response response = readResponse();
         if(response instanceof ErrorResponse){
             logger.error(((ErrorResponse) response).getError());
+            throw new Exception(((ErrorResponse) response).getError());
         }
         GetEventWithParticipantsCountResponse result = (GetEventWithParticipantsCountResponse) response;
         return result.getEvents();
     }
 
     @Override
-    public Collection<ParticipantDTO> getParticipantsForEventWithCount(Long eventId) {
+    public Collection<ParticipantDTO> getParticipantsForEventWithCount(Long eventId) throws Exception {
         sendRequest( new GetParticipantsForEventWithCountRequest());
         Response response = readResponse();
         if(response instanceof ErrorResponse) {
             logger.error(((ErrorResponse) response).getError());
+            throw new Exception(((ErrorResponse) response).getError());
         }
         GetParticipantsForEventWithCountResponse result = (GetParticipantsForEventWithCountResponse) response;
         return result.getParticipants();
     }
 
     @Override
-    public void saveEventEntry(List<Office> offices) {
+    public void saveEventEntry(List<Office> offices) throws Exception {
         sendRequest(new CreateEventEntriesRequest(offices));
     }
 
     @Override
-    public Collection<Participant> findAllParticipants() {
+    public Collection<Participant> findAllParticipants() throws Exception {
         sendRequest(new GetAllParticipantsRequest());
         Response response = readResponse();
         if(response instanceof ErrorResponse){
             logger.error(((ErrorResponse) response).getError());
+            throw new Exception(((ErrorResponse) response).getError());
         }
         AllParticipantsResponse result = (AllParticipantsResponse) response;
         return result.getParticipants();
     }
 
-//    @Override
-//    public Collection<Event> findAllEvents() {
-//        sendRequest(new GetAllEventsRequest());
-//    }
+    @Override
+    public Collection<Event> findAllEvents() throws Exception {
+        sendRequest(new GetAllEventsRequest());
+        Response response = readResponse();
+        if(response instanceof ErrorResponse){
+            logger.error(((ErrorResponse) response).getError());
+            throw new Exception(((ErrorResponse) response).getError());
+        }
+        AllEventsResponse result = (AllEventsResponse) response;
+        return result.getEvents();
+    }
 
     @Override
-    public void saveParticipant(Participant participant) {
+    public void saveEvent(Event event) throws Exception {
+        sendRequest(new CreateEventRequest(event));
+    }
+
+    @Override
+    public void saveParticipant(Participant participant) throws Exception {
         sendRequest(new CreateParticipantRequest(participant));
     }
 
@@ -125,25 +141,28 @@ public class ServicesProxy implements IContestServices {
             client = null;
         }catch (IOException e){
             logger.error("Error while closing connection " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private Response readResponse() {
+    private Response readResponse() throws Exception {
         Response response = null;
         try {
             response = responseQueue.take();
         } catch (InterruptedException e) {
             logger.error("Error reading response: " + e.getMessage());
+            throw new Exception("Error reading response: " + e.getMessage());
         }
         return response;
     }
 
-    private void sendRequest(Request request) {
+    private void sendRequest(Request request) throws Exception {
         try {
             objectOutputStream.writeObject(request);
             objectOutputStream.flush();
         } catch (IOException e) {
             logger.error("Sending request failed", e);
+            throw new Exception("Sending request failed", e);
         }
     }
 
@@ -157,6 +176,7 @@ public class ServicesProxy implements IContestServices {
             startResponseReader();
         }catch (IOException e){
             logger.error("Error while initializing connection " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -181,7 +201,7 @@ public class ServicesProxy implements IContestServices {
                         }
                     }
                 } catch (IOException | ClassNotFoundException exception) {
-                    System.out.println("reading error: " + exception);
+                    logger.error("reading error: {}", exception);
                 }
             }
         }

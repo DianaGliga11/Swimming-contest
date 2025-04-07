@@ -212,7 +212,7 @@ DEFAULT_JVM_OPTS=""
 
 set -- \
         -classpath "$CLASSPATH" \
-        org.example.HelloApplication \
+        org.example.StartClient \
         "$@"
 
 # Stop when "xargs" is not available.

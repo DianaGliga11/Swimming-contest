@@ -74,7 +74,7 @@ set CLASSPATH=%APP_HOME%\lib\ClientFX-1.0-SNAPSHOT.jar;%APP_HOME%\lib\javafx-fxm
 
 
 @rem Execute ClientFX
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %CLIENT_FX_OPTS%  -classpath "%CLASSPATH%" org.example.HelloApplication %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %CLIENT_FX_OPTS%  -classpath "%CLASSPATH%" org.example.StartClient %*
 
 :end
 @rem End local scope for the variables with windows NT shell

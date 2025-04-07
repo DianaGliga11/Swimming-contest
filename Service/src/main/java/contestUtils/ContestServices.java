@@ -1,17 +1,16 @@
 package contestUtils;
 
+import example.example.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import DTO.EventDTO;
 import DTO.ParticipantDTO;
-import org.example.*;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -113,5 +112,15 @@ public class ContestServices implements IContestServices{
         }catch(EntityRepoException e) {
             logger.error("Failed to save participant", e);
         }
+    }
+
+    @Override
+    public synchronized Collection<Event> findAllEvents() throws Exception {
+        return eventService.getAll();
+    }
+
+    @Override
+    public void saveEvent(Event event) throws Exception {
+
     }
 }

@@ -1,18 +1,20 @@
 package Controller;
 
+import contestUtils.IContestServices;
+import example.example.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.example.*;
 
 import java.util.Properties;
 
 public class NewParticipantController extends AnchorPane {
-    private ParticipantService participantService;
+    //private ParticipantService participantService;
     //private Runnable onParticipantAdded;
+    private IContestServices server;
     private Properties properties;
     private Stage currentStage;
     private User currentUser;
@@ -36,7 +38,7 @@ public class NewParticipantController extends AnchorPane {
                 return;
             }
             Participant participant = new Participant(name, age);
-            participantService.add(participant);
+            server.saveParticipant(participant);
             //onParticipantAdded.run();
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
@@ -46,12 +48,13 @@ public class NewParticipantController extends AnchorPane {
         }
     }
 
-    public void init(Properties properties, User currentUser, Stage currentStage) {
-        this.properties = properties;
+    public void init(IContestServices server, User currentUser, Stage currentStage) {
+        //this.properties = properties;
+        this.server = server;
         this.currentUser = currentUser;
         this.currentStage = currentStage;
         ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
-        this.participantService = new ParticipantImplementationService(participantRepository);
+        //this.participantService = new ParticipantImplementationService(participantRepository);
         nameTextField.clear();
         ageTextField.clear();
     }

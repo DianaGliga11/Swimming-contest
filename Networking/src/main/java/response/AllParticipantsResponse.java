@@ -1,6 +1,6 @@
 package response;
 
-import org.example.Participant;
+import example.example.Participant;
 
 import java.util.Collection;
 

@@ -1,4 +1,4 @@
-rootProject.name = 'mpp-proiect-java-DianaGliga11'
+rootProject.name = 'mpp-proiect-java-DianaGliga11-lab4'
 include 'Model'
 include 'Repository'
 include 'Service'

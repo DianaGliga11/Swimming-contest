@@ -1,10 +1,8 @@
-import org.example.ContestConcurrentServer;
-import org.example.Server;
+import example.example.*;
 import contestUtils.ContestServices;
 import contestUtils.IContestServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.*;
 
 import java.io.IOException;
 import java.rmi.ServerException;

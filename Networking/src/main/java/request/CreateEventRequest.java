@@ -1,6 +1,6 @@
 package request;
 
-import org.example.Event;
+import example.example.Event;
 
 public class CreateEventRequest implements Request {
     private final Event event;

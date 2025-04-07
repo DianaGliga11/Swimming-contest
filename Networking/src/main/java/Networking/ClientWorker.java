@@ -3,7 +3,7 @@ package Networking;
 import DTO.EventDTO;
 import contestUtils.IContestServices;
 import contestUtils.IMainObserver;
-import org.example.Participant;
+import example.example.Participant;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.User;
+import example.example.User;
 import request.*;
 import response.*;
 
@@ -27,7 +27,7 @@ public class ClientWorker implements Runnable, IMainObserver {
     private ObjectOutputStream objectOutputStream;
     private volatile boolean connected;
 
-    public ClientWorker(IContestServices contestServices, Socket socketConnection) {
+    public ClientWorker(IContestServices contestServices, Socket socketConnection) throws Exception {
         this.contestServices = contestServices;
         this.socketConnection = socketConnection;
         try {
@@ -38,15 +38,17 @@ public class ClientWorker implements Runnable, IMainObserver {
             connected = true;
         } catch (IOException e) {
             logger.error("Server.ClientWorker failed: " + e.getMessage());
+            throw new Exception("Server.ClientWorker failed: " + e.getMessage());
         }
     }
 
     @Override
-    public void participantAdded(Participant participant) {
+    public void participantAdded(Participant participant) throws Exception {
         try {
             sendResponse(new NewParticipantResponse(participant));
         } catch (IOException e) {
             logger.error("Server.ClientWorker failed: " + e.getMessage());
+            throw new Exception("Server.ClientWorker failed: " + e.getMessage());
         }
     }
 
@@ -59,11 +61,12 @@ public class ClientWorker implements Runnable, IMainObserver {
     }
 
     @Override
-    public void newRegistration(List<EventDTO> events) {
+    public void newRegistration(List<EventDTO> events) throws Exception {
         try {
             sendResponse(new UpdatedEventsResponse(events));
         } catch (IOException e) {
             logger.error("New registration failed: " + e.getMessage());
+            throw new Exception("New registration failed: " + e.getMessage());
         }
     }
 
@@ -84,11 +87,13 @@ public class ClientWorker implements Runnable, IMainObserver {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 logger.error("Response failed: " + e.getMessage());
+                e.printStackTrace();
             }
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 logger.error("Thread failed: " + e.getMessage());
+                e.printStackTrace();
             }
         }
         try {
@@ -97,6 +102,7 @@ public class ClientWorker implements Runnable, IMainObserver {
             socketConnection.close();
         } catch (IOException e) {
             logger.error("Socket connection close failed: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -110,6 +116,7 @@ public class ClientWorker implements Runnable, IMainObserver {
                 return new OKResponse(user);
             }catch (Exception e){
                 logger.error("Login failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
             }
         }
 
@@ -121,6 +128,7 @@ public class ClientWorker implements Runnable, IMainObserver {
                 return new OKResponse(null);
             }catch (Exception e){
                 logger.error("Logout failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
             }
         }
 
@@ -132,6 +140,7 @@ public class ClientWorker implements Runnable, IMainObserver {
                 return new NewParticipantResponse(participant);
             } catch (Exception e) {
                 logger.error("Create participant failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
             }
         }
 
@@ -142,6 +151,7 @@ public class ClientWorker implements Runnable, IMainObserver {
                 return new UpdatedEventsResponse(contestServices.getEventsWithParticipantsCount().stream().toList());
             } catch (Exception e) {
                 logger.error("Create event entries failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
             }
         }
 
@@ -151,6 +161,17 @@ public class ClientWorker implements Runnable, IMainObserver {
                 return new GetEventWithParticipantsCountResponse(contestServices.getEventsWithParticipantsCount());
             }catch (Exception e){
                 logger.error("Get event request failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
+            }
+        }
+
+        if(request instanceof GetAllParticipantsRequest getAllParticipantsRequest){
+            logger.info("Get all participant request..");
+            try{
+                return new AllParticipantsResponse(contestServices.findAllParticipants());
+            }catch (Exception e){
+                logger.error("Get all participant request failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
             }
         }
 

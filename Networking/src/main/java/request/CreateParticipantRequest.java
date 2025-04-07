@@ -1,6 +1,6 @@
 package request;
 
-import org.example.Participant;
+import example.example.Participant;
 
 public class CreateParticipantRequest implements Request{
     private final Participant participant;

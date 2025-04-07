@@ -1,6 +1,6 @@
 package DTO;
 
-import org.example.Entity;
+import example.example.Entity;
 
 import java.io.Serializable;
 

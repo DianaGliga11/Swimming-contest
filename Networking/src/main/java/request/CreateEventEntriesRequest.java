@@ -1,7 +1,7 @@
 package request;
 
 
-import org.example.Office;
+import example.example.Office;
 
 import java.util.List;
 

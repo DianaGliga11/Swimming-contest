@@ -1,23 +1,24 @@
 package Controller;
 
+import contestUtils.IContestServices;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import org.example.EntityRepoException;
-import org.example.Event;
-import org.example.EventImplementationService;
-import org.example.User;
+import example.example.EntityRepoException;
+import example.example.Event;
+import example.example.EventImplementationService;
+import example.example.User;
 
 import java.io.IOException;
 import java.util.Properties;
 
 public class NewEventController extends AnchorPane {
-    private EventImplementationService eventService;
-    private Properties properties;
+    //private EventImplementationService eventService;
+    //private Properties properties;
+    private IContestServices server;
     private User currentUser;
     private Stage currentStage;
 
@@ -28,15 +29,15 @@ public class NewEventController extends AnchorPane {
     private TextField distanceField;
 
     @FXML
-    protected void onConfirmClicked() throws EntityRepoException {
+    protected void onConfirmClicked() throws Exception {
         String style = styleField.getText();
         int distance = Integer.parseInt(distanceField.getText());
-        eventService.add(new Event(style, distance));
+        server.saveEvent(new Event(style, distance));
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/home-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/home-view.fxml"));
             AnchorPane root = fxmlLoader.load();
             HomeController controller = fxmlLoader.getController();
-            controller.init(properties, currentUser, currentStage);
+            controller.init(server, currentUser, currentStage);
             currentStage.getScene().setRoot(root);
         } catch (IOException e) {
             showAlert("IOException ", e.getMessage());

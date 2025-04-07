@@ -1,7 +1,6 @@
 package response;
 
 import DTO.EventDTO;
-import org.example.Event;
 
 public class NewEventResponse implements UpdateResponse{
     private final EventDTO event;

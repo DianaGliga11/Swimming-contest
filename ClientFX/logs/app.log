@@ -15,3 +15,88 @@
 2025-04-05 23:01:25 [JavaFX Application Thread] INFO  JdbcUtils - user: root
 2025-04-05 23:01:25 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
 2025-04-05 23:01:52 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:42:56 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 10:42:56 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 10:43:44 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 10:43:44 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 10:44:11 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 10:44:11 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 10:49:40 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 10:49:40 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 10:50:11 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 10:50:11 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 10:50:51 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 10:50:51 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 11:12:00 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 11:12:00 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 11:14:17 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 11:14:17 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 11:22:00 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 11:22:00 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 11:22:00 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.host=localhost, server.port=55559} 
+2025-04-07 11:22:10 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... null
+2025-04-07 11:22:10 [JavaFX Application Thread] INFO  JdbcUtils - user: null
+2025-04-07 11:22:10 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-04-07 11:22:10 [JavaFX Application Thread] ERROR JdbcUtils - java.sql.SQLException: The url cannot be null
+2025-04-07 11:22:19 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... null
+2025-04-07 11:22:19 [JavaFX Application Thread] INFO  JdbcUtils - user: null
+2025-04-07 11:22:19 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-04-07 11:22:19 [JavaFX Application Thread] ERROR JdbcUtils - java.sql.SQLException: The url cannot be null
+2025-04-07 11:27:32 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 11:27:32 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 11:27:32 [JavaFX Application Thread] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.host=localhost, server.port=55559} 
+2025-04-07 11:27:39 [JavaFX Application Thread] INFO  JdbcUtils - trying to connect to database ... null
+2025-04-07 11:27:39 [JavaFX Application Thread] INFO  JdbcUtils - user: null
+2025-04-07 11:27:39 [JavaFX Application Thread] INFO  JdbcUtils - pass: null
+2025-04-07 11:27:39 [JavaFX Application Thread] ERROR JdbcUtils - java.sql.SQLException: The url cannot be null
+2025-04-07 11:40:31 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 11:40:31 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 11:40:43 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 11:40:43 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 12:30:47 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 12:30:47 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 12:33:03 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 12:33:03 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 12:33:09 [Thread-3] ERROR ServicesProxy - reading error: {}
+java.io.WriteAbortedException: writing aborted; java.io.NotSerializableException: example.example.User
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1757) ~[?:?]
+	at java.io.ObjectInputStream$FieldValues.<init>(ObjectInputStream.java:2625) ~[?:?]
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:2472) ~[?:?]
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2278) ~[?:?]
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1750) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:528) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:486) ~[?:?]
+	at Networking.ServicesProxy$ReaderThread.run(ServicesProxy.java:192) ~[Networking.jar:?]
+	at java.lang.Thread.run(Thread.java:1575) [?:?]
+Caused by: java.io.NotSerializableException: example.example.User
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1201) ~[?:?]
+	at java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1586) ~[?:?]
+	at java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:1543) ~[?:?]
+	at java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1452) ~[?:?]
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1195) ~[?:?]
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:359) ~[?:?]
+	at Networking.ClientWorker.sendResponse(ClientWorker.java:58) ~[Networking.jar:?]
+	at Networking.ClientWorker.run(ClientWorker.java:86) ~[Networking.jar:?]
+	... 1 more
+2025-04-07 12:37:28 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 12:37:28 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 12:39:33 [JavaFX Application Thread] INFO  StartClient - Client properties loaded
+2025-04-07 12:39:33 [JavaFX Application Thread] INFO  StartClient - Using IP: localhost on port 55559
+2025-04-07 12:39:42 [JavaFX Application Thread] ERROR ServicesProxy - Authentication failed
+2025-04-07 12:39:42 [Thread-3] ERROR ServicesProxy - reading error: {}
+java.net.SocketException: Socket closed
+	at sun.nio.ch.NioSocketImpl.endRead(NioSocketImpl.java:243) ~[?:?]
+	at sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:323) ~[?:?]
+	at sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346) ~[?:?]
+	at sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796) ~[?:?]
+	at java.net.Socket$SocketInputStream.implRead(Socket.java:1116) ~[?:?]
+	at java.net.Socket$SocketInputStream.read(Socket.java:1103) ~[?:?]
+	at java.net.Socket$SocketInputStream.read(Socket.java:1097) ~[?:?]
+	at java.io.ObjectInputStream$PeekInputStream.peek(ObjectInputStream.java:2900) ~[?:?]
+	at java.io.ObjectInputStream$BlockDataInputStream.peek(ObjectInputStream.java:3229) ~[?:?]
+	at java.io.ObjectInputStream$BlockDataInputStream.peekByte(ObjectInputStream.java:3239) ~[?:?]
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1701) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:528) ~[?:?]
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:486) ~[?:?]
+	at Networking.ServicesProxy$ReaderThread.run(ServicesProxy.java:192) ~[Networking.jar:?]
+	at java.lang.Thread.run(Thread.java:1575) [?:?]

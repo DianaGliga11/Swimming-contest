@@ -1,14 +1,13 @@
 package contestUtils;
 
 import DTO.EventDTO;
-import org.example.Event;
-import org.example.Participant;
+import example.example.Participant;
 
 import java.util.List;
 
 public interface IMainObserver {
-    void participantAdded(Participant participant);
-    void newRegistration(List<EventDTO> events);
+    void participantAdded(Participant participant) throws Exception;
+    void newRegistration(List<EventDTO> events) throws Exception;
 
     void eventAdded(EventDTO event);
 }
