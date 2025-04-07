@@ -15,7 +15,7 @@ public class NewParticipantController extends AnchorPane {
     //private ParticipantService participantService;
     //private Runnable onParticipantAdded;
     private IContestServices server;
-    private Properties properties;
+   // private Properties properties;
     private Stage currentStage;
     private User currentUser;
 
@@ -53,7 +53,7 @@ public class NewParticipantController extends AnchorPane {
         this.server = server;
         this.currentUser = currentUser;
         this.currentStage = currentStage;
-        ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
+        //ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
         //this.participantService = new ParticipantImplementationService(participantRepository);
         nameTextField.clear();
         ageTextField.clear();

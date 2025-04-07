@@ -26,8 +26,8 @@ public class ServicesProxy implements IContestServices {
     private final String host;
     private final int port;
     private IMainObserver client;
-    private ObjectInputStream objectInputStream;
-    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
     private Socket connection;
     private final static Logger logger = LogManager.getLogger();
 
@@ -135,8 +135,8 @@ public class ServicesProxy implements IContestServices {
     private void closeConnection() {
         finished=true;
         try{
-            objectInputStream.close();
-            objectOutputStream.close();
+            input.close();
+            output.close();
             connection.close();
             client = null;
         }catch (IOException e){
@@ -158,8 +158,8 @@ public class ServicesProxy implements IContestServices {
 
     private void sendRequest(Request request) throws Exception {
         try {
-            objectOutputStream.writeObject(request);
-            objectOutputStream.flush();
+            output.writeObject(request);
+            output.flush();
         } catch (IOException e) {
             logger.error("Sending request failed", e);
             throw new Exception("Sending request failed", e);
@@ -169,9 +169,9 @@ public class ServicesProxy implements IContestServices {
     private void initializeConnection() {
         try{
             connection = new Socket(host,port);
-            objectOutputStream = new ObjectOutputStream(connection.getOutputStream());
-            objectOutputStream.flush();
-            objectInputStream = new ObjectInputStream(connection.getInputStream());
+            output = new ObjectOutputStream(connection.getOutputStream());
+            output.flush();
+            input = new ObjectInputStream(connection.getInputStream());
             finished=false;
             startResponseReader();
         }catch (IOException e){
@@ -189,8 +189,8 @@ public class ServicesProxy implements IContestServices {
         public void run() {
             while (!finished) {
                 try {
-                    Object response = objectInputStream.readObject();
-                    System.out.println("response received " + response);
+                    Object response = input.readObject();
+                    logger.info("response received " + response);
                     if (response instanceof UpdateResponse) {
                         handleUpdate((UpdateResponse) response);
                     } else {

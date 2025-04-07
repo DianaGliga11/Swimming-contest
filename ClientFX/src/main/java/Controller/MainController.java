@@ -18,8 +18,8 @@ import contestUtils.IMainObserver;
 
 public class MainController extends AnchorPane{
     private IContestServices server;
-    private UserService userService;
-    private Properties properties;
+    //private UserService userService;
+    //private Properties properties;
     private Stage currentStage;
 
     @FXML
@@ -27,6 +27,9 @@ public class MainController extends AnchorPane{
 
     @FXML
     private PasswordField passwordTextField;
+
+    @FXML
+    private Button loginButton;
 
     @FXML
     protected void onLoginButtonClick() {

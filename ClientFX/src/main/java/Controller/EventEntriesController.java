@@ -59,10 +59,14 @@ public class EventEntriesController extends AnchorPane {
     }
 
     public void init(IContestServices server, Stage currentStage, User currentUser) throws Exception {
-        initialise(server, currentStage, currentUser);
-        setParticipants();
-        eventListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        loadEvents();
+        try {
+            initialise(server, currentStage, currentUser);
+            setParticipants();
+            eventListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            loadEvents();
+        }catch (Exception e){
+            showAlert("Error in init (EventEvtriesController) ", e.getMessage());
+        }
     }
 
     private void setParticipants() throws Exception {
@@ -90,5 +94,13 @@ public class EventEntriesController extends AnchorPane {
         //eventService = new EventImplementationService(eventRepository, officeRepository);
         //participantService = new ParticipantImplementationService(participantRepository);
         this.currentStage = currentStage;
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

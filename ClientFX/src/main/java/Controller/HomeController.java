@@ -174,27 +174,31 @@ public class HomeController extends AnchorPane implements IMainObserver{
         initialiseEventTable();
     }
 
-    public void init(IContestServices server, User currentUser, Stage currentStage) throws Exception {
-        currentStage.setTitle("Swiming Contest");
-        this.server = server;
-        this.currentUser = currentUser;
+    public void init(IContestServices server, User currentUser, Stage currentStage)  {
+        try {
+            currentStage.setTitle("Swiming Contest");
+            this.server = server;
+            this.currentUser = currentUser;
 //        ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
 //        participantService = new ParticipantImplementationService(participantRepository);
 //        EventRepository eventRepository = new EventDBRepository(properties);
 //        eventService = new EventImplementationService(eventRepository,
 //                new OfficeDBRepository(properties, participantRepository, eventRepository));
-        this.currentStage = currentStage;
-        //this.properties = properties;
+            this.currentStage = currentStage;
+            //this.properties = properties;
 
-        usernameLabel.setText(" (" + currentUser.getUserName() + ")");
-        searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
-        searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("eventCount"));
-        searchResultsContainer.setVisible(false);
+            usernameLabel.setText(" (" + currentUser.getUserName() + ")");
+            searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+            searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("eventCount"));
+            searchResultsContainer.setVisible(false);
 
-        initializeEventComboBox();
-        initialiseParticipantsTable();
-        initialiseEventTable();
+            initializeEventComboBox();
+            initialiseParticipantsTable();
+            initialiseEventTable();
+        }catch(Exception e) {
+            showAlert("An error occurred in init (HomeCoontroller): " , e.getMessage());
+        }
     }
 
     private void initializeEventComboBox() throws Exception {
