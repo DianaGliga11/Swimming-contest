@@ -11,6 +11,7 @@ import java.util.Properties;
 public class StartServer {
     public static final int DEFAULT_PORT = 55558;
     public static final Logger logger = LogManager.getLogger();
+
     public static void main(String[] args) {
         Properties serverProperties = new Properties();
         try{

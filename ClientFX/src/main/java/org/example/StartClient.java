@@ -51,6 +51,7 @@ public class StartClient extends Application {
         } catch (IOException e) {
             logger.error("Cannot start application " + e.getMessage());
         }
+
     }
 
     public static void main(String[] args) {

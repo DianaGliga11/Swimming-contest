@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
+
 import contestUtils.IMainObserver;
 
 public class HomeController extends AnchorPane implements IMainObserver{
@@ -174,55 +176,82 @@ public class HomeController extends AnchorPane implements IMainObserver{
         initialiseEventTable();
     }
 
-    public void init(IContestServices server, User currentUser, Stage currentStage)  {
+    public void init(IContestServices server, User currentUser, Stage currentStage) {
         try {
             currentStage.setTitle("Swiming Contest");
             this.server = server;
             this.currentUser = currentUser;
-//        ParticipantRepository participantRepository = new ParticipantDBRepository(properties);
-//        participantService = new ParticipantImplementationService(participantRepository);
-//        EventRepository eventRepository = new EventDBRepository(properties);
-//        eventService = new EventImplementationService(eventRepository,
-//                new OfficeDBRepository(properties, participantRepository, eventRepository));
             this.currentStage = currentStage;
-            //this.properties = properties;
 
             usernameLabel.setText(" (" + currentUser.getUserName() + ")");
+
             searchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
             searchAgeColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
             searchEventCountColumn.setCellValueFactory(new PropertyValueFactory<>("eventCount"));
             searchResultsContainer.setVisible(false);
 
             initializeEventComboBox();
-            initialiseParticipantsTable();
-            initialiseEventTable();
-        }catch(Exception e) {
-            showAlert("An error occurred in init (HomeCoontroller): " , e.getMessage());
+
+            // Rulează în fundal inițializarea grea
+            new Thread(() -> {
+                try {
+                    initialiseParticipantsTable();
+                    initialiseEventTable();
+                } catch (Exception e) {
+                    Platform.runLater(() -> showAlert("Init error", "Eroare la inițializare tabele: " + e.getMessage()));
+                }
+            }).start();
+
+        } catch(Exception e) {
+            showAlert("An error occurred in init (HomeController): ", e.getMessage());
         }
     }
 
-    private void initializeEventComboBox() throws Exception {
-        eventComboBox.getItems().clear();
-        eventComboBox.getItems().addAll(server.findAllEvents());
+
+    private void initializeEventComboBox() {
+        CompletableFuture.runAsync(() -> {
+            try {
+                var events = server.findAllEvents();
+                Platform.runLater(() -> {
+                    eventComboBox.getItems().clear();
+                    eventComboBox.getItems().addAll(events);
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Error", "Could not load events: " + e.getMessage()));
+            }
+        });
     }
 
+
     private void initialiseParticipantsTable() throws Exception {
-        participantTable.getItems().clear();
-        participantTable.setPlaceholder(new Label("No Participants"));
-        participantName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        participantAge.setCellValueFactory(new PropertyValueFactory<>("age"));
-        Collection<Participant> participants = server.findAllParticipants();
-        participantTable.getItems().addAll(participants);
+        CompletableFuture.runAsync(() -> {
+            try {
+                participantTable.getItems().clear();
+                participantTable.setPlaceholder(new Label("No Participants"));
+                participantName.setCellValueFactory(new PropertyValueFactory<>("name"));
+                participantAge.setCellValueFactory(new PropertyValueFactory<>("age"));
+                Collection<Participant> participants = server.findAllParticipants();
+                Platform.runLater(() -> participantTable.getItems().addAll(participants));
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Error", "Failed to load participants: " + e.getMessage()));
+            }
+        });
     }
 
     private void initialiseEventTable() throws Exception {
-        eventTable.getItems().clear();
-        eventTable.setPlaceholder(new Label("No Events"));
-        eventStyle.setCellValueFactory(new PropertyValueFactory<>("style"));
-        eventDistance.setCellValueFactory(new PropertyValueFactory<>("distance"));
-        eventParticipantsCount.setCellValueFactory(new PropertyValueFactory<>("participantsCount"));
-        Collection<EventDTO> events = server.getEventsWithParticipantsCount();
-        eventTable.getItems().addAll(events);
+        CompletableFuture.runAsync(() -> {
+            try {
+                eventTable.getItems().clear();
+                eventTable.setPlaceholder(new Label("No Events"));
+                eventStyle.setCellValueFactory(new PropertyValueFactory<>("style"));
+                eventDistance.setCellValueFactory(new PropertyValueFactory<>("distance"));
+                eventParticipantsCount.setCellValueFactory(new PropertyValueFactory<>("participantsCount"));
+                Collection<EventDTO> events = server.getEventsWithParticipantsCount();
+                Platform.runLater(() -> eventTable.getItems().addAll(events));
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Error", "Failed to load events: " + e.getMessage()));
+            }
+        });
     }
 
     private void showAlert(String title, String message) {

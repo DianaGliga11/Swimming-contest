@@ -10,13 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+
 import contestUtils.IMainObserver;
 
-public class MainController extends AnchorPane{
+public class MainController extends AnchorPane {
     private IContestServices server;
     //private UserService userService;
     //private Properties properties;
@@ -38,15 +40,26 @@ public class MainController extends AnchorPane{
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/home-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
+
             HomeController controller = fxmlLoader.getController();
-            User user = server.login(username, password, controller);
-            controller.init(server, user, currentStage);
-            currentStage.setScene(scene);
-            currentStage.show();
+
+            User user = server.login(username, password, controller); // <-- trimitem controllerul
+
+            Platform.runLater(() -> {
+                try {
+                    controller.init(server, user, currentStage);
+                    currentStage.setScene(scene);
+                    currentStage.show();
+                } catch (Exception e) {
+                    showAlert("Init Error", e.getMessage());
+                }
+            });
+
         } catch (Exception exception) {
-            showAlert("Error on Login button: ", exception.getMessage());
+            Platform.runLater(() -> showAlert("Login Error", exception.getMessage()));
         }
     }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -66,7 +79,7 @@ public class MainController extends AnchorPane{
 
     public void init(IContestServices server, Stage currentStage) {
         currentStage.setTitle("Login");
-        this.server=server;
+        this.server = server;
         this.currentStage = currentStage;
     }
 }

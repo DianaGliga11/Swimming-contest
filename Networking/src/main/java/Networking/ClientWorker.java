@@ -23,18 +23,18 @@ public class ClientWorker implements Runnable, IMainObserver {
 
     private final static Logger logger = LogManager.getLogger();
 
-    private ObjectInputStream objectInputStream;
-    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
     private volatile boolean connected;
 
     public ClientWorker(IContestServices contestServices, Socket socketConnection) throws Exception {
         this.contestServices = contestServices;
         this.socketConnection = socketConnection;
         try {
-            objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
-            objectOutputStream.flush();
+            output = new ObjectOutputStream(socketConnection.getOutputStream());
+            output.flush();
 
-            objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
+            input = new ObjectInputStream(socketConnection.getInputStream());
             connected = true;
         } catch (IOException e) {
             logger.error("Server.ClientWorker failed: " + e.getMessage());
@@ -54,9 +54,9 @@ public class ClientWorker implements Runnable, IMainObserver {
 
     private void sendResponse(Response response) throws IOException {
         logger.info("Server.ClientWorker sendResponse: " + response);
-        synchronized (objectOutputStream) {
-            objectOutputStream.writeObject(response);
-            objectOutputStream.flush();
+        synchronized (output) {
+            output.writeObject(response);
+            output.flush();
         }
     }
 
@@ -71,8 +71,13 @@ public class ClientWorker implements Runnable, IMainObserver {
     }
 
     @Override
-    public void eventAdded(EventDTO event) {
-
+    public void eventAdded(EventDTO event) throws Exception {
+        try{
+            sendResponse(new NewEventResponse(event));
+        }catch (IOException e){
+            logger.error("New event failed: " + e.getMessage());
+            throw new Exception("New event failed: " + e.getMessage());
+        }
     }
 
 
@@ -80,7 +85,7 @@ public class ClientWorker implements Runnable, IMainObserver {
     public void run() {
         while (connected) {
             try {
-                Object request = objectInputStream.readObject();
+                Object request = input.readObject();
                 Response response = handleRequest((Request) request);
                 if (response != null) {
                     sendResponse(response);
@@ -97,8 +102,8 @@ public class ClientWorker implements Runnable, IMainObserver {
             }
         }
         try {
-            objectInputStream.close();
-            objectOutputStream.close();
+            input.close();
+            output.close();
             socketConnection.close();
         } catch (IOException e) {
             logger.error("Socket connection close failed: " + e.getMessage());

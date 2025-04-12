@@ -1,5 +1,7 @@
 package request;
 
+import contestUtils.IMainObserver;
+
 public class LoginRequest implements Request{
     private String username;
     private String password;
@@ -16,4 +18,5 @@ public class LoginRequest implements Request{
     public String getPassword() {
         return password;
     }
+
 }
