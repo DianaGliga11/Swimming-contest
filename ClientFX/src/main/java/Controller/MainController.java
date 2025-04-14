@@ -11,12 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-
-import contestUtils.IMainObserver;
 
 public class MainController extends AnchorPane {
     private IContestServices server;
@@ -43,7 +37,7 @@ public class MainController extends AnchorPane {
 
             HomeController controller = fxmlLoader.getController();
 
-            User user = server.login(username, password, controller); // <-- trimitem controllerul
+            User user = server.login(username, password, controller);
 
             Platform.runLater(() -> {
                 try {

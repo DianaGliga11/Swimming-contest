@@ -159,7 +159,7 @@ public class HomeController extends AnchorPane implements IMainObserver {
     }
 
     @FXML
-    protected void onParticipantButtonClicked() throws Exception {
+    protected void onParticipantButtonClicked() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/new-participant-view.fxml"));
             Parent root = loader.load();
@@ -171,7 +171,7 @@ public class HomeController extends AnchorPane implements IMainObserver {
             stage.setTitle("Add New Participant");
             stage.showAndWait();
             initialiseParticipantsTable();
-        } catch (IOException | EntityRepoException e) {
+        } catch (IOException e) {
             showAlert("Error", "Cannot open participant form: " + e.getMessage());
         }
     }
@@ -242,7 +242,7 @@ public class HomeController extends AnchorPane implements IMainObserver {
     }
 
 
-    private void initialiseParticipantsTable() throws Exception {
+    private void initialiseParticipantsTable()  {
         CompletableFuture.runAsync(() -> {
             try {
                 participantTable.getItems().clear();
@@ -260,7 +260,7 @@ public class HomeController extends AnchorPane implements IMainObserver {
         });
     }
 
-    private void initialiseEventTable() throws Exception {
+    private void initialiseEventTable(){
         CompletableFuture.runAsync(() -> {
             try {
                 eventTable.getItems().clear();
@@ -296,12 +296,12 @@ public class HomeController extends AnchorPane implements IMainObserver {
     }
 
     @Override
-    public void participantAdded(Participant participant) throws Exception {
+    public void participantAdded(Participant participant) {
         Platform.runLater(() -> participantTable.getItems().add(participant));
     }
 
     @Override
-    public void newRegistration(List<EventDTO> events) throws Exception {
+    public void newRegistration(List<EventDTO> events) {
         Platform.runLater(() -> {
             eventTable.getItems().clear();
             eventTable.getItems().addAll(events);

@@ -42,8 +42,8 @@ public class EventEntriesController extends AnchorPane {
         }
 
         try {
-            server.saveEventEntry(eventEntries); // va notifica HomeController prin observer
-            ((Stage) this.getScene().getWindow()).close(); // închide DOAR fereastra secundară
+            server.saveEventEntry(eventEntries);
+            ((Stage) this.getScene().getWindow()).close();
         } catch (IOException e) {
             showAlert("Eroare", e.getMessage());
         }
@@ -51,12 +51,12 @@ public class EventEntriesController extends AnchorPane {
 
 
     @FXML
-    protected void onParticipantSelected() throws Exception {
+    protected void onParticipantSelected()  {
         currentParticipant = participantBox.getValue();
         loadEvents();
     }
 
-    public void init(IContestServices server, Stage currentStage, User currentUser, HomeController homeController) throws Exception {
+    public void init(IContestServices server, Stage currentStage, User currentUser, HomeController homeController) {
         try {
             initialise(server, currentStage, currentUser);
             this.homeController = homeController;

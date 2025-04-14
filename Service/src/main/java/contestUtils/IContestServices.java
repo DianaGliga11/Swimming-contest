@@ -22,7 +22,6 @@ public interface IContestServices {
     void saveEventEntry(List<Office> offices) throws Exception;
 
     Collection<Participant> findAllParticipants() throws Exception;
-    //Collection<Event> findAllEvents() throws EntityRepoException;
 
     void saveParticipant(Participant participant) throws Exception;
 
