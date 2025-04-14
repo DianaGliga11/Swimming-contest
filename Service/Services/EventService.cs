@@ -6,10 +6,10 @@ namespace Service;
 
 public class EventService : I_EventService
 {
-    private EventDBRepository eventRepository;
-    private OfficeDBRepository officeRepository;
+    private I_EventDBRepository eventRepository;
+    private I_OfficeDBRepository officeRepository;
 
-    public EventService(EventDBRepository eventRepository, OfficeDBRepository officeRepository)
+    public EventService(I_EventDBRepository eventRepository, I_OfficeDBRepository officeRepository)
     {
         this.eventRepository = eventRepository;
         this.officeRepository = officeRepository;

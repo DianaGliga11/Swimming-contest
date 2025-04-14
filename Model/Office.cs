@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
+    [Serializable]
     public class Office : Entity<long>
     {
         public Participant Participant { get; set; }

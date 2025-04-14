@@ -2,7 +2,7 @@
 
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
-
+    [Serializable]
     public class Event : Entity<long>
     {
         public int Distance { get; set; }

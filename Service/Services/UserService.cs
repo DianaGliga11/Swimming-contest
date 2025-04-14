@@ -5,9 +5,9 @@ namespace Service;
 
 public class UserService : I_UserService
 {
-    private UserDBRepository userRepository;
+    private I_UserDBRepository userRepository;
 
-    public UserService(UserDBRepository userRepository)
+    public UserService(I_UserDBRepository userRepository)
     {
         this.userRepository = userRepository;
     }

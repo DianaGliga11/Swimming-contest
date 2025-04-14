@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
-
     public class User : Entity<long>
     {
         public String UserName { get; set; }
         public String Password { get; set; }
 
+        public User()
+        {
+            
+        }
         public User(String userName, String password)
         {
             UserName = userName;

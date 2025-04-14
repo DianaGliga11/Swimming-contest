@@ -2,6 +2,7 @@
 
 namespace mpp_proiect_csharp_DianaGliga11.Model.DTO;
 
+[Serializable]
 public class ParticipantDTO : Entity<long>
 {
     public String name { get; set; }

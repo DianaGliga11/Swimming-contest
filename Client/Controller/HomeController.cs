@@ -1,8 +1,7 @@
 ﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
-using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
-using Controller;
+using Service;
 
 namespace Controller
 {
@@ -10,9 +9,8 @@ namespace Controller
     {
         private IDictionary<string, string> properties;
         private User currentUser;
-        private I_EventService eventService;
-        private I_ParticipantService participantService;
-        
+        private IContestServices server;
+
         private ComboBox eventComboBox;
         private Label usernameLabel;
         private Label searchMessageLabel;
@@ -26,12 +24,15 @@ namespace Controller
         private Button btnAddParticipant;
         private Button btnNewEntry;
 
-        public HomeController(IDictionary<string, string> properties, User currentUser)
+        public HomeController(IDictionary<string, string> properties, User currentUser, IContestServices server)
         {
             this.properties = properties;
             this.currentUser = currentUser;
+            this.server = server;
             InitializeComponents();
-            InitializeServices();
+            LoadEventComboBox();
+            LoadParticipants();
+            LoadEvents();
         }
 
         private void InitializeComponents()
@@ -60,7 +61,7 @@ namespace Controller
                 Location = new Point(230, 50),
                 Width = 80
             };
-            btnSearch.Click += OnSearchClicked;
+            //btnSearch.Click += OnSearchClicked;
 
             searchMessageLabel = new Label
             {
@@ -155,24 +156,10 @@ namespace Controller
             this.Controls.Add(btnLogout);
         }
 
-        private void InitializeServices()
-        {
-            ParticipantDBRepository participantRepository = new ParticipantDBRepository(properties);
-            participantService = new ParticipantService(participantRepository);
-            
-            EventDBRepository eventRepository = new EventDBRepository(properties);
-            OfficeDBRepository officeRepository = new OfficeDBRepository(properties, participantRepository, eventRepository);
-            eventService = new EventService(eventRepository, officeRepository);
-
-            LoadEventComboBox();
-            LoadParticipants();
-            LoadEvents();
-        }
-
         private void LoadEventComboBox()
         {
             eventComboBox.Items.Clear();
-            var events = eventService.getAll();
+            var events = server.GetAllEvents();
             if (events == null || !events.Any())
             {
                 MessageBox.Show("No events found.");
@@ -185,11 +172,10 @@ namespace Controller
             }
         }
 
-
         private void LoadParticipants()
         {
             participantTable.Rows.Clear();
-            foreach (var participant in participantService.getAll())
+            foreach (var participant in server.GetAllParticipants())
             {
                 participantTable.Rows.Add(participant.Name, participant.Age);
             }
@@ -198,21 +184,13 @@ namespace Controller
         private void LoadEvents()
         {
             eventTable.Rows.Clear();
-            foreach (var ev in eventService.getEventsWithParticipantsCount())
+            foreach (var ev in server.GetEventsWithParticipantsCount())
             {
                 eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
             }
         }
-        
-        public void Init(IDictionary<string, string> properties, User currentUser)
-        {
-            this.properties = properties;
-            this.currentUser = currentUser;
-            LoadEvents();
-            LoadParticipants();
-        }
 
-
+        /*
         private void OnSearchClicked(object sender, EventArgs e)
         {
             var selectedEvent = eventComboBox.SelectedItem as Event;
@@ -224,7 +202,7 @@ namespace Controller
 
             try
             {
-                var results = eventService.getParticipantsForEventWithCount(selectedEvent.Id);
+                var results = server.GetEventsWithParticipantsCount();
                 if (results == null || !results.Any())
                 {
                     ShowSearchMessage("No participants found for this event.", true);
@@ -236,7 +214,7 @@ namespace Controller
                     searchResultsContainer.Visible = true;
                 }
             }
-            catch (EntityRepoException ex)
+            catch (Exception ex)
             {
                 ShowAlert("Search Error", ex.Message);
                 searchResultsContainer.Visible = false;
@@ -251,6 +229,7 @@ namespace Controller
                 searchResultsTable.Rows.Add(result.name, result.age, result.eventCount);
             }
         }
+        */
 
         private void ShowSearchMessage(string message, bool isError)
         {
@@ -266,7 +245,7 @@ namespace Controller
 
         private void OnLogoutClicked(object sender, EventArgs e)
         {
-            var loginForm = new MainController(properties);
+            var loginForm = new MainController(properties, server);
             loginForm.Show();
             this.Close();
         }

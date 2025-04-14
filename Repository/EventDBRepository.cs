@@ -21,7 +21,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Add(Event entity)
         {
             log.Info($"Adding Event: {entity}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
 
             try
             {
@@ -52,7 +52,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Remove(long id)
         {
             log.Info($"Removing Event: {id}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {
@@ -76,7 +76,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Update(long id, Event entity)
         {
             log.Info($"Updating Event: {entity}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {
@@ -112,7 +112,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public Event findById(long id)
         {
             log.Info($"Finding Event: {id}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {
@@ -147,7 +147,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<Event> getAll()
         {
             log.Info("Getting All Events");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             IList<Event> events = new List<Event>();
             
             using (var command = connection.CreateCommand())

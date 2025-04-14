@@ -1,0 +1,16 @@
+﻿using mpp_proiect_csharp_DianaGliga11.Model;
+using mpp_proiect_csharp_DianaGliga11.Model.DTO;
+
+namespace Service;
+
+public interface IContestServices
+{
+    User Login(string username, string password, IMainObserver client);
+    void Logout(User user, IMainObserver client);
+    List<EventDTO> GetEventsWithParticipantsCount();
+    List<Participant> GetAllParticipants();
+    List<Event> GetAllEvents();
+    void saveEventsEntries(List<Office> newEntry);
+    void saveParticipant(Participant participant);
+    
+}

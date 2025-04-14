@@ -21,7 +21,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Add(User entity)
         {
             log.Info($"Adding User: {entity}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
 
             try
             {
@@ -52,7 +52,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Remove(long id)
         {
             log.Info($"Removing User: {id}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {
@@ -76,7 +76,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public void Update(long id, User entity)
         {
             log.Info($"Updating User: {entity}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {
@@ -112,7 +112,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public User findById(long id)
         {
             log.Info($"Finding User: {id}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {
@@ -147,7 +147,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public IEnumerable<User> getAll()
         {
             log.Info("Getting All Users");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             IList<User> users = new List<User>();
             
             using (var command = connection.CreateCommand())
@@ -171,7 +171,7 @@ namespace mpp_proiect_csharp_DianaGliga11.Repository
         public User GetUserByCredentials(string username, string password)
         {
             log.Info($"Searching for User: Username={username}");
-            var connection = DBUtils.getConnection(Props);
+            var connection = DBUtils.GetConnection(Props);
             
             try
             {

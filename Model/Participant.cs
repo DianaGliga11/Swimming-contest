@@ -2,7 +2,7 @@
 
 namespace mpp_proiect_csharp_DianaGliga11.Model
 {
-
+    [Serializable]
     public class Participant : Entity<long>
     {
         public String Name { get; set; }

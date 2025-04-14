@@ -5,9 +5,9 @@ namespace Service;
 
 public class ParticipantService : I_ParticipantService
 {
-    private ParticipantDBRepository participantRepository;
+    private I_ParticipantDBRepository participantRepository;
 
-    public ParticipantService(ParticipantDBRepository participantRepository)
+    public ParticipantService(I_ParticipantDBRepository participantRepository)
     {
         this.participantRepository = participantRepository;
     }

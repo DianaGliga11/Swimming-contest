@@ -2,6 +2,7 @@
 
 namespace mpp_proiect_csharp_DianaGliga11.Model.DTO;
 
+[Serializable]
 public class EventDTO : Entity<long>
 {
     public String style { get; set; }

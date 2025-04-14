@@ -23,7 +23,7 @@ public class ParticipantDBRepository : I_ParticipantDBRepository
     public void Add(Participant entity)
     {
         log.Info($"Adding Participant: {entity}");
-        var connection = DBUtils.getConnection(Props);
+        var connection = DBUtils.GetConnection(Props);
 
         try
         {
@@ -55,7 +55,7 @@ public class ParticipantDBRepository : I_ParticipantDBRepository
     public void Remove(long id)
     {
         log.Info($"Removing Participant: {id}");
-       var connection = DBUtils.getConnection(Props);
+       var connection = DBUtils.GetConnection(Props);
        try
        {
            using var command = connection.CreateCommand();
@@ -77,7 +77,7 @@ public class ParticipantDBRepository : I_ParticipantDBRepository
     public void Update(long id, Participant entity)
     {
         log.Info($"Updating Participant: {entity}");
-        var connection = DBUtils.getConnection(Props);
+        var connection = DBUtils.GetConnection(Props);
         try
         {
             using var command = connection.CreateCommand();
@@ -105,7 +105,7 @@ public class ParticipantDBRepository : I_ParticipantDBRepository
     public Participant findById(long id)
     {
         log.Info($"Finding Participant: {id}");
-        var connection = DBUtils.getConnection(Props);
+        var connection = DBUtils.GetConnection(Props);
         try
         {
             using (var command = connection.CreateCommand())
@@ -138,7 +138,7 @@ public class ParticipantDBRepository : I_ParticipantDBRepository
     public IEnumerable<Participant> getAll()
     {
         log.Info($"Getting All Participants");
-        var connection = DBUtils.getConnection(Props);
+        var connection = DBUtils.GetConnection(Props);
         IList<Participant> participants = new List<Participant>();
         using (var command = connection.CreateCommand())
         {
@@ -159,7 +159,7 @@ public class ParticipantDBRepository : I_ParticipantDBRepository
     public Participant GetParticipantsByData(Participant participant)
     {
         log.Info($"Searching for Participant: {participant}");
-        var connection = DBUtils.getConnection(Props);
+        var connection = DBUtils.GetConnection(Props);
         try
         {
             using (var command = connection.CreateCommand())

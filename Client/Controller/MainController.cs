@@ -1,6 +1,8 @@
 ﻿using log4net;
 using mpp_proiect_csharp_DianaGliga11.Model;
-using mpp_proiect_csharp_DianaGliga11.Repository;
+using Service;
+using System.Drawing;
+using System.Windows.Forms;
 using Service;
 
 namespace Controller
@@ -16,17 +18,19 @@ namespace Controller
         private Label errorLabel;
 
         private static readonly ILog log = LogManager.GetLogger(typeof(MainController));
-        private UserService userService;
-        private IDictionary<string, string> properties;
+        private readonly IContestServices server;
+        private readonly IDictionary<string, string> properties;
 
-        public MainController(IDictionary<string, string> props)
+        // Constructor
+        public MainController(IDictionary<string, string> props, IContestServices server)
         {
             this.properties = props;
+            this.server = server;
             InitializeComponents();
-            InitializeServices();
-            this.FormClosing += MainController_FormClosing; 
+            this.FormClosing += MainController_FormClosing;
         }
 
+        // Initializarea componentelor formularului
         private void InitializeComponents()
         {
             this.Text = "Login - Swimming Competition";
@@ -82,7 +86,7 @@ namespace Controller
             loginButton = new Button
             {
                 Text = "LOGIN",
-                Font = new Font("Segoe UI", 12F, FontStyle.Regular),
+                Font = new Font("Segoe UI", 12F),
                 Location = new Point(150, 270),
                 Size = new Size(200, 35),
                 BackColor = Color.LightSkyBlue,
@@ -109,41 +113,49 @@ namespace Controller
             this.Controls.Add(errorLabel);
         }
 
-        private void InitializeServices()
-        {
-            UserDBRepository userRepository = new UserDBRepository(properties);
-            userService = new UserService(userRepository);
-        }
-
         private void OnLoginButtonClick(object sender, EventArgs e)
         {
-            string username = usernameTextField.Text;
-            string password = passwordTextField.Text;
+            log.Debug("OnLoginButtonClick...");
+            string username = usernameTextField.Text.Trim();
+            string password = passwordTextField.Text.Trim();
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                errorLabel.Text = "Username and password cannot be empty.";
+                log.Warn("Login attempt with empty username or password.");
+                return;
+            }
 
             try
             {
-                User user = userService.getLogin(username, password);
+                log.Debug($"Login attempt with username: {username}");
+                User user = server.Login(username, password, null);
+
                 if (user != null)
                 {
+                    log.Info($"Login successful for user: {user.UserName}");
                     this.Hide();
-                    var homeController = new HomeController(properties, user);
+                    var homeController = new HomeController(properties, user, server);
                     homeController.Show();
                 }
                 else
                 {
-                    errorLabel.Text = "Invalid username or password";
+                    errorLabel.Text = "Invalid username or password.";
+                    log.Warn("Invalid login credentials.");
                 }
             }
-            catch (EntityRepoException ex)
+            catch (Exception ex)
             {
-                errorLabel.Text = "Database error: " + ex.Message;
+                log.Error("Login error", ex);
+                errorLabel.Text = "Error: " + ex.Message;
             }
         }
+
         private void MainController_FormClosing(object sender, FormClosingEventArgs e)
         {
-            log.Info("Aplicația se închide...");
-            LogManager.Shutdown();  
-            Application.Exit();  
+            log.Info("App is closing...");
+            LogManager.Shutdown();
+            Application.Exit();
         }
     }
 }
