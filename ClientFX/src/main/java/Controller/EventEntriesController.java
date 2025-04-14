@@ -2,7 +2,6 @@ package Controller;
 
 import contestUtils.IContestServices;
 import example.example.*;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +25,8 @@ public class EventEntriesController extends AnchorPane {
     private Stage currentStage;
     private User currentUser;
 
+    private HomeController homeController;
+
     @FXML
     private ComboBox<Participant> participantBox;
 
@@ -37,21 +38,17 @@ public class EventEntriesController extends AnchorPane {
         ObservableList<Event> eventsSelected = eventListView.getSelectionModel().getSelectedItems();
         List<Office> eventEntries = new ArrayList<>();
         for (Event event : eventsSelected) {
-            eventEntries.add(new Office(currentParticipant,event));
+            eventEntries.add(new Office(currentParticipant, event));
         }
 
         try {
-            server.saveEventEntry(eventEntries );
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/home-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            HomeController controller = fxmlLoader.getController();
-            controller.init(server, currentUser, currentStage);
-            currentStage.setScene(scene);
-            currentStage.show();
+            server.saveEventEntry(eventEntries); // va notifica HomeController prin observer
+            ((Stage) this.getScene().getWindow()).close(); // închide DOAR fereastra secundară
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            showAlert("Eroare", e.getMessage());
         }
     }
+
 
     @FXML
     protected void onParticipantSelected() throws Exception {
@@ -59,13 +56,13 @@ public class EventEntriesController extends AnchorPane {
         loadEvents();
     }
 
-    public void init(IContestServices server, Stage currentStage, User currentUser) throws Exception {
+    public void init(IContestServices server, Stage currentStage, User currentUser, HomeController homeController) throws Exception {
         try {
             initialise(server, currentStage, currentUser);
+            this.homeController = homeController;
             setParticipants();
             eventListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             loadEvents();
-            loadParticipants();
         }catch (Exception e){
             showAlert("Error in init (EventEvtriesController) ", e.getMessage());
         }
@@ -79,25 +76,6 @@ public class EventEntriesController extends AnchorPane {
         currentParticipant = participantBox.getValue();
     }
 
-    private void loadParticipants() {
-        new Thread(() -> {
-            try {
-                Collection<Participant> participants = server.findAllParticipants();
-                Platform.runLater(() -> {
-                    participantBox.getItems().setAll(participants);
-                    if (!participants.isEmpty()) {
-                        participantBox.getSelectionModel().selectFirst();
-                        currentParticipant = participantBox.getValue();
-                        loadEvents();
-                    }
-                });
-            } catch (Exception e) {
-                Platform.runLater(() ->
-                        showAlert("Error", "Failed to load participants: " + e.getMessage())
-                );
-            }
-        }).start();
-    }
     private void loadEvents() {
         new Thread(() -> {
             try {

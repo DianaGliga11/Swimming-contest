@@ -141,6 +141,11 @@ public class HomeController extends AnchorPane implements IMainObserver {
 
     @FXML
     protected void onLogoutClicked() {
+        try{
+            server.logout(currentUser,this);
+        } catch (Exception e) {
+            showAlert("Logout error ", e.getMessage());
+        }
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/main-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
@@ -177,7 +182,7 @@ public class HomeController extends AnchorPane implements IMainObserver {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/event-view.fxml"));
             Parent root = loader.load();
             EventEntriesController controller = loader.getController();
-            controller.init(server, currentStage, currentUser);
+            controller.init(server, new Stage(), currentUser, this);
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
