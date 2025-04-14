@@ -7,6 +7,7 @@ import contestUtils.IMainObserver;
 import example.example.Event;
 import example.example.Participant;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -84,38 +85,42 @@ public class ClientWorker implements Runnable, IMainObserver {
         }
     }
 
-
     @Override
     public void run() {
-        while (connected) {
-            try {
-                Object request = input.readObject();
-                Response response = handleRequest((Request) request);
-                if (response != null) {
-                    sendResponse(response);
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                logger.error("Response failed: " + e.getMessage());
-                connected=false;
-                e.printStackTrace();
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                logger.error("Thread failed: " + e.getMessage());
-                e.printStackTrace();
-                connected=false;
-            }
-        }
         try {
-            input.close();
-            output.close();
-            socketConnection.close();
-        } catch (IOException e) {
-            logger.error("Socket connection close failed: " + e.getMessage());
-            e.printStackTrace();
+            while (connected) {
+                try {
+                    Object request = input.readObject();
+                    Response response = handleRequest((Request) request);
+                    if (response != null) {
+                        sendResponse(response);
+                    }
+                } catch (EOFException e) {
+                    logger.info("Client disconnected.");
+                    connected = false;
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.error("Response failed: " + e.getMessage(), e);
+                    connected = false;
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    logger.error("Thread interrupted: " + e.getMessage(), e);
+                    connected = false;
+                }
+            }
+        } finally {
+            try {
+                input.close();
+                output.close();
+                socketConnection.close();
+            } catch (IOException e) {
+                logger.error("Socket connection close failed: " + e.getMessage(), e);
+            }
         }
     }
+
 
     private Response handleRequest(Request request) {
         if(request instanceof LoginRequest loginRequest) {
