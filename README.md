@@ -39,7 +39,7 @@ Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc
 - fiecare are fisiere fxml pentru partea de frontend a aplicatiei
 - aplicatia va porni din HelloApplication care deschide initial fereastra de logare, care va face trecerea spre fereastra principala.
 
-  --Lab 6--
+--Lab 6--
 
 -> In branch-ul lab6
 1. Modificari asupra Model:
