@@ -2,6 +2,7 @@ package Controller;
 
 import contestUtils.IContestServices;
 import example.example.*;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,6 +65,7 @@ public class EventEntriesController extends AnchorPane {
             setParticipants();
             eventListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             loadEvents();
+            loadParticipants();
         }catch (Exception e){
             showAlert("Error in init (EventEvtriesController) ", e.getMessage());
         }
@@ -77,11 +79,38 @@ public class EventEntriesController extends AnchorPane {
         currentParticipant = participantBox.getValue();
     }
 
-    private void loadEvents() throws Exception {
-        eventListView.getItems().clear();
-        Collection<Event> events = server
-                .findAllEvents();
-        eventListView.getItems().addAll(events);
+    private void loadParticipants() {
+        new Thread(() -> {
+            try {
+                Collection<Participant> participants = server.findAllParticipants();
+                Platform.runLater(() -> {
+                    participantBox.getItems().setAll(participants);
+                    if (!participants.isEmpty()) {
+                        participantBox.getSelectionModel().selectFirst();
+                        currentParticipant = participantBox.getValue();
+                        loadEvents();
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() ->
+                        showAlert("Error", "Failed to load participants: " + e.getMessage())
+                );
+            }
+        }).start();
+    }
+    private void loadEvents() {
+        new Thread(() -> {
+            try {
+                Collection<Event> events = server.findAllEvents();
+                javafx.application.Platform.runLater(() -> {
+                    eventListView.getItems().setAll(events);
+                });
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() ->
+                        showAlert("Error", "Failed to load events: " + e.getMessage())
+                );
+            }
+        }).start();
     }
 
     private void initialise(IContestServices server, Stage currentStage, User currentUser) {

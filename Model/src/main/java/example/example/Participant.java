@@ -1,6 +1,8 @@
 package example.example;
 
-public class Participant extends Entity<Long> {
+import java.io.Serializable;
+
+public class Participant extends Entity<Long> implements Serializable {
     private String name;
     private int age;
 

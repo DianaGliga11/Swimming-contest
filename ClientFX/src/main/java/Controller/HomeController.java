@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 
 import contestUtils.IMainObserver;
 
-public class HomeController extends AnchorPane implements IMainObserver{
+public class HomeController extends AnchorPane implements IMainObserver {
     private IContestServices server;
     private User currentUser;
     //private EventImplementationService eventService;
@@ -82,33 +82,45 @@ public class HomeController extends AnchorPane implements IMainObserver{
     }
 
     @FXML
-    protected void onSearchClicked() throws Exception {
-        try {
-            Event selectedEvent = eventComboBox.getValue();
-            if (selectedEvent == null) {
-                showSearchMessage("Please select an event first!", true);
-                return;
-            }
-
-            Collection<ParticipantDTO> results = server.getParticipantsForEventWithCount(selectedEvent.getId());
-
-            if (results == null || results.isEmpty()) {
-                showSearchMessage("No participants found for this event.", true);
-                searchResultsContainer.setVisible(false);
-            } else {
-                updateSearchResults(results);
-                showSearchResults();
-            }
-        } catch (EntityRepoException e) {
-            showAlert("Search Error", "An error occurred: " + e.getMessage());
-            searchResultsContainer.setVisible(false);
+    protected void onSearchClicked() {
+        Event selectedEvent = eventComboBox.getValue();
+        if (selectedEvent == null) {
+            showSearchMessage("Please select an event first!", true);
+            return;
         }
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                Collection<ParticipantDTO> results = server.getParticipantsForEventWithCount(selectedEvent.getId());
+
+                if (results == null || results.isEmpty()) {
+                    Platform.runLater(() -> {
+                        showSearchMessage("No participants found for this event.", true);
+                        searchResultsContainer.setVisible(false);
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        updateSearchResults(results);
+                        showSearchResults();
+                    });
+                }
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    showAlert("Search Error", "An error occurred: " + e.getMessage());
+                    searchResultsContainer.setVisible(false);
+                });
+            }
+        });
     }
+
 
     private void updateSearchResults(Collection<ParticipantDTO> results) {
         if (searchResultsTable != null) {
-            searchResultsTable.getItems().clear();
-            searchResultsTable.getItems().addAll(results);
+            CompletableFuture.runAsync(() -> {
+                System.out.println("Search result size" + results.size());
+                searchResultsTable.getItems().clear();
+                searchResultsTable.getItems().addAll(results);
+            });
         } else {
             System.err.println("searchResultsTable is null!");
         }
@@ -116,14 +128,16 @@ public class HomeController extends AnchorPane implements IMainObserver{
 
     private void showSearchResults() {
         if (searchResultsContainer != null && searchResultsTable != null) {
-            searchResultsContainer.setVisible(true);
-            searchResultsTable.setVisible(true);
-            searchMessageLabel.setVisible(false);
+            CompletableFuture.runAsync(() -> {
+                searchResultsTable.setPlaceholder(new Label("No results found"));
+                searchResultsContainer.setVisible(true);
+                searchResultsTable.setVisible(true);
+                searchMessageLabel.setVisible(false);
+            });
         } else {
             System.err.println("Search results components not initialized!");
         }
     }
-
 
     @FXML
     protected void onLogoutClicked() {
@@ -169,8 +183,8 @@ public class HomeController extends AnchorPane implements IMainObserver{
             stage.setScene(new Scene(root));
             stage.setTitle("New Event Registration");
             stage.initOwner(currentStage);
-            stage.show();
-        } catch (IOException | EntityRepoException e) {
+            stage.showAndWait();
+        } catch (IOException e) {
             showAlert("Error", "Failed to open new entry form: " + e.getMessage());
         }
         initialiseEventTable();
@@ -192,17 +206,17 @@ public class HomeController extends AnchorPane implements IMainObserver{
 
             initializeEventComboBox();
 
-            // Rulează în fundal inițializarea grea
-            new Thread(() -> {
+            Platform.runLater(() -> {
                 try {
+                    initializeEventComboBox();
                     initialiseParticipantsTable();
                     initialiseEventTable();
                 } catch (Exception e) {
-                    Platform.runLater(() -> showAlert("Init error", "Eroare la inițializare tabele: " + e.getMessage()));
+                    showAlert("Init error", "Eroare la inițializare tabele: " + e.getMessage());
                 }
-            }).start();
+            });
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             showAlert("An error occurred in init (HomeController): ", e.getMessage());
         }
     }
@@ -227,11 +241,14 @@ public class HomeController extends AnchorPane implements IMainObserver{
         CompletableFuture.runAsync(() -> {
             try {
                 participantTable.getItems().clear();
-                participantTable.setPlaceholder(new Label("No Participants"));
+                //participantTable.setPlaceholder(new Label("No Participants"));
                 participantName.setCellValueFactory(new PropertyValueFactory<>("name"));
                 participantAge.setCellValueFactory(new PropertyValueFactory<>("age"));
                 Collection<Participant> participants = server.findAllParticipants();
-                Platform.runLater(() -> participantTable.getItems().addAll(participants));
+                Platform.runLater(() -> {
+                    participantTable.getItems().addAll(participants);
+
+                });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load participants: " + e.getMessage()));
             }

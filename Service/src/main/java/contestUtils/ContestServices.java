@@ -116,7 +116,12 @@ public class ContestServices implements IContestServices{
 
     @Override
     public synchronized Collection<Event> findAllEvents() throws Exception {
-        return eventService.getAll();
+        try {
+            return eventService.getAll(); // Trebuie să returneze date din baza de date
+        } catch (EntityRepoException e) {
+            logger.error("Failed to load events", e);
+            throw new Exception("Could not load events");
+        }
     }
 
     @Override

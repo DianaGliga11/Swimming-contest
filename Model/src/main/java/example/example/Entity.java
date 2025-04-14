@@ -1,6 +1,8 @@
 package example.example;
 
-public abstract class Entity<Long> {
+import java.io.Serializable;
+
+public abstract class Entity<Long> implements Serializable {
     private Long id;
 
     public Long getId() {

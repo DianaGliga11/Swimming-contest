@@ -83,7 +83,7 @@ public class ServicesProxy implements IContestServices {
 
     @Override
     public Collection<ParticipantDTO> getParticipantsForEventWithCount(Long eventId) throws Exception {
-        sendRequest( new GetParticipantsForEventWithCountRequest());
+        sendRequest( new GetParticipantsForEventWithCountRequest(eventId));
         Response response = readResponse();
         if(response instanceof ErrorResponse) {
             logger.error(((ErrorResponse) response).getError());
@@ -114,12 +114,10 @@ public class ServicesProxy implements IContestServices {
     public Collection<Event> findAllEvents() throws Exception {
         sendRequest(new GetAllEventsRequest());
         Response response = readResponse();
-        if(response instanceof ErrorResponse){
-            logger.error(((ErrorResponse) response).getError());
+        if (response instanceof ErrorResponse) {
             throw new Exception(((ErrorResponse) response).getError());
         }
-        AllEventsResponse result = (AllEventsResponse) response;
-        return result.getEvents();
+        return ((AllEventsResponse) response).getEvents();
     }
 
     @Override
@@ -146,14 +144,16 @@ public class ServicesProxy implements IContestServices {
     }
 
     private Response readResponse() throws Exception {
-        Response response = null;
         try {
-            response = responseQueue.take();
+            Response response = responseQueue.take();
+            if (response instanceof ErrorResponse) {
+                throw new Exception(((ErrorResponse) response).getError());
+            }
+            return response;
         } catch (InterruptedException e) {
-            logger.error("Error reading response: " + e.getMessage());
-            throw new Exception("Error reading response: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            throw new Exception("Interrupted while waiting for response");
         }
-        return response;
     }
 
     private void sendRequest(Request request) throws Exception {

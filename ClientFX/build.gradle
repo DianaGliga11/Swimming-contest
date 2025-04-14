@@ -21,6 +21,45 @@ application {
   mainClass = 'org.example.StartClient'
 }
 
+tasks.register('runClient1', JavaExec) {
+  group = 'application'
+  description = 'Run first client window'
+  mainClass.set('org.example.StartClient')
+  classpath = sourceSets.main.runtimeClasspath
+
+  def javafxPath = configurations.runtimeClasspath
+          .filter { it.name.contains("javafx") }
+          .collect { it.absolutePath }
+          .join(System.getProperty("path.separator"))
+
+  jvmArgs = [
+          '--module-path', javafxPath,
+          '--add-modules', 'javafx.controls,javafx.fxml'
+  ]
+
+  args = ['client1']
+}
+
+tasks.register('runClient2', JavaExec) {
+  group = 'application'
+  description = 'Run second client window'
+
+  mainClass.set('org.example.StartClient')
+  classpath = sourceSets.main.runtimeClasspath
+
+  def javafxPath = configurations.runtimeClasspath
+          .filter { it.name.contains("javafx") }
+          .collect { it.absolutePath }
+          .join(System.getProperty("path.separator"))
+
+  jvmArgs = [
+          '--module-path', javafxPath,
+          '--add-modules', 'javafx.controls,javafx.fxml'
+  ]
+
+  args = ['client2']
+}
+
 
 dependencies {
   implementation project(':Model')
@@ -31,8 +70,8 @@ dependencies {
   implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
 
 //  implementation "org.openjfx:javafx-base:21"
-//  implementation 'org.openjfx:javafx-controls:21'
-//  implementation 'org.openjfx:javafx-fxml:21'
+  implementation 'org.openjfx:javafx-controls:21'
+  implementation 'org.openjfx:javafx-fxml:21'
 //  implementation 'org.openjfx:javafx-graphics:21'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'

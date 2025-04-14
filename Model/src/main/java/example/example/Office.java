@@ -1,6 +1,8 @@
 package example.example;
 
-public class Office extends Entity<Long> {
+import java.io.Serializable;
+
+public class Office extends Entity<Long> implements Serializable {
     private Participant participant;
     private Event event;
 

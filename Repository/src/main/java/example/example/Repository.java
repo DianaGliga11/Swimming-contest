@@ -1,8 +1,9 @@
 package example.example;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface Repository<E extends Entity<Long>> {
+public interface Repository<E extends Entity<Long>> extends Serializable {
     void add(E entity) throws EntityRepoException;
 
     void remove(long id) throws EntityRepoException;

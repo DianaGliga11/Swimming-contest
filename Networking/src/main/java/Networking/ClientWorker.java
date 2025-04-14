@@ -1,14 +1,17 @@
 package Networking;
 
 import DTO.EventDTO;
+import DTO.ParticipantDTO;
 import contestUtils.IContestServices;
 import contestUtils.IMainObserver;
+import example.example.Event;
 import example.example.Participant;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -55,6 +58,7 @@ public class ClientWorker implements Runnable, IMainObserver {
     private void sendResponse(Response response) throws IOException {
         logger.info("Server.ClientWorker sendResponse: " + response);
         synchronized (output) {
+            output.reset();
             output.writeObject(response);
             output.flush();
         }
@@ -92,6 +96,7 @@ public class ClientWorker implements Runnable, IMainObserver {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 logger.error("Response failed: " + e.getMessage());
+                connected=false;
                 e.printStackTrace();
             }
             try {
@@ -99,6 +104,7 @@ public class ClientWorker implements Runnable, IMainObserver {
             } catch (InterruptedException e) {
                 logger.error("Thread failed: " + e.getMessage());
                 e.printStackTrace();
+                connected=false;
             }
         }
         try {
@@ -179,6 +185,28 @@ public class ClientWorker implements Runnable, IMainObserver {
                 return new ErrorResponse(e.getMessage());
             }
         }
+
+        if (request instanceof GetAllEventsRequest getAllEventsRequest) {
+            logger.info("Get all events request...");
+            try {
+                Collection<Event> events = contestServices.findAllEvents();
+                return new AllEventsResponse(events); // Asigură-te că această clasă există
+            } catch (Exception e) {
+                logger.error("Get all events failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
+            }
+        }
+
+        if (request instanceof GetParticipantsForEventWithCountRequest getParticipantsForEventRequest) {
+            try {
+                Collection<ParticipantDTO> participants = contestServices.getParticipantsForEventWithCount(getParticipantsForEventRequest.getEventId());
+                return new GetParticipantsForEventWithCountResponse(participants);
+            } catch (Exception e) {
+                logger.error("Get participants for event failed: " + e.getMessage());
+                return new ErrorResponse(e.getMessage());
+            }
+        }
+
 
         return null;
     }
