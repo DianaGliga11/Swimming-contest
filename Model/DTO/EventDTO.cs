@@ -9,6 +9,10 @@ public class EventDTO : Entity<long>
     public int distance { get; set; }
     public int participantsCount { get; set; }
 
+    public EventDTO()
+    {
+        
+    }
     public EventDTO(string style, int distance, int participantsCount)
     {
         this.style = style;

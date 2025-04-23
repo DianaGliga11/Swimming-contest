@@ -9,6 +9,10 @@ public class ParticipantDTO : Entity<long>
     public int age {get; set;}
     public int eventCount {get; set;}
 
+    public ParticipantDTO()
+    {
+        
+    }
     public ParticipantDTO(string name, int age, int eventCount)
     {
         this.name = name;
