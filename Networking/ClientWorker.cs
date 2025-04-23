@@ -85,7 +85,13 @@ namespace Networking
             }
             catch (Exception e)
             {
-                log.Error("ClientWorker.Run: "+ e.Message);
+                log.Error("ClientWorker.Run: " + e.Message);
+            }
+            finally
+            {
+                log.Info("Client Worker closing connection...");
+                stream?.Close();
+                connection?.Close();
             }
         }
         
@@ -230,35 +236,7 @@ namespace Networking
 
             return new ErrorResponse("Unsupported request type");
         }
-        
-
-        private IRequest DeserializeRequest(string json)
-        {
-            log.Debug($"Deserializing request: {json}");
-            var env = JsonSerializer.Deserialize<JsonEnvelope>(json, jsonOptions);
-
-            switch (env.Type)
-            {
-                case nameof(LoginRequest):
-                    return env.Payload.Deserialize<LoginRequest>(jsonOptions);
-                case nameof(LogoutRequest):
-                    return env.Payload.Deserialize<LogoutRequest>(jsonOptions);
-                case nameof(CreateParticipantRequest):
-                    return env.Payload.Deserialize<CreateParticipantRequest>(jsonOptions);
-                case nameof(CreateEventEntriesRequest):
-                    return env.Payload.Deserialize<CreateEventEntriesRequest>(jsonOptions);
-                case nameof(GetAllParticipantsRequest):
-                    return env.Payload.Deserialize<GetAllParticipantsRequest>(jsonOptions);
-                case nameof(GetAllEventsRequest):
-                    return env.Payload.Deserialize<GetAllEventsRequest>(jsonOptions);
-                case nameof(GetEventsWithParticipantsCountRequest):
-                    return env.Payload.Deserialize<GetEventsWithParticipantsCountRequest>(jsonOptions);
-                // …etc…
-                default:
-                    throw new Exception($"Unknown request type: {env.Type}");
-            }
-        }
-
+ 
 
         private void SendResponse(IResponse response)
         {

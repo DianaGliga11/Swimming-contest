@@ -28,7 +28,7 @@ namespace Controller
             this.properties = props;
             this.server = server;
             InitializeComponents();
-            this.FormClosing += MainController_FormClosing;
+            //this.FormClosing += MainController_FormClosing;
         }
 
         // Initializarea componentelor formularului
@@ -114,7 +114,7 @@ namespace Controller
             this.Controls.Add(errorLabel);
         }
 
-        private void OnLoginButtonClick(object sender, EventArgs e)
+        private async void OnLoginButtonClick(object sender, EventArgs e)
         {
             log.Debug("OnLoginButtonClick...");
             string username = usernameTextField.Text.Trim();
@@ -130,34 +130,62 @@ namespace Controller
             try
             {
                 log.Debug($"Login attempt with username: {username}");
+        
+                // Dezactivează butonul pentru a preveni apăsări multiple
+                loginButton.Enabled = false;
+                Cursor.Current = Cursors.WaitCursor;
 
-                var request = new LoginRequest(username, password);
-                // Cream deja instanța de HomeController ca observer
-                var homeController = new HomeController(properties, null, server);
-                log.Debug($"LoginRequest created - Username: {request.Username}, Password: [PROTECTED]");
-                // Încercăm autentificarea și trimitem observer-ul (clientul)
-                User user = server.Login(username, password, homeController);
-
-                if (user != null)
-                {
-                    log.Info($"Login successful for user: {user.UserName}");
-
-                    // Acum setăm utilizatorul în controller după login
-                    homeController.SetLoggedInUser(user);
-
-                    this.Hide();
-                    homeController.Show();
-                }
-                else
-                {
-                    errorLabel.Text = "Invalid username or password.";
-                    log.Warn("Invalid login credentials.");
-                }
+                // Rulează operația de login pe un thread separat
+                await Task.Run(() => PerformLogin(username, password));
             }
             catch (Exception ex)
             {
                 log.Error("Login error", ex);
                 errorLabel.Text = "Error: " + ex.Message;
+                loginButton.Enabled = true;
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void PerformLogin(string username, string password)
+        {
+            try
+            {
+                log.Info("Trying login...");
+
+                // 1. Login direct, fără observer în apel (dacă nu e nevoie acolo)
+                User user = server.Login(username, password, null);
+
+                this.Invoke((MethodInvoker)delegate {
+                    if (user != null)
+                    {
+                        log.Info($"Login successful for user: {user.UserName}");
+
+                        // 2. Creezi controllerul doar dacă login-ul a reușit
+                        var homeController = new HomeController(properties, user, server);
+                        homeController.SetLoggedInUser(user);
+
+                        this.Hide();
+                        homeController.Show();
+                    }
+                    else
+                    {
+                        errorLabel.Text = "Invalid username or password.";
+                        log.Warn("Invalid login credentials.");
+                    }
+
+                    loginButton.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                });
+            }
+            catch (Exception ex)
+            {
+                this.Invoke((MethodInvoker)delegate {
+                    errorLabel.Text = "Error: " + ex.Message;
+                    loginButton.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                });
+                log.Error("Login error", ex);
             }
         }
 

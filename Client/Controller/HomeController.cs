@@ -158,36 +158,53 @@ namespace Controller
 
         private void LoadEventComboBox()
         {
-            eventComboBox.Items.Clear();
-            var events = server.GetAllEvents();
-            if (events == null || !events.Any())
-            {
-                MessageBox.Show("No events found.");
-                return;
-            }
+            UpdateUI(() => {
+                eventComboBox.Items.Clear();
+                var events = server.GetAllEvents();
+                if (events == null || !events.Any())
+                {
+                    MessageBox.Show("No events found.");
+                    return;
+                }
 
-            foreach (var ev in events)
-            {
-                eventComboBox.Items.Add(ev);
-            }
+                foreach (var ev in events)
+                {
+                    eventComboBox.Items.Add(ev);
+                }
+            });
         }
 
+        public void UpdateUI(Action action)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
         private void LoadParticipants()
         {
-            participantTable.Rows.Clear();
-            foreach (var participant in server.GetAllParticipants())
-            {
-                participantTable.Rows.Add(participant.Name, participant.Age);
-            }
+            UpdateUI(() => {
+                participantTable.Rows.Clear();
+                foreach (var participant in server.GetAllParticipants())
+                {
+                    participantTable.Rows.Add(participant.Name, participant.Age);
+                }
+            });
         }
 
         private void LoadEvents()
         {
-            eventTable.Rows.Clear();
-            foreach (var ev in server.GetEventsWithParticipantsCount())
-            {
-                eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
-            }
+            UpdateUI(() => {
+                eventTable.Rows.Clear();
+                foreach (var ev in server.GetEventsWithParticipantsCount())
+                {
+                    eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
+                }
+            });
         }
 
         /*
@@ -277,14 +294,19 @@ namespace Controller
 
         public void ParticipantAdded(Participant participant)
         {
-            throw new NotImplementedException();
+            UpdateUI(() => {
+                participantTable.Rows.Add(participant.Name, participant.Age);
+                MessageBox.Show($"Participant {participant.Name} added successfully!");
+            });
         }
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
-            throw new NotImplementedException();
+            UpdateUI(() => {
+                LoadEvents();
+                MessageBox.Show("Event entries updated successfully!");
+            });
         }
-
         public void SetLoggedInUser(User user)
         {
             this.currentUser = user;

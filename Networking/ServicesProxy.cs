@@ -56,34 +56,23 @@ namespace Networking
         }
         private IResponse ReadResponse()
         {
-            // read one line
-            var sb = new StringBuilder();
-            int b;
-            while ((b = stream.ReadByte()) != -1 && b != '\n')
-                sb.Append((char)b);
-            string json = sb.ToString();
-            log.Debug($"Received response: {json}");
+            log.Debug("Waiting for response...");
+            waitHandle.WaitOne();  // așteaptă până când un răspuns e pus în coadă
 
-            // parse envelope
-            var env = JsonSerializer.Deserialize<JsonEnvelope>(json, jsonOptions);
-
-            switch (env.Type)
+            lock (responses)
             {
-                case nameof(OkResponse):
-                    return env.Payload.Deserialize<OkResponse>(jsonOptions);
-                case nameof(ErrorResponse):
-                    return env.Payload.Deserialize<ErrorResponse>(jsonOptions);
-                case nameof(AllEventsResponse):
-                    return env.Payload.Deserialize<AllEventsResponse>(jsonOptions);
-                case nameof(AllParticipantsResponse):
-                    return env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions);
-                case nameof(EventsWithParticipantsCountResponse):
-                    return env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions);
-                // …etc…
-                default:
-                    throw new Exception($"Unknown response type: {env.Type}");
+                if (responses.Count > 0)
+                {
+                    IResponse resp = responses.Dequeue();
+                    log.Debug($"Returning response from queue: {resp.GetType().Name}");
+                    return resp;
+                }
             }
+
+            log.Warn("No response in queue after waitHandle set.");
+            return new ErrorResponse("No response received.");
         }
+
         private void SendRequest(IRequest request)
         {
             string payloadJson = JsonSerializer.Serialize(request, request.GetType(), jsonOptions);
@@ -113,6 +102,7 @@ namespace Networking
             using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
             while (!finished)
             {
+                log.Info("Client is running...");
                 string line;
                 try
                 {
@@ -172,40 +162,6 @@ namespace Networking
             finished = true;
         }
 
-
-        private IResponse DeserializeResponse(string json)
-        {
-            try
-            {
-                using JsonDocument document = JsonDocument.Parse(json);
-                var root = document.RootElement;
-
-                if (!root.TryGetProperty("$type", out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
-                {
-                    throw new Exception("Invalid or missing '$type' property");
-                }
-
-                string type = typeProp.GetString()?.ToLowerInvariant();
-                if (!root.TryGetProperty("payload", out var payload))
-                {
-                    throw new Exception("Missing 'payload' property");
-                }
-
-                return type switch
-                {
-                    "okresponse" => JsonSerializer.Deserialize<OkResponse>(payload.GetRawText(), jsonOptions),
-                    "errorresponse" => JsonSerializer.Deserialize<ErrorResponse>(payload.GetRawText(), jsonOptions),
-                    "newparticipantresponse" => JsonSerializer.Deserialize<NewParticipantResponse>(payload.GetRawText(), jsonOptions),
-                    "updatedeventsresponse" => JsonSerializer.Deserialize<UpdatedEventsResponse>(payload.GetRawText(), jsonOptions),
-                    _ => throw new Exception($"Unknown response type: {type}")
-                };
-            }
-            catch (Exception ex)
-            {
-                log.Error($"Failed to deserialize response. JSON: {json}, Error: {ex.Message}");
-                throw;
-            }
-        }
 
         private void HandleUpdate(UpdateResponse update)
         {
