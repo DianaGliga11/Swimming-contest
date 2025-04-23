@@ -1,19 +1,19 @@
-﻿using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using System.Text.Json.Serialization;
+using mpp_proiect_csharp_DianaGliga11.Model;
 
 namespace Networking.Response
 {
     public class OkResponse : IResponse
     {
-        public User user{get;set;}
+        [JsonPropertyName("user")]
+        public User user { get; set; }
 
-        public OkResponse()
-        {
-        }
+        [JsonConstructor]
+        public OkResponse() { }
 
         public OkResponse(User user)
         {
             this.user = user;
         }
-
     }
 }

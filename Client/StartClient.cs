@@ -17,7 +17,7 @@ public class StartClient
         IDictionary<string, string> properties = new SortedList<string, string>();
         XmlConfigurator.Configure(new FileInfo("client.config"));
 
-        IContestServices server = new ServicesProxy("127.0.0.1", 55556);
+        IContestServices server = new ServicesProxy("127.0.0.1", 56789);
         MainController controller = new MainController(properties, server);
         Application.Run(controller);
     }

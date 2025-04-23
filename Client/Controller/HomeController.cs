@@ -5,7 +5,7 @@ using Service;
 
 namespace Controller
 {
-    public class HomeController : Form
+    public class HomeController : Form, IMainObserver
     {
         private IDictionary<string, string> properties;
         private User currentUser;
@@ -27,12 +27,12 @@ namespace Controller
         public HomeController(IDictionary<string, string> properties, User currentUser, IContestServices server)
         {
             this.properties = properties;
-            this.currentUser = currentUser;
             this.server = server;
-            InitializeComponents();
-            LoadEventComboBox();
-            LoadParticipants();
-            LoadEvents();
+
+            if (currentUser != null)
+            {
+                SetLoggedInUser(currentUser);
+            }
         }
 
         private void InitializeComponents()
@@ -273,6 +273,26 @@ namespace Controller
         private void ShowAlert(string title, string message)
         {
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public void ParticipantAdded(Participant participant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EventEvntriesAdded(List<EventDTO> events)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetLoggedInUser(User user)
+        {
+            this.currentUser = user;
+            InitializeComponents();
+            LoadEventComboBox();
+            LoadParticipants();
+            LoadEvents();
+            
         }
     }
 }

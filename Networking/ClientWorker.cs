@@ -3,10 +3,12 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
 using Service;
 using log4net;
+using Networking.Networking;
 using Networking.Request;
 using Networking.Response;
 
@@ -18,10 +20,16 @@ namespace Networking
         private IContestServices server;
         private TcpClient connection;
         private NetworkStream stream;
-        private readonly JsonSerializerOptions jsonOptions;
+        //private readonly JsonSerializerOptions jsonOptions;
         private volatile bool connected;
         private static readonly ILog log = LogManager.GetLogger(typeof(ClientWorker));
 
+        private static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false,
+            Converters = { new JsonStringEnumConverter() }
+        };
 
         public ClientWorker(IContestServices server, TcpClient connection)
         {
@@ -31,7 +39,7 @@ namespace Networking
             {
                 stream = connection.GetStream();
                 connected = true;
-                jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = false};
+                //jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = false};
             }
             catch (Exception ex)
             {
@@ -39,67 +47,77 @@ namespace Networking
             }
         }
         
-        public virtual void Run()
+        public void Run()
         {
-            while (connected)
+            try
             {
-                try
+                log.Info("Client Worker running...");
+                using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
+                while (connected)
                 {
-                    string requestJson = ReadJsonFromStream();
-                    if (string.IsNullOrWhiteSpace(requestJson))
-                    {
-                        continue;
-                    }
+                    string line = reader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line)) continue;
 
-                    IRequest request = DeserializeRequest(requestJson);
-                    
+                    // parse envelope
+                    JsonEnvelope env = JsonSerializer.Deserialize<JsonEnvelope>(line, jsonOptions);
+
+                    // dispatch to concrete IRequest
+                    IRequest request = env.Type switch
+                    {
+                        nameof(LoginRequest) => env.Payload.Deserialize<LoginRequest>(jsonOptions),
+                        nameof(LogoutRequest) => env.Payload.Deserialize<LogoutRequest>(jsonOptions),
+                        // … etc. …
+                        _ => throw new Exception($"Unknown request type: {env.Type}")
+                    };
+
+                    // handle it
                     IResponse response = HandleRequest(request);
-                    if (response != null)
-                    {
-                        SendResponse(response);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    log.Error("Exception in Run: " + ex.StackTrace);
-                }
 
-                try
-                {
-                    Thread.Sleep(1000);
-                }
-                catch (Exception ex)
-                {
-                    log.Error("Exception in Run: " + ex.StackTrace);
+                    // send back in the same envelope form
+                    string payloadJson = JsonSerializer.Serialize(response, response.GetType(), jsonOptions);
+                    var payloadElement = JsonDocument.Parse(payloadJson).RootElement;
+                    var outEnv = new { type = response.GetType().Name, payload = payloadElement };
+                    string outLine = JsonSerializer.Serialize(outEnv, jsonOptions) + "\n";
+                    byte[] outBytes = Encoding.UTF8.GetBytes(outLine);
+                    stream.Write(outBytes, 0, outBytes.Length);
+                    stream.Flush();
                 }
             }
+            catch (Exception e)
+            {
+                log.Error("ClientWorker.Run: "+ e.Message);
+            }
         }
-
+        
         private IResponse HandleRequest(IRequest request)
         {
-            if (request is LoginRequest loginRequest)
+            try
             {
-                log.Info("Login request ... ");
+                log.Info($"Handling request of type: {request.GetType().Name}");
 
-                if (string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
+                if (request is LoginRequest loginRequest)
                 {
-                    return new ErrorResponse("Username and password are required");
-                }
+                    log.Info("Processing login request...");
+            
+                    if (string.IsNullOrEmpty(loginRequest.Username) || 
+                        string.IsNullOrEmpty(loginRequest.Password))
+                    {
+                        return new ErrorResponse("Username and password are required");
+                    }
 
-                try
-                {
                     lock (server)
                     {
                         User user = server.Login(loginRequest.Username, loginRequest.Password, this);
+                        if (user == null)
+                        {
+                            return new ErrorResponse("Authentication failed");
+                        }
+                
+                        // Asigură-te că obiectul User este complet populat
+                        log.Debug($"User to return: {JsonSerializer.Serialize(user)}");
                         return new OkResponse(user);
                     }
                 }
-                catch (Exception exception)
-                {
-                    connected = false;
-                    return new ErrorResponse(exception.Message);
-                }
-            }
             
             if (request is LogoutRequest logoutRequest)
             {
@@ -119,6 +137,7 @@ namespace Networking
                     return new ErrorResponse(exception.Message);
                 }
             }
+            
             
             if (request is CreateParticipantRequest createParticipantRequest)
             {
@@ -202,58 +221,55 @@ namespace Networking
                     return new ErrorResponse(exception.Message);
                 }
             }
-
-            return null;
-        }
-
-
-        private string ReadJsonFromStream()
-        {
-            using StreamReader reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
-            string json = reader.ReadLine();
-            log.Info("Received JSON: " + json);
-            return json;
-        }
-       
-        private IRequest DeserializeRequest(string json)
-        {
-            try
-            {
-                using JsonDocument document = JsonDocument.Parse(json);
-                string type = document.RootElement.GetProperty("Type").GetString();
-                JsonElement payload = document.RootElement.GetProperty("Payload");
-
-                return type switch
-                {
-                    nameof(LoginRequest) => payload.Deserialize<LoginRequest>(jsonOptions),
-                    nameof(LogoutRequest) => payload.Deserialize<LogoutRequest>(jsonOptions),
-                    nameof(CreateParticipantRequest) => payload.Deserialize<CreateParticipantRequest>(jsonOptions),
-                    nameof(CreateEventEntriesRequest) => payload.Deserialize<CreateEventEntriesRequest>(jsonOptions),
-                    nameof(GetAllParticipantsRequest) => payload.Deserialize<GetAllParticipantsRequest>(jsonOptions),
-                    nameof(GetAllEventsRequest) => payload.Deserialize<GetAllEventsRequest>(jsonOptions),
-                    nameof(GetEventsWithParticipantsCountRequest) => payload.Deserialize<GetEventsWithParticipantsCountRequest>(jsonOptions),
-                    _ => throw new InvalidOperationException("Unknown request type: " + type)
-                };
             }
             catch (Exception ex)
             {
-                log.Error("Failed to deserialize request: " + ex.Message);
-                throw;
+                log.Error("Request handling failed", ex);
+                return new ErrorResponse(ex.Message);
+            }
+
+            return new ErrorResponse("Unsupported request type");
+        }
+        
+
+        private IRequest DeserializeRequest(string json)
+        {
+            log.Debug($"Deserializing request: {json}");
+            var env = JsonSerializer.Deserialize<JsonEnvelope>(json, jsonOptions);
+
+            switch (env.Type)
+            {
+                case nameof(LoginRequest):
+                    return env.Payload.Deserialize<LoginRequest>(jsonOptions);
+                case nameof(LogoutRequest):
+                    return env.Payload.Deserialize<LogoutRequest>(jsonOptions);
+                case nameof(CreateParticipantRequest):
+                    return env.Payload.Deserialize<CreateParticipantRequest>(jsonOptions);
+                case nameof(CreateEventEntriesRequest):
+                    return env.Payload.Deserialize<CreateEventEntriesRequest>(jsonOptions);
+                case nameof(GetAllParticipantsRequest):
+                    return env.Payload.Deserialize<GetAllParticipantsRequest>(jsonOptions);
+                case nameof(GetAllEventsRequest):
+                    return env.Payload.Deserialize<GetAllEventsRequest>(jsonOptions);
+                case nameof(GetEventsWithParticipantsCountRequest):
+                    return env.Payload.Deserialize<GetEventsWithParticipantsCountRequest>(jsonOptions);
+                // …etc…
+                default:
+                    throw new Exception($"Unknown request type: {env.Type}");
             }
         }
 
-        
+
         private void SendResponse(IResponse response)
         {
-            var wrapper = new
-            {
-                Type = response.GetType().Name,
+            var envelope = new {
+                Type    = response.GetType().Name,
                 Payload = response
             };
-
-            string json = JsonSerializer.Serialize(wrapper, jsonOptions) + "\n";
-            byte[] bytes = Encoding.UTF8.GetBytes(json);
-            stream.Write(bytes, 0, bytes.Length);
+            string json = JsonSerializer.Serialize(envelope, jsonOptions) + "\n";
+            log.Debug($"Sending response: {json}");
+            byte[] data = Encoding.UTF8.GetBytes(json);
+            stream.Write(data, 0, data.Length);
             stream.Flush();
         }
 

@@ -1,17 +1,19 @@
-﻿namespace Networking.Response
+﻿using System.Text.Json.Serialization;
+
+namespace Networking.Response
 {
+    
     public class ErrorResponse : IResponse
     {
-        public string message{get;set;}
+        [JsonPropertyName("message")]
+        public string message { get; set; }
 
-        public ErrorResponse()
-        {
-        }
+        [JsonConstructor]
+        public ErrorResponse() { }
 
         public ErrorResponse(string message)
         {
             this.message = message;
         }
-
     }
 }

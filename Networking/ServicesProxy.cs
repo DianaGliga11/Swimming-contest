@@ -1,11 +1,13 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
 using Networking.Response;
 using Service;
 using log4net;
+using Networking.Networking;
 using Networking.Request;
 
 namespace Networking
@@ -24,7 +26,10 @@ namespace Networking
         private static readonly ILog log = LogManager.GetLogger(typeof(ServicesProxy));
         private readonly object syncLock = new();
 
-
+        static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        };
         public ServicesProxy(string host, int port)
         {
             this.host = host;
@@ -49,33 +54,54 @@ namespace Networking
             }
             
         }
-        
         private IResponse ReadResponse()
         {
-            lock (syncLock)
+            // read one line
+            var sb = new StringBuilder();
+            int b;
+            while ((b = stream.ReadByte()) != -1 && b != '\n')
+                sb.Append((char)b);
+            string json = sb.ToString();
+            log.Debug($"Received response: {json}");
+
+            // parse envelope
+            var env = JsonSerializer.Deserialize<JsonEnvelope>(json, jsonOptions);
+
+            switch (env.Type)
             {
-                waitHandle.WaitOne();
-                lock (responses)
-                {
-                    return responses.Dequeue();
-                }
+                case nameof(OkResponse):
+                    return env.Payload.Deserialize<OkResponse>(jsonOptions);
+                case nameof(ErrorResponse):
+                    return env.Payload.Deserialize<ErrorResponse>(jsonOptions);
+                case nameof(AllEventsResponse):
+                    return env.Payload.Deserialize<AllEventsResponse>(jsonOptions);
+                case nameof(AllParticipantsResponse):
+                    return env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions);
+                case nameof(EventsWithParticipantsCountResponse):
+                    return env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions);
+                // …etc…
+                default:
+                    throw new Exception($"Unknown response type: {env.Type}");
             }
         }
-
         private void SendRequest(IRequest request)
         {
-            lock (syncLock)
-            {
-                var wrapper = new
-                {
-                    Type = request.GetType().Name,
-                    Payload = request
-                };
-                string json = JsonSerializer.Serialize(wrapper) + "\n";
-                byte[] data = Encoding.UTF8.GetBytes(json);
-                stream.Write(data, 0, data.Length);
-            }
+            string payloadJson = JsonSerializer.Serialize(request, request.GetType(), jsonOptions);
+            var payloadElement = JsonDocument.Parse(payloadJson).RootElement;
+
+            // wrap into envelope
+            var envelope = new {
+                type = request.GetType().Name,
+                payload = payloadElement
+            };
+            log.Info($"Sending request: {envelope}");
+            string envelopeJson = JsonSerializer.Serialize(envelope, jsonOptions) + "\n";
+            byte[] bytes = Encoding.UTF8.GetBytes(envelopeJson);
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Flush();
         }
+
+
         private void StartReader()
         {
             Thread threadWorker = new Thread(Run);
@@ -84,50 +110,66 @@ namespace Networking
 
         public void Run()
         {
-            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
             while (!finished)
             {
+                string line;
                 try
                 {
-                    string json = reader.ReadLine();
-                    if (!string.IsNullOrEmpty(json))
-                    {
-                        IResponse response = null;
-                        try
-                        {
-                            response = DeserializeResponse(json);
-                        }
-                        catch (Exception ex)
-                        {
-                            log.Error($"Deserialization failed: {ex.Message}");
-                            continue; // Salt peste răspuns invalid
-                        }
-
-                        if (response is UpdateResponse updateResponse)
-                        {
-                            HandleUpdate(updateResponse);
-                        }
-                        else
-                        {
-                            lock (responses)
-                            {
-                                responses.Enqueue(response);
-                            }
-
-                            waitHandle.Set();
-                        }
-                    }
+                    line = reader.ReadLine();
                 }
                 catch (IOException ioex)
                 {
                     log.Error("Connection closed: " + ioex.Message);
-                    finished = true;
+                    break;
+                }
+
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                log.Debug($"Raw incoming: {line}");
+                JsonEnvelope env;
+                try
+                {
+                    env = JsonSerializer.Deserialize<JsonEnvelope>(line, jsonOptions);
                 }
                 catch (Exception ex)
                 {
-                    log.Error("Reading error: " + ex.Message);
+                    log.Error($"Invalid envelope, skipping: {ex.Message}");
+                    continue;
+                }
+
+                // now env.Type tells us what kind of response
+                try
+                {
+                    if (env.Type == nameof(UpdatedEventsResponse))
+                    {
+                        var update = env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions);
+                        HandleUpdate(update);
+                    }
+                    else
+                    {
+                        // concrete non-update response
+                        IResponse resp = env.Type switch
+                        {
+                            nameof(OkResponse)    => env.Payload.Deserialize<OkResponse>(jsonOptions),
+                            nameof(ErrorResponse) => env.Payload.Deserialize<ErrorResponse>(jsonOptions),
+                            // … add other non-update response types here …
+                            _ => throw new Exception($"Unknown response type: {env.Type}")
+                        };
+
+                        lock (responses)
+                            responses.Enqueue(resp);
+                        waitHandle.Set();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error($"Failed to materialize '{env.Type}': {ex.Message}");
                 }
             }
+
+            finished = true;
         }
 
 
@@ -138,23 +180,23 @@ namespace Networking
                 using JsonDocument document = JsonDocument.Parse(json);
                 var root = document.RootElement;
 
-                if (!root.TryGetProperty("Type", out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
+                if (!root.TryGetProperty("$type", out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
                 {
-                    throw new Exception("Invalid or missing 'Type' property");
+                    throw new Exception("Invalid or missing '$type' property");
                 }
 
-                string type = typeProp.GetString();
-                if (!root.TryGetProperty("Payload", out var payload))
+                string type = typeProp.GetString()?.ToLowerInvariant();
+                if (!root.TryGetProperty("payload", out var payload))
                 {
-                    throw new Exception("Missing 'Payload' property");
+                    throw new Exception("Missing 'payload' property");
                 }
 
                 return type switch
                 {
-                    nameof(OkResponse) => JsonSerializer.Deserialize<OkResponse>(payload.GetRawText()),
-                    nameof(ErrorResponse) => JsonSerializer.Deserialize<ErrorResponse>(payload.GetRawText()),
-                    nameof(NewParticipantResponse) => JsonSerializer.Deserialize<NewParticipantResponse>(payload.GetRawText()),
-                    // ... adaugă toate celelalte tipuri de răspuns
+                    "okresponse" => JsonSerializer.Deserialize<OkResponse>(payload.GetRawText(), jsonOptions),
+                    "errorresponse" => JsonSerializer.Deserialize<ErrorResponse>(payload.GetRawText(), jsonOptions),
+                    "newparticipantresponse" => JsonSerializer.Deserialize<NewParticipantResponse>(payload.GetRawText(), jsonOptions),
+                    "updatedeventsresponse" => JsonSerializer.Deserialize<UpdatedEventsResponse>(payload.GetRawText(), jsonOptions),
                     _ => throw new Exception($"Unknown response type: {type}")
                 };
             }
@@ -202,6 +244,7 @@ namespace Networking
             if (response is OkResponse okResponse)
             {
                 this.client = client;
+                log.Debug("Login response parsed successfully!");
                 return okResponse.user;
             }
 

@@ -3,6 +3,7 @@ using mpp_proiect_csharp_DianaGliga11.Model;
 using Service;
 using System.Drawing;
 using System.Windows.Forms;
+using Networking.Request;
 using Service;
 
 namespace Controller
@@ -129,13 +130,22 @@ namespace Controller
             try
             {
                 log.Debug($"Login attempt with username: {username}");
-                User user = server.Login(username, password, null);
+
+                var request = new LoginRequest(username, password);
+                // Cream deja instanța de HomeController ca observer
+                var homeController = new HomeController(properties, null, server);
+                log.Debug($"LoginRequest created - Username: {request.Username}, Password: [PROTECTED]");
+                // Încercăm autentificarea și trimitem observer-ul (clientul)
+                User user = server.Login(username, password, homeController);
 
                 if (user != null)
                 {
                     log.Info($"Login successful for user: {user.UserName}");
+
+                    // Acum setăm utilizatorul în controller după login
+                    homeController.SetLoggedInUser(user);
+
                     this.Hide();
-                    var homeController = new HomeController(properties, user, server);
                     homeController.Show();
                 }
                 else
