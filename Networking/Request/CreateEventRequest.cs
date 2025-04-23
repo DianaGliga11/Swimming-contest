@@ -3,7 +3,7 @@
 namespace Networking.Request
 {
 
-    public class CreateEventRequest
+    public class CreateEventRequest : IRequest
     {
         public Event ev { get; set; }
 

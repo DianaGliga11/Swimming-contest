@@ -66,7 +66,13 @@ namespace Networking
                     {
                         nameof(LoginRequest) => env.Payload.Deserialize<LoginRequest>(jsonOptions),
                         nameof(LogoutRequest) => env.Payload.Deserialize<LogoutRequest>(jsonOptions),
-                        // … etc. …
+                        nameof(GetAllEventsRequest) => env.Payload.Deserialize<GetAllEventsRequest>(jsonOptions), 
+                        nameof(GetAllParticipantsRequest) => env.Payload.Deserialize<GetAllParticipantsRequest>(jsonOptions),
+                        nameof(GetEventsWithParticipantsCountRequest) => env.Payload.Deserialize<GetEventsWithParticipantsCountRequest>(jsonOptions),
+                        nameof(CreateParticipantRequest) => env.Payload.Deserialize<CreateParticipantRequest>(jsonOptions),
+                        nameof(CreateEventEntriesRequest) => env.Payload.Deserialize<CreateEventEntriesRequest>(jsonOptions),
+                        nameof(CreateEventRequest) => env.Payload.Deserialize<CreateEventRequest>(jsonOptions),
+                        nameof(GetParticipantsForEventWithCountRequest) => env.Payload.Deserialize<GetParticipantsForEventWithCountRequest>(jsonOptions),
                         _ => throw new Exception($"Unknown request type: {env.Type}")
                     };
 

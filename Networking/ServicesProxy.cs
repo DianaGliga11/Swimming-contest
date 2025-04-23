@@ -100,9 +100,10 @@ namespace Networking
         public void Run()
         {
             using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
+            log.Info("Client is running...");
+
             while (!finished)
             {
-                log.Info("Client is running...");
                 string line;
                 try
                 {
@@ -144,7 +145,14 @@ namespace Networking
                         {
                             nameof(OkResponse)    => env.Payload.Deserialize<OkResponse>(jsonOptions),
                             nameof(ErrorResponse) => env.Payload.Deserialize<ErrorResponse>(jsonOptions),
-                            // … add other non-update response types here …
+                            nameof(AllEventsResponse) => env.Payload.Deserialize<AllEventsResponse>(jsonOptions),
+                            nameof(AllParticipantsResponse) => env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions),
+                            nameof(EventsWithParticipantsCountResponse) => env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions),
+                            nameof(EntriesByEventResponse) => env.Payload.Deserialize<EntriesByEventResponse>(jsonOptions),
+                            nameof(GetParticipantsForEventWithCountRequest) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
+                            nameof(NewParticipantResponse) => env.Payload.Deserialize<NewParticipantResponse>(jsonOptions),
+                            nameof(ParticipantResponse) => env.Payload.Deserialize<ParticipantResponse>(jsonOptions),
+                            nameof(UpdatedEventsResponse) => env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions),
                             _ => throw new Exception($"Unknown response type: {env.Type}")
                         };
 

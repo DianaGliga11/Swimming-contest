@@ -3,7 +3,7 @@ using Networking.Request;
 
 namespace Networking.Response
 {
-    public class EntriesByEventResponse : IRequest
+    public class EntriesByEventResponse : IResponse
     {
         private IEnumerable<Office> eventEntries{get;set;}
 

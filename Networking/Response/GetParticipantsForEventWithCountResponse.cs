@@ -3,7 +3,7 @@
 namespace Networking.Response
 {
     
-    public class GetParticipantsForEventWithCountResponse
+    public class GetParticipantsForEventWithCountResponse: IResponse
     {
         private IEnumerable<ParticipantDTO> participants;
 
