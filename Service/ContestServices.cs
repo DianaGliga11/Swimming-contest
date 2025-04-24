@@ -56,6 +56,11 @@ public class ContestServices : IContestServices
         return eventService.getEventsWithParticipantsCount().ToList();
     }
 
+    public List<ParticipantDTO> GetParticipantsForEventWithCount(long eventId)
+    {
+        return eventService.getParticipantsForEventWithCount(eventId).ToList();
+    }
+
     public List<Participant> GetAllParticipants()
     {
         return participantService.getAll().ToList();

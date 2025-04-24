@@ -149,7 +149,7 @@ namespace Networking
                             nameof(AllParticipantsResponse) => env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions),
                             nameof(EventsWithParticipantsCountResponse) => env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions),
                             nameof(EntriesByEventResponse) => env.Payload.Deserialize<EntriesByEventResponse>(jsonOptions),
-                            nameof(GetParticipantsForEventWithCountRequest) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
+                            nameof(GetParticipantsForEventWithCountResponse) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
                             nameof(NewParticipantResponse) => env.Payload.Deserialize<NewParticipantResponse>(jsonOptions),
                             nameof(ParticipantResponse) => env.Payload.Deserialize<ParticipantResponse>(jsonOptions),
                             nameof(UpdatedEventsResponse) => env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions),
@@ -176,10 +176,10 @@ namespace Networking
             switch (update)
             {
                 case NewParticipantResponse newParticipantResponse:
-                    client.ParticipantAdded(newParticipantResponse.participant);
+                    client.ParticipantAdded(newParticipantResponse.Participant);
                     break;
                 case UpdatedEventsResponse updatedEventsResponse:
-                    client.EventEvntriesAdded(updatedEventsResponse.events);
+                    client.EventEvntriesAdded(updatedEventsResponse.Events);
                     break;
             }
         }
@@ -246,6 +246,18 @@ namespace Networking
             return eventsWithParticipantsCountResponse.events;
         }
 
+        public List<ParticipantDTO> GetParticipantsForEventWithCount(long eventId)
+        {
+            SendRequest(new GetParticipantsForEventWithCountRequest(eventId));
+            IResponse response = ReadResponse();
+            if (response is ErrorResponse errorResponse)
+            {
+                throw new Exception(errorResponse.message);
+            }
+            GetParticipantsForEventWithCountResponse getParticipantsForEventWithCountResponse = (GetParticipantsForEventWithCountResponse)response;
+            return getParticipantsForEventWithCountResponse.participants;
+        }
+
         public List<Participant> GetAllParticipants()
         {
             SendRequest(new GetAllParticipantsRequest());
@@ -255,7 +267,7 @@ namespace Networking
                 throw new Exception(errorResponse.message);
             }
             AllParticipantsResponse allParticipantsResponse = (AllParticipantsResponse)response;
-            return allParticipantsResponse.participants;
+            return allParticipantsResponse.Participants;
         }
 
         public List<Event> GetAllEvents()
@@ -273,11 +285,42 @@ namespace Networking
         public void saveEventsEntries(List<Office> newEntry)
         {
             SendRequest(new CreateEventEntriesRequest(newEntry));
+            IResponse response = ReadResponse();
+
+            if (response is ErrorResponse errorResponse)
+            {
+                throw new Exception(errorResponse.message);
+            }
+            else if (response is OkResponse)
+            {
+                log.Info("Events entries saved successfully.");
+            }
+            else
+            {
+                throw new Exception($"Unexpected response type: {response.GetType().Name}");
+            }
         }
+
 
         public void saveParticipant(Participant participant)
         {
             SendRequest(new CreateParticipantRequest(participant));
+            IResponse response = ReadResponse();
+    
+            // Gestionați corect tipurile de răspuns așteptate
+            if (response is ErrorResponse errorResponse)
+            {
+                throw new Exception(errorResponse.message);
+            }
+            else if (response is NewParticipantResponse newParticipantResponse)
+            {
+                // Participantul a fost adăugat cu succes
+                log.Info($"Participant added: {newParticipantResponse.Participant?.Name}");
+            }
+            else
+            {
+                throw new Exception($"Unexpected response type: {response.GetType().Name}");
+            }
         }
     }
 }

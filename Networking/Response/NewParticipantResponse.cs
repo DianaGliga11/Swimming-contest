@@ -1,10 +1,12 @@
-﻿using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using System.Text.Json.Serialization;
+using mpp_proiect_csharp_DianaGliga11.Model;
 
 namespace Networking.Response
 {
     public class NewParticipantResponse : UpdateResponse
     {
-        public Participant participant{get;set;}
+        [JsonPropertyName("participant")]
+        public Participant Participant{get;set;}
 
         public NewParticipantResponse()
         {
@@ -12,7 +14,7 @@ namespace Networking.Response
 
         public NewParticipantResponse(Participant participant)
         {
-            this.participant = participant;
+            this.Participant = participant;
         }
 
 

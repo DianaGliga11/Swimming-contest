@@ -1,7 +1,10 @@
-﻿using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using Microsoft.VisualBasic.Logging;
+using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
 using Service;
 using Service;
+using log4net;
+
 
 namespace Controller
 {
@@ -10,6 +13,7 @@ namespace Controller
         private IDictionary<string, string> properties;
         private User currentUser;
         private IContestServices server;
+        private static readonly ILog log = LogManager.GetLogger(typeof(MainController));
 
         private ComboBox eventComboBox;
         private Label usernameLabel;
@@ -61,7 +65,7 @@ namespace Controller
                 Location = new Point(230, 50),
                 Width = 80
             };
-            //btnSearch.Click += OnSearchClicked;
+            btnSearch.Click += OnSearchClicked;
 
             searchMessageLabel = new Label
             {
@@ -158,8 +162,8 @@ namespace Controller
 
         private void LoadEventComboBox()
         {
-            UpdateUI(() => {
-                eventComboBox.Items.Clear();
+            UpdateUI(() =>
+            {
                 var events = server.GetAllEvents();
                 if (events == null || !events.Any())
                 {
@@ -167,12 +171,12 @@ namespace Controller
                     return;
                 }
 
-                foreach (var ev in events)
-                {
-                    eventComboBox.Items.Add(ev);
-                }
+                eventComboBox.DataSource = events.ToList();
+                eventComboBox.SelectedIndex = -1;
+
             });
         }
+
 
         public void UpdateUI(Action action)
         {
@@ -191,7 +195,8 @@ namespace Controller
                 participantTable.Rows.Clear();
                 foreach (var participant in server.GetAllParticipants())
                 {
-                    participantTable.Rows.Add(participant.Name, participant.Age);
+                    log.Debug($"Loading participant: {participant.Name}");
+                    participantTable.Rows.Add(participant.Name, participant.Age, participant.Id);
                 }
             });
         }
@@ -207,10 +212,11 @@ namespace Controller
             });
         }
 
-        /*
+        
         private void OnSearchClicked(object sender, EventArgs e)
         {
             var selectedEvent = eventComboBox.SelectedItem as Event;
+            log.Info($"Selected item: {selectedEvent}");
             if (selectedEvent == null)
             {
                 ShowSearchMessage("Please select an event first!", true);
@@ -219,7 +225,7 @@ namespace Controller
 
             try
             {
-                var results = server.GetEventsWithParticipantsCount();
+                var results = server.GetParticipantsForEventWithCount(selectedEvent.Id);
                 if (results == null || !results.Any())
                 {
                     ShowSearchMessage("No participants found for this event.", true);
@@ -238,6 +244,7 @@ namespace Controller
             }
         }
 
+
         private void UpdateSearchResults(IEnumerable<ParticipantDTO> results)
         {
             searchResultsTable.Rows.Clear();
@@ -246,7 +253,7 @@ namespace Controller
                 searchResultsTable.Rows.Add(result.name, result.age, result.eventCount);
             }
         }
-        */
+        
 
         private void ShowSearchMessage(string message, bool isError)
         {
@@ -269,7 +276,7 @@ namespace Controller
 
         private void OnParticipantButtonClicked(object sender, EventArgs e)
         {
-            var newParticipantForm = new NewParticipantController(properties);
+            var newParticipantForm = new NewParticipantController(server);
             if (newParticipantForm.ShowDialog() == DialogResult.OK)
             {
                 LoadParticipants();
@@ -278,11 +285,14 @@ namespace Controller
 
         private void OnNewEntryClicked(object sender, EventArgs e)
         {
-            using (var eventEntriesForm = new EventEntriesController(properties, currentUser))
+            var allEvents = server.GetAllEvents();
+            var allParticipants = server.GetAllParticipants();
+
+            using (var eventEntriesForm = new EventEntriesController(server, null, allEvents, allParticipants))
             {
                 if (eventEntriesForm.ShowDialog() == DialogResult.OK)
                 {
-                    LoadEvents();
+                    LoadEvents(); // Reload event table to reflect updated participant counts
                 }
             }
         }

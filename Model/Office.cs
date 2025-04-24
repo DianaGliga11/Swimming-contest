@@ -10,6 +10,10 @@ namespace mpp_proiect_csharp_DianaGliga11.Model
         public Participant Participant { get; set; }
         public Event Event { get; set; }
 
+        public Office()
+        {
+        }
+
         public Office(Participant participants, Event events)
         {   
             Participant = participants;

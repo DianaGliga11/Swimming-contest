@@ -15,10 +15,12 @@ namespace Controller
         private TextBox ageTextField;
         private Button confirmButton;
 
-        public NewParticipantController(IDictionary<string,string> properties)
+        private readonly IContestServices proxy;
+
+        public NewParticipantController(IContestServices proxy)
         {
-            this.properties = properties;
-            Init(this.properties,currentUser,onParticipantAdded);
+            InitializeComponents();
+            this.proxy = proxy;
         }
 
         private void InitializeComponents()
@@ -105,12 +107,20 @@ namespace Controller
                 }
 
                 Participant participant = new Participant(name, age);
-                participantService.add(participant);
+                try
+                {
+                    proxy.saveParticipant(participant);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    ShowAlert("Error adding participant", ex.Message);
+                }
 
-                onParticipantAdded?.Invoke();
+                //onParticipantAdded?.Invoke();
 
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+               
             }
             catch (Exception ex)
             {

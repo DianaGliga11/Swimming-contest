@@ -1,18 +1,21 @@
-﻿using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using System.Text.Json.Serialization;
+using mpp_proiect_csharp_DianaGliga11.Model;
 
 namespace Networking.Request
 {
     public class CreateEventEntriesRequest : IRequest
     {
-        public List<Office> eventEntries{get;set;}
+        [JsonPropertyName("eventEntries")]
+        public List<Office> EventEntries{get;set;}
 
+        [JsonConstructor]
         public CreateEventEntriesRequest()
         {
         }
 
         public CreateEventEntriesRequest(List<Office> eventEntries)
         {
-            this.eventEntries = eventEntries;
+            this.EventEntries = eventEntries;
         }
     }
 }

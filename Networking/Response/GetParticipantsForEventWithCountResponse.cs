@@ -5,14 +5,14 @@ namespace Networking.Response
     
     public class GetParticipantsForEventWithCountResponse: IResponse
     {
-        private IEnumerable<ParticipantDTO> participants;
+        public List<ParticipantDTO> participants;
 
         public GetParticipantsForEventWithCountResponse()
         {
             
         }
 
-        public GetParticipantsForEventWithCountResponse(IEnumerable<ParticipantDTO> participants)
+        public GetParticipantsForEventWithCountResponse(List<ParticipantDTO> participants)
         {
             this.participants = participants;
         }

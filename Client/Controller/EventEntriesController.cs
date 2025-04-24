@@ -16,15 +16,24 @@ namespace Controller
         private CheckedListBox eventListView;
         private Button confirmButton;
 
-        public EventEntriesController(IDictionary<string, string> properties, User currentUser)
+        private readonly IContestServices proxy;
+        private readonly List<Event> allEvents;
+        private List<Participant> allParticipants;
+
+
+
+        public EventEntriesController(IContestServices proxy, Participant participant, List<Event> events, List<Participant> allParticipants)
         {
-            this.properties = properties;
-            this.currentUser = currentUser;
-            InitializeServices();
             InitializeComponents();
+            this.proxy = proxy;
+            this.currentParticipant = participant;
+            this.allEvents = events;
+            this.allParticipants = allParticipants;
             LoadData();
         }
 
+
+        /*
         private void InitializeServices()
         {
             EventDBRepository eventRepository = new EventDBRepository(properties);
@@ -34,6 +43,7 @@ namespace Controller
             eventService = new EventService(eventRepository, officeRepository);
             participantService = new ParticipantService(participantRepository);
         }
+        */
 
         private void InitializeComponents()
         {
@@ -69,7 +79,7 @@ namespace Controller
                 Location = new Point(20, 90),
                 Size = new Size(350, 300),
                 CheckOnClick = true,
-                DisplayMember = "Style" 
+                //DisplayMember = "Style" 
             };
 
             confirmButton = new Button
@@ -91,19 +101,23 @@ namespace Controller
         {
             try
             {
-                var participants = participantService.getAll();
-                participantBox.DataSource = participants;
-                participantBox.SelectedIndex = participants.Any() ? 0 : -1;
+                participantBox.DataSource = allParticipants;
+                participantBox.SelectedItem = allParticipants
+                    .FirstOrDefault(p => p.Name == currentParticipant.Name && p.Age == currentParticipant.Age);
 
-                var events = eventService.getAll();
-                eventListView.DataSource = events;
+                eventListView.Items.Clear();
+                foreach (var ev in allEvents)
+                {
+                    eventListView.Items.Add(ev);
+                }
             }
-            catch (EntityRepoException ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Error loading data: {ex.Message}", "Error", 
+                MessageBox.Show($"Error loading data: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void OnParticipantSelected(object sender, EventArgs e)
         {
@@ -139,7 +153,8 @@ namespace Controller
                 foreach (var ev in selectedEvents)
                 {
                     var registration = new Office(currentParticipant, ev);
-                    eventService.saveEventEntry(registration);
+                    var entries = selectedEvents.Select(ev => new Office(currentParticipant, ev)).ToList();
+                    proxy.saveEventsEntries(entries);
                 }
 
                 MessageBox.Show($"Successfully registered for {selectedEvents.Count} events!", 

@@ -158,7 +158,8 @@ namespace Networking
                 {
                     lock (server)
                     {
-                        server.saveParticipant(createParticipantRequest.participant);
+                        server.saveParticipant(createParticipantRequest.Participant);
+                        return new NewParticipantResponse(createParticipantRequest.Participant);
                     }
                 }
                 catch (Exception exception)
@@ -169,12 +170,13 @@ namespace Networking
 
             if (request is CreateEventEntriesRequest createEventEntriesRequest)
             {
-                log.Info("Create events request");
+                log.Info("Create event entries request");
                 try
                 {
                     lock (server)
                     {
-                        server.saveEventsEntries(createEventEntriesRequest.eventEntries);
+                        server.saveEventsEntries(createEventEntriesRequest.EventEntries);
+                        return new OkResponse(null); // Sau trimite ceva util dacă vrei
                     }
                 }
                 catch (Exception exception)
@@ -182,6 +184,7 @@ namespace Networking
                     return new ErrorResponse(exception.Message);
                 }
             }
+
             
             if (request is GetAllParticipantsRequest)
             {
@@ -233,6 +236,25 @@ namespace Networking
                     return new ErrorResponse(exception.Message);
                 }
             }
+
+            if (request is GetParticipantsForEventWithCountRequest getParticipantsForEventWithCountRequest)
+            {
+                log.Info("Get participant for event count");
+                try
+                {
+                    lock (server)
+                    {
+                        List<ParticipantDTO> participants =
+                            server.GetParticipantsForEventWithCount(getParticipantsForEventWithCountRequest.EventId);
+                        return new GetParticipantsForEventWithCountResponse(participants);
+
+                    }
+                }
+                catch (Exception exception)
+                {
+                    return new ErrorResponse(exception.Message);
+                }
+            }
             }
             catch (Exception ex)
             {
@@ -263,7 +285,10 @@ namespace Networking
             log.Info("Participant added: " + participant.Name);
             try
             {
-                SendResponse(new NewParticipantResponse(participant));
+                SendResponse(new NewParticipantResponse(participant)
+                {
+                    Participant = participant
+                });
             }
             catch (Exception ex)
             {
