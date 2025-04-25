@@ -176,7 +176,8 @@ namespace Networking
                     lock (server)
                     {
                         server.saveEventsEntries(createEventEntriesRequest.EventEntries);
-                        return new OkResponse(null); // Sau trimite ceva util dacă vrei
+                        var updatedEvents = server.GetEventsWithParticipantsCount();
+                        return new UpdatedEventsResponse(updatedEvents);
                     }
                 }
                 catch (Exception exception)
@@ -184,6 +185,7 @@ namespace Networking
                     return new ErrorResponse(exception.Message);
                 }
             }
+
 
             
             if (request is GetAllParticipantsRequest)

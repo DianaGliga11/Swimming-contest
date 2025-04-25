@@ -203,14 +203,20 @@ namespace Controller
 
         private void LoadEvents()
         {
-            UpdateUI(() => {
-                eventTable.Rows.Clear();
-                foreach (var ev in server.GetEventsWithParticipantsCount())
-                {
-                    eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
-                }
-            });
+            if (InvokeRequired)
+            {
+                Invoke(new Action(LoadEvents));
+                return;
+            }
+
+            eventTable.Rows.Clear();
+            var events = server.GetEventsWithParticipantsCount();
+            foreach (var ev in events)
+            {
+                eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
+            }
         }
+
 
         
         private void OnSearchClicked(object sender, EventArgs e)
@@ -312,10 +318,7 @@ namespace Controller
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
-            UpdateUI(() => {
-                LoadEvents();
-                MessageBox.Show("Event entries updated successfully!");
-            });
+           LoadEvents();
         }
         public void SetLoggedInUser(User user)
         {

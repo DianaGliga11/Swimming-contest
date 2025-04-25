@@ -123,50 +123,41 @@ namespace Controller
         {
             currentParticipant = participantBox.SelectedItem as Participant;
         }
-        private void OnConfirmClicked(object sender, EventArgs e)
+        private async void OnConfirmClicked(object sender, EventArgs e)
         {
             try
             {
                 if (currentParticipant == null || currentParticipant.Id <= 0)
                 {
-                    MessageBox.Show("Please select a valid participant first", "Error", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a valid participant first");
                     return;
                 }
 
-                var selectedEvents = new List<Event>();
-                foreach (var item in eventListView.CheckedItems)
-                {
-                    if (item is Event ev && ev.Id > 0)
-                    {
-                        selectedEvents.Add(ev);
-                    }
-                }
+                var selectedEvents = eventListView.CheckedItems
+                    .Cast<Event>()
+                    .Where(ev => ev.Id > 0)
+                    .ToList();
 
-                if (selectedEvents.Count == 0)
+                if (!selectedEvents.Any())
                 {
-                    MessageBox.Show("Please select at least one valid event", "Error", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select at least one valid event");
                     return;
                 }
 
-                foreach (var ev in selectedEvents)
-                {
-                    var registration = new Office(currentParticipant, ev);
-                    var entries = selectedEvents.Select(ev => new Office(currentParticipant, ev)).ToList();
-                    proxy.saveEventsEntries(entries);
-                }
+                var entries = selectedEvents
+                    .Select(ev => new Office(currentParticipant, ev))
+                    .ToList();
+        
+                await Task.Run(() => proxy.saveEventsEntries(entries));
 
-                MessageBox.Show($"Successfully registered for {selectedEvents.Count} events!", 
-                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Registration failed: {ex.Message}", "Error", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Registration failed: {ex.Message}");
             }
         }
+
     }
 }

@@ -77,10 +77,18 @@ public class ContestServices : IContestServices
         {
             eventService.saveEventEntry(entry);
         }
+        var updatedEvents = GetEventsWithParticipantsCount();
 
         foreach (IMainObserver client in loggedClients.Values)
         {
-            client.EventEvntriesAdded(GetEventsWithParticipantsCount());
+            try
+            {
+                client.EventEvntriesAdded(updatedEvents);
+            }
+            catch (Exception e)
+            {
+                log.Error($"Failed to notify client");
+            }
         }
     }
 

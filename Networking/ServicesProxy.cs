@@ -173,14 +173,17 @@ namespace Networking
 
         private void HandleUpdate(UpdateResponse update)
         {
-            switch (update)
+            try
             {
-                case NewParticipantResponse newParticipantResponse:
-                    client.ParticipantAdded(newParticipantResponse.Participant);
-                    break;
-                case UpdatedEventsResponse updatedEventsResponse:
-                    client.EventEvntriesAdded(updatedEventsResponse.Events);
-                    break;
+                if (update is UpdatedEventsResponse updatedEventsResponse)
+                {
+                    log.Info($"Received updated events: {updatedEventsResponse.Events?.Count ?? 0}");
+                    client?.EventEvntriesAdded(updatedEventsResponse.Events);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Error handling update: {ex.Message}");
             }
         }
 
@@ -284,24 +287,27 @@ namespace Networking
 
         public void saveEventsEntries(List<Office> newEntry)
         {
-            SendRequest(new CreateEventEntriesRequest(newEntry));
-            IResponse response = ReadResponse();
+            try
+            {
+                SendRequest(new CreateEventEntriesRequest(newEntry));
+                IResponse response = ReadResponse();
 
-            if (response is ErrorResponse errorResponse)
-            {
-                throw new Exception(errorResponse.message);
+                if (response is ErrorResponse errorResponse)
+                {
+                    throw new Exception(errorResponse.message);
+                }
+                else if (response is UpdatedEventsResponse updatedEventsResponse)
+                {
+                    // Process update on a separate thread to avoid deadlock
+                    Task.Run(() => HandleUpdate(updatedEventsResponse));
+                }
             }
-            else if (response is OkResponse)
+            catch (Exception ex)
             {
-                log.Info("Events entries saved successfully.");
-            }
-            else
-            {
-                throw new Exception($"Unexpected response type: {response.GetType().Name}");
+                log.Error($"Error in saveEventsEntries: {ex.Message}");
+                throw;
             }
         }
-
-
         public void saveParticipant(Participant participant)
         {
             SendRequest(new CreateParticipantRequest(participant));
