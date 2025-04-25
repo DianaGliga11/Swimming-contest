@@ -7,7 +7,7 @@ namespace Networking.Response
     public class EntriesByEventResponse : IResponse
     {
         [JsonPropertyName("eventEntries")]
-        private IEnumerable<Office> EventEntries{get;set;}
+        public IEnumerable<Office> EventEntries{get;set;}
 
         [JsonConstructor]
         public EntriesByEventResponse()

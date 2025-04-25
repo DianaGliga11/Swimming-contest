@@ -27,6 +27,8 @@ namespace Controller
         private Button btnLogout;
         private Button btnAddParticipant;
         private Button btnNewEntry;
+        
+        private Button refreshButton; 
 
         public HomeController(IDictionary<string, string> properties, User currentUser, IContestServices server)
         {
@@ -147,6 +149,14 @@ namespace Controller
                 Width = 80
             };
             btnLogout.Click += OnLogoutClicked;
+            
+            refreshButton = new Button
+            {
+                Text = "Refresh",
+                Location = new System.Drawing.Point(800, 20),
+                Size = new System.Drawing.Size(120, 30)
+            };
+            refreshButton.Click += OnRefreshClicked;
 
             this.Controls.Add(usernameLabel);
             this.Controls.Add(eventComboBox);
@@ -158,6 +168,8 @@ namespace Controller
             this.Controls.Add(btnAddParticipant);
             this.Controls.Add(btnNewEntry);
             this.Controls.Add(btnLogout);
+            
+            this.Controls.Add(refreshButton);
         }
 
         private void LoadEventComboBox()
@@ -180,9 +192,9 @@ namespace Controller
 
         public void UpdateUI(Action action)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(action);
+                Invoke(action);
             }
             else
             {
@@ -318,8 +330,16 @@ namespace Controller
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
-           LoadEvents();
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => EventEvntriesAdded(events)));
+                return;
+            }
+
+            // 🟢 Executat pe UI thread
+            LoadEvents();
         }
+
         public void SetLoggedInUser(User user)
         {
             this.currentUser = user;
@@ -328,6 +348,15 @@ namespace Controller
             LoadParticipants();
             LoadEvents();
             
+        }
+        
+        private void OnRefreshClicked(object sender, EventArgs e)
+        {
+            // Reîncărcăm datele
+            LoadEventComboBox();
+            LoadEvents();
+            LoadEventComboBox();
+            MessageBox.Show("Interface has been refreshed.");
         }
     }
 }

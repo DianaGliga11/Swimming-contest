@@ -20,7 +20,7 @@ namespace Controller
         private readonly List<Event> allEvents;
         private List<Participant> allParticipants;
 
-
+    
 
         public EventEntriesController(IContestServices proxy, Participant participant, List<Event> events, List<Participant> allParticipants)
         {
@@ -101,14 +101,33 @@ namespace Controller
         {
             try
             {
-                participantBox.DataSource = allParticipants;
-                participantBox.SelectedItem = allParticipants
-                    .FirstOrDefault(p => p.Name == currentParticipant.Name && p.Age == currentParticipant.Age);
-
-                eventListView.Items.Clear();
-                foreach (var ev in allEvents)
+                // Actualizează UI-ul doar pe thread-ul principal
+                if (this.InvokeRequired)
                 {
-                    eventListView.Items.Add(ev);
+                    this.Invoke(new Action(() =>
+                    {
+                        participantBox.DataSource = allParticipants;
+                        participantBox.SelectedItem = allParticipants
+                            .FirstOrDefault(p => p.Name == currentParticipant.Name && p.Age == currentParticipant.Age);
+
+                        eventListView.Items.Clear();
+                        foreach (var ev in allEvents)
+                        {
+                            eventListView.Items.Add(ev);
+                        }
+                    }));
+                }
+                else
+                {
+                    participantBox.DataSource = allParticipants;
+                    participantBox.SelectedItem = allParticipants
+                        .FirstOrDefault(p => p.Name == currentParticipant.Name && p.Age == currentParticipant.Age);
+
+                    eventListView.Items.Clear();
+                    foreach (var ev in allEvents)
+                    {
+                        eventListView.Items.Add(ev);
+                    }
                 }
             }
             catch (Exception ex)
@@ -117,6 +136,7 @@ namespace Controller
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
         private void OnParticipantSelected(object sender, EventArgs e)
@@ -147,9 +167,14 @@ namespace Controller
                 var entries = selectedEvents
                     .Select(ev => new Office(currentParticipant, ev))
                     .ToList();
-        
+
+                // Execută pe un thread separat
                 await Task.Run(() => proxy.saveEventsEntries(entries));
 
+                // După ce datele au fost salvate, actualizează datele în interfață
+                LoadData(); // Actualizează UI-ul cu noile date
+
+                // Dacă nu a aruncat excepții, închidem fereastra
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

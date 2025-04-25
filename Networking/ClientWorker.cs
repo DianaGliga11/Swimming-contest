@@ -177,7 +177,7 @@ namespace Networking
                     {
                         server.saveEventsEntries(createEventEntriesRequest.EventEntries);
                         var updatedEvents = server.GetEventsWithParticipantsCount();
-                        return new UpdatedEventsResponse(updatedEvents);
+                        return new OkResponse();
                     }
                 }
                 catch (Exception exception)
