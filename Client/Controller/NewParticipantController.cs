@@ -108,6 +108,7 @@ namespace Controller
             this.Controls.Add(ageTextField);
             this.Controls.Add(confirmButton);
         }
+        
         private async void OnConfirmClicked(object sender, EventArgs e)
         {
             string name = nameTextField.Text.Trim();
@@ -123,13 +124,11 @@ namespace Controller
                 return;
             }
 
-            Participant newParticipant = new Participant(name, age);
+            Participant participant = new Participant(name, age);
 
             try
             {
-                // Creează o listă care conține toți participanții existenți + noul participant
-                await Task.Run(() => proxy.saveParticipant(new List<Participant> { newParticipant }));
-
+                await Task.Run(() => proxy.saveParticipant(participant));
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

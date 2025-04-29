@@ -186,12 +186,11 @@ public void Run()
                     log.Info($"Received updated events: {updatedEventsResponse.Events?.Count ?? 0}");
                     if (updatedEventsResponse.Events != null) client?.EventEvntriesAdded(updatedEventsResponse.Events);
                 }
-                else if (update is UpdatedParticipantsResponse updatedParticipantsResponse)
+                else if (update is NewParticipantResponse newParticipantResponse)
                 {
-                    log.Info($"Received new participant: {updatedParticipantsResponse.Participants?.Count ?? 0}");
-                    if (updatedParticipantsResponse.Participants != null)
-                        client?.ParticipantAdded(updatedParticipantsResponse
-                            .Participants); // trebuie să implementezi și metoda asta
+                    log.Info($"Received new participant: {newParticipantResponse.Participant}");
+
+                    client?.ParticipantAdded(newParticipantResponse.Participant); 
                 }
             }
             catch (Exception ex)
@@ -329,11 +328,11 @@ public void Run()
                 throw;
             }
         }
-        public void saveParticipant(List<Participant> participants)
+        public void saveParticipant(Participant participant)
         {
             try
             {
-                SendRequest(new CreateParticipantRequest(participants));
+                SendRequest(new CreateParticipantRequest(participant));
                 IResponse response = ReadResponse();
 
                 // Gestionați corect tipurile de răspuns așteptate

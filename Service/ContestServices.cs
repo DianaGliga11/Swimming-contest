@@ -73,79 +73,22 @@ public class ContestServices : IContestServices
 
     public void saveEventsEntries(List<Office> newEntries)
     {
-        // Salvare în baza de date
         foreach (Office entry in newEntries)
         {
             eventService.saveEventEntry(entry);
         }
-    
-        // Obține datele actualizate
-        var updatedEvents = GetEventsWithParticipantsCount();
-    
-        // Notifică TOȚI clienții
-        NotifyAllClientsAboutEvents(updatedEvents);
-    }
 
-    private void NotifyAllClientsAboutEvents(List<EventDTO> events)
-    {
-        List<string> clientsToRemove = new();
-
-        foreach (var entry in loggedClients)
+        foreach (IMainObserver client in loggedClients.Values)
         {
-            var username = entry.Key;
-            var observer = entry.Value;
-
-            try
-            {
-                observer.EventEvntriesAdded(events);
-            }
-            catch (Exception ex)
-            {
-                log.Error($"Error notifying client '{username}': {ex.Message}");
-                clientsToRemove.Add(username);
-            }
-        }
-
-        // Scoate clienții care au dat eroare
-        foreach (var user in clientsToRemove)
-        {
-            loggedClients.Remove(user);
+           client.EventEvntriesAdded(GetEventsWithParticipantsCount());
         }
     }
-    public void saveParticipant(List<Participant> participants)
+    public void saveParticipant(Participant participant)
     {
-        // Salvați doar ultimul participant (dacă asta e comportamentul dorit)
-        Participant newParticipant = participants.Last();
-        participantService.add(newParticipant);
-    
-        // Obțineți lista actualizată de participanți
-        List<Participant> updatedParticipants = GetAllParticipants();
-    
-        // Notificați TOȚI clienții conectați
-        NotifyAllClients(updatedParticipants);
-    }
-
-    private void NotifyAllClients(List<Participant> participants)
-    {
-        List<IMainObserver> failedClients = new List<IMainObserver>();
-    
-        foreach (var clientEntry in loggedClients)
+        participantService.add(participant);
+        foreach (IMainObserver client in loggedClients.Values)
         {
-            try
-            {
-                clientEntry.Value.ParticipantAdded(participants);
-            }
-            catch (Exception e)
-            {
-                log.Error($"Failed to notify client {clientEntry.Key}: {e.Message}");
-                failedClients.Add(clientEntry.Value);
-            }
-        }
-    
-        // Ștergeți clienții care nu mai răspund
-        foreach (var failedClient in failedClients)
-        {
-            loggedClients.Remove(loggedClients.FirstOrDefault(x => x.Value == failedClient).Key);
+            client.ParticipantAdded(participant);
         }
     }
 }

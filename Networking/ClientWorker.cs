@@ -158,7 +158,7 @@ namespace Networking
                 {
                     lock (server)
                     {
-                        server.saveParticipant(createParticipantRequest.Participants);
+                        server.saveParticipant(createParticipantRequest.Participant);
                         var updatedParticipants = server.GetAllParticipants();
                         return new UpdatedParticipantsResponse(updatedParticipants);
                     }
@@ -283,11 +283,11 @@ namespace Networking
         }
 
         
-        public void ParticipantAdded(List<Participant> participants)
+        public void ParticipantAdded(Participant participant)
         {
             try
             {
-                var response = new UpdatedParticipantsResponse(participants);
+                var response = new NewParticipantResponse(participant);
                 SendResponse(response);
             }
             catch (Exception ex)

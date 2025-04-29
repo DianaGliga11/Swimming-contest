@@ -27,8 +27,8 @@ namespace Controller
         private Button btnLogout;
         private Button btnAddParticipant;
         private Button btnNewEntry;
-        
-        private Button refreshButton; 
+
+        private Button refreshButton;
 
         public HomeController(IContestServices server)
         {
@@ -144,7 +144,7 @@ namespace Controller
                 Width = 80
             };
             btnLogout.Click += OnLogoutClicked;
-            
+
             refreshButton = new Button
             {
                 Text = "Refresh",
@@ -163,7 +163,7 @@ namespace Controller
             this.Controls.Add(btnAddParticipant);
             this.Controls.Add(btnNewEntry);
             this.Controls.Add(btnLogout);
-            
+
             this.Controls.Add(refreshButton);
         }
 
@@ -196,9 +196,11 @@ namespace Controller
                 action();
             }
         }
+
         private void LoadParticipants()
         {
-            UpdateUI(() => {
+            UpdateUI(() =>
+            {
                 participantTable.Rows.Clear();
                 foreach (var participant in server.GetAllParticipants())
                 {
@@ -225,7 +227,7 @@ namespace Controller
         }
 
 
-        
+
         private void OnSearchClicked(object sender, EventArgs e)
         {
             var selectedEvent = eventComboBox.SelectedItem as Event;
@@ -266,7 +268,7 @@ namespace Controller
                 searchResultsTable.Rows.Add(result.name, result.age, result.eventCount);
             }
         }
-        
+
 
         private void ShowSearchMessage(string message, bool isError)
         {
@@ -291,13 +293,13 @@ namespace Controller
         {
             var allEvents = server.GetAllEvents();
             var allParticipants = server.GetAllParticipants();
-            using(var newParticipantForm = new NewParticipantController(server, null, allEvents, allParticipants))
+            using (var newParticipantForm = new NewParticipantController(server, null, allEvents, allParticipants))
             {
                 if (newParticipantForm.ShowDialog() == DialogResult.OK)
                 {
                     //LoadParticipants();
                 }
-                
+
             }
         }
 
@@ -320,31 +322,11 @@ namespace Controller
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public void ParticipantAdded(List<Participant> participants)
+        public void ParticipantAdded(Participant participant)
         {
-            UpdateUI(() => {
-                // Actualizați întregul tabel, nu doar adăugați
-                participantTable.Rows.Clear();
-                foreach (var p in participants.OrderBy(p => p.Name))
-                {
-                    participantTable.Rows.Add(p.Name, p.Age);
-                }
-        
-                // Opțional: evidențiați ultimul adăugat
-                if (participants.Count > 0)
-                {
-                    var last = participants.Last();
-                    foreach (DataGridViewRow row in participantTable.Rows)
-                    {
-                        if (row.Cells["Name"].Value.ToString() == last.Name && 
-                            row.Cells["Age"].Value.ToString() == last.Age.ToString())
-                        {
-                            row.DefaultCellStyle.BackColor = Color.LightGreen;
-                            participantTable.FirstDisplayedScrollingRowIndex = row.Index;
-                            break;
-                        }
-                    }
-                }
+            UpdateUI(() =>
+            {
+                participantTable.Rows.Add(participant.Name, participant.Age); 
             });
         }
 
