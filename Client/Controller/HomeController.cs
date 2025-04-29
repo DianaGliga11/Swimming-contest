@@ -289,10 +289,15 @@ namespace Controller
 
         private void OnParticipantButtonClicked(object sender, EventArgs e)
         {
-            var newParticipantForm = new NewParticipantController(server);
-            if (newParticipantForm.ShowDialog() == DialogResult.OK)
+            var allEvents = server.GetAllEvents();
+            var allParticipants = server.GetAllParticipants();
+            using(var newParticipantForm = new NewParticipantController(server, null, allEvents, allParticipants))
             {
-                //LoadParticipants();
+                if (newParticipantForm.ShowDialog() == DialogResult.OK)
+                {
+                    //LoadParticipants();
+                }
+                
             }
         }
 
@@ -315,18 +320,48 @@ namespace Controller
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public void ParticipantAdded(Participant participant)
+        public void ParticipantAdded(List<Participant> participants)
         {
             UpdateUI(() => {
-                participantTable.Rows.Add(participant.Name, participant.Age);
-                MessageBox.Show($"Participant {participant.Name} added successfully!");
+                // Actualizați întregul tabel, nu doar adăugați
+                participantTable.Rows.Clear();
+                foreach (var p in participants.OrderBy(p => p.Name))
+                {
+                    participantTable.Rows.Add(p.Name, p.Age);
+                }
+        
+                // Opțional: evidențiați ultimul adăugat
+                if (participants.Count > 0)
+                {
+                    var last = participants.Last();
+                    foreach (DataGridViewRow row in participantTable.Rows)
+                    {
+                        if (row.Cells["Name"].Value.ToString() == last.Name && 
+                            row.Cells["Age"].Value.ToString() == last.Age.ToString())
+                        {
+                            row.DefaultCellStyle.BackColor = Color.LightGreen;
+                            participantTable.FirstDisplayedScrollingRowIndex = row.Index;
+                            break;
+                        }
+                    }
+                }
             });
         }
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
             UpdateUI(() => {
-                LoadEvents();  // Reîncarci evenimentele
+                eventTable.Rows.Clear();
+                foreach (var ev in events.OrderBy(e => e.style))
+                {
+                    eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
+            
+                    // Opțional: evidențiere pentru ultima modificare
+                    if (ev == events.Last())
+                    {
+                        eventTable.Rows[eventTable.Rows.Count - 1].DefaultCellStyle.BackColor = Color.LightYellow;
+                    }
+                }
             });
         }
 

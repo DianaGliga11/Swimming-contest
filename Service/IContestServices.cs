@@ -12,6 +12,6 @@ public interface IContestServices
     List<Participant> GetAllParticipants();
     List<Event> GetAllEvents();
     void saveEventsEntries(List<Office> newEntry);
-    void saveParticipant(Participant participant);
+    void saveParticipant(List<Participant> participants);
     
 }

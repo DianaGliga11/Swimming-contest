@@ -5,6 +5,6 @@ namespace Service;
 
 public interface IMainObserver
 {
-       void ParticipantAdded(Participant participant);
+       void ParticipantAdded(List<Participant> participants);
        void EventEvntriesAdded(List<EventDTO> events);
 }

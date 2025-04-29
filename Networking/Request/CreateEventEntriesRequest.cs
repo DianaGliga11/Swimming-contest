@@ -6,7 +6,7 @@ namespace Networking.Request
     public class CreateEventEntriesRequest : IRequest
     {
         [JsonPropertyName("eventEntries")]
-        public List<Office> EventEntries{get;set;} = null!;
+        public List<Office> EventEntries{get;set;}
 
         [JsonConstructor]
         public CreateEventEntriesRequest()

@@ -158,8 +158,9 @@ namespace Networking
                 {
                     lock (server)
                     {
-                        server.saveParticipant(createParticipantRequest.Participant);
-                        return new NewParticipantResponse(createParticipantRequest.Participant);
+                        server.saveParticipant(createParticipantRequest.Participants);
+                        var updatedParticipants = server.GetAllParticipants();
+                        return new UpdatedParticipantsResponse(updatedParticipants);
                     }
                 }
                 catch (Exception exception)
@@ -282,32 +283,29 @@ namespace Networking
         }
 
         
-        public void ParticipantAdded(Participant participant)
+        public void ParticipantAdded(List<Participant> participants)
         {
-            log.Info("Participant added: " + participant.Name);
             try
             {
-                SendResponse(new NewParticipantResponse(participant)
-                {
-                    Participant = participant
-                });
+                var response = new UpdatedParticipantsResponse(participants);
+                SendResponse(response);
             }
             catch (Exception ex)
             {
-                log.Error("Exception in ParticipantAdded: " + ex.StackTrace);
+                log.Error("Failed to send UpdatedParticipantsResponse: " + ex.Message);
             }
         }
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
-            log.Info("Events added: " + events.Count);
             try
             {
-                SendResponse(new UpdatedEventsResponse(events));
+                var response = new UpdatedEventsResponse(events);
+                SendResponse(response);
             }
             catch (Exception ex)
             {
-                log.Error("Exception in EventEvntriesAdded: " + ex.StackTrace);
+                log.Error("Failed to send UpdatedEventsResponse: " + ex.Message);
             }
         }
     }

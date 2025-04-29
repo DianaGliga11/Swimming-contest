@@ -1,4 +1,5 @@
-﻿using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Repository;
 using Service;
 
@@ -6,10 +7,13 @@ namespace Controller
 {
     public class NewParticipantController : Form
     {
-        private ParticipantService participantService;
-        private Action onParticipantAdded;
-        private IDictionary<string,string> properties;
+        //private ParticipantService participantService;
+        //private Action onParticipantAdded;
+        //private IDictionary<string,string> properties;
         private User currentUser;
+        private Participant participant;
+        private List<Participant> participants;
+        private List<Event> events;
 
         private TextBox nameTextField;
         private TextBox ageTextField;
@@ -17,11 +21,39 @@ namespace Controller
 
         private readonly IContestServices proxy;
 
-        public NewParticipantController(IContestServices proxy)
+        public NewParticipantController(IContestServices proxy, Participant participant, List<Event> events, List<Participant> participants)
         {
             InitializeComponents();
             this.proxy = proxy;
+            this.participant = participant;
+            this.events = events;
+            this.participants = participants;
+            LoadData();
         }
+
+        private void LoadData()
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(LoadData));
+                    return;
+                }
+
+                if (participant != null)
+                {
+                    nameTextField.Text = participant.Name;
+                    ageTextField.Text = participant.Age.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading participant data: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         private void InitializeComponents()
         {
@@ -76,53 +108,37 @@ namespace Controller
             this.Controls.Add(ageTextField);
             this.Controls.Add(confirmButton);
         }
-
-        public void Init(IDictionary<string,string> properties, User currentUser, Action onParticipantAddedCallback)
+        private async void OnConfirmClicked(object sender, EventArgs e)
         {
-            this.properties = properties;
-            this.currentUser = currentUser;
-            this.onParticipantAdded = onParticipantAddedCallback;
+            string name = nameTextField.Text.Trim();
+            if (string.IsNullOrEmpty(name))
+            {
+                ShowAlert("Error", "Name cannot be empty!");
+                return;
+            }
 
-            ParticipantDBRepository participantRepository = new ParticipantDBRepository(properties);
-            this.participantService = new ParticipantService(participantRepository);
+            if (!int.TryParse(ageTextField.Text, out int age))
+            {
+                ShowAlert("Error", "Please enter a valid age!");
+                return;
+            }
 
-            InitializeComponents();
-        }
+            Participant newParticipant = new Participant(name, age);
 
-        private void OnConfirmClicked(object sender, EventArgs e)
-        {
             try
             {
-                string name = nameTextField.Text.Trim();
-                if (string.IsNullOrEmpty(name))
-                {
-                    ShowAlert("Error", "Name cannot be empty!");
-                    return;
-                }
+                // Creează o listă care conține toți participanții existenți + noul participant
+                await Task.Run(() => proxy.saveParticipant(new List<Participant> { newParticipant }));
 
-                if (!int.TryParse(ageTextField.Text, out int age))
-                {
-                    ShowAlert("Error", "Please enter a valid age!");
-                    return;
-                }
-
-                Participant participant = new Participant(name, age);
-                try
-                {
-                    proxy.saveParticipant(participant);
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                catch (Exception ex)
-                {
-                    ShowAlert("Error adding participant", ex.Message);
-                }
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             catch (Exception ex)
             {
-                ShowAlert("Error", ex.Message);
+                ShowAlert("Error adding participant", ex.Message);
             }
         }
+
 
         private void ShowAlert(string title, string message)
         {

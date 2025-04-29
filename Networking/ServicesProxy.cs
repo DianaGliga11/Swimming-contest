@@ -97,77 +97,84 @@ namespace Networking
             threadWorker.Start();
         }
 
-        public void Run()
+public void Run()
+{
+    using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
+    log.Info("Client is running...");
+
+    while (!finished)
+    {
+        string line;
+        try
         {
-            using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
-            log.Info("Client is running...");
-
-            while (!finished)
-            {
-                string line;
-                try
-                {
-                    line = reader.ReadLine();
-                }
-                catch (IOException ioex)
-                {
-                    log.Error("Connection closed: " + ioex.Message);
-                    break;
-                }
-
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                log.Debug($"Raw incoming: {line}");
-                JsonEnvelope env;
-                try
-                {
-                    env = JsonSerializer.Deserialize<JsonEnvelope>(line, jsonOptions);
-                }
-                catch (Exception ex)
-                {
-                    log.Error($"Invalid envelope, skipping: {ex.Message}");
-                    continue;
-                }
-
-                // now env.Type tells us what kind of response
-                try
-                {
-                    if (env.Type == nameof(UpdatedEventsResponse))
-                    {
-                        var update = env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions);
-                        HandleUpdate(update);
-                    }
-                    else
-                    {
-                        // concrete non-update response
-                        IResponse resp = env.Type switch
-                        {
-                            nameof(OkResponse)    => env.Payload.Deserialize<OkResponse>(jsonOptions),
-                            nameof(ErrorResponse) => env.Payload.Deserialize<ErrorResponse>(jsonOptions),
-                            nameof(AllEventsResponse) => env.Payload.Deserialize<AllEventsResponse>(jsonOptions),
-                            nameof(AllParticipantsResponse) => env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions),
-                            nameof(EventsWithParticipantsCountResponse) => env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions),
-                            nameof(EntriesByEventResponse) => env.Payload.Deserialize<EntriesByEventResponse>(jsonOptions),
-                            nameof(GetParticipantsForEventWithCountResponse) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
-                            nameof(NewParticipantResponse) => env.Payload.Deserialize<NewParticipantResponse>(jsonOptions),
-                            nameof(UpdatedEventsResponse) => env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions),
-                            _ => throw new Exception($"Unknown response type: {env.Type}")
-                        };
-
-                        lock (responses)
-                            responses.Enqueue(resp);
-                        waitHandle.Set();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    log.Error($"Failed to materialize '{env.Type}': {ex.Message}");
-                }
-            }
-
-            finished = true;
+            line = reader.ReadLine();
         }
+        catch (IOException ioex)
+        {
+            log.Error("Connection closed: " + ioex.Message);
+            break;
+        }
+
+        if (string.IsNullOrWhiteSpace(line))
+            continue;
+
+        log.Debug($"Raw incoming: {line}");
+        JsonEnvelope env;
+        try
+        {
+            env = JsonSerializer.Deserialize<JsonEnvelope>(line, jsonOptions);
+        }
+        catch (Exception ex)
+        {
+            log.Error($"Invalid envelope, skipping: {ex.Message}");
+            continue;
+        }
+
+        try
+        {
+            // verificăm dacă este un update
+            if (env.Type == nameof(UpdatedEventsResponse) || env.Type == nameof(UpdatedParticipantsResponse))
+            {
+                UpdateResponse update = env.Type switch
+                {
+                    nameof(UpdatedEventsResponse) => env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions),
+                    nameof(UpdatedParticipantsResponse) => env.Payload.Deserialize<UpdatedParticipantsResponse>(jsonOptions),
+                    _ => throw new Exception($"Unknown update type: {env.Type}")
+                };
+
+                HandleUpdate(update);
+            }
+            else
+            {
+                // este răspuns la o cerere normală
+                IResponse resp = env.Type switch
+                {
+                    nameof(OkResponse) => env.Payload.Deserialize<OkResponse>(jsonOptions),
+                    nameof(ErrorResponse) => env.Payload.Deserialize<ErrorResponse>(jsonOptions),
+                    nameof(AllEventsResponse) => env.Payload.Deserialize<AllEventsResponse>(jsonOptions),
+                    nameof(AllParticipantsResponse) => env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions),
+                    nameof(EventsWithParticipantsCountResponse) => env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions),
+                    nameof(EntriesByEventResponse) => env.Payload.Deserialize<EntriesByEventResponse>(jsonOptions),
+                    nameof(GetParticipantsForEventWithCountResponse) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
+                    // ATENȚIE: adaugă NewParticipantResponse aici DOAR dacă îl folosești și ca răspuns la cerere!
+                    //nameof(NewParticipantResponse) => env.Payload.Deserialize<NewParticipantResponse>(jsonOptions),
+                    _ => throw new Exception($"Unknown response type: {env.Type}")
+                };
+
+                lock (responses)
+                    responses.Enqueue(resp);
+                waitHandle.Set();
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Error($"Error processing response of type '{env.Type}': {ex.Message}");
+        }
+    }
+
+    finished = true;
+}
+
 
 
         private void HandleUpdate(UpdateResponse update)
@@ -177,12 +184,14 @@ namespace Networking
                 if (update is UpdatedEventsResponse updatedEventsResponse)
                 {
                     log.Info($"Received updated events: {updatedEventsResponse.Events?.Count ?? 0}");
-                    client?.EventEvntriesAdded(updatedEventsResponse.Events);
+                    if (updatedEventsResponse.Events != null) client?.EventEvntriesAdded(updatedEventsResponse.Events);
                 }
-                else if (update is NewParticipantResponse newParticipantResponse)
+                else if (update is UpdatedParticipantsResponse updatedParticipantsResponse)
                 {
-                    log.Info($"Received new participant: {newParticipantResponse.Participant?.Name}");
-                    client?.ParticipantAdded(newParticipantResponse.Participant);  // trebuie să implementezi și metoda asta
+                    log.Info($"Received new participant: {updatedParticipantsResponse.Participants?.Count ?? 0}");
+                    if (updatedParticipantsResponse.Participants != null)
+                        client?.ParticipantAdded(updatedParticipantsResponse
+                            .Participants); // trebuie să implementezi și metoda asta
                 }
             }
             catch (Exception ex)
@@ -320,24 +329,33 @@ namespace Networking
                 throw;
             }
         }
-        public void saveParticipant(Participant participant)
+        public void saveParticipant(List<Participant> participants)
         {
-            SendRequest(new CreateParticipantRequest(participant));
-            IResponse response = ReadResponse();
-    
-            // Gestionați corect tipurile de răspuns așteptate
-            if (response is ErrorResponse errorResponse)
+            try
             {
-                throw new Exception(errorResponse.message);
+                SendRequest(new CreateParticipantRequest(participants));
+                IResponse response = ReadResponse();
+
+                // Gestionați corect tipurile de răspuns așteptate
+                if (response is ErrorResponse errorResponse)
+                {
+                    throw new Exception(errorResponse.message);
+                }
+                else if (response is UpdatedParticipantsResponse updatedParticipantsResponse)
+                {
+                    // Participantul a fost adăugat cu succes
+                    log.Info($"Participant added: {updatedParticipantsResponse.Participants?.Count ?? 0}");
+                    Task.Run(() => HandleUpdate(updatedParticipantsResponse));
+                }
+                else
+                {
+                    throw new Exception($"Unexpected response type: {response.GetType().Name}");
+                }
             }
-            else if (response is NewParticipantResponse newParticipantResponse)
+            catch (Exception ex)
             {
-                // Participantul a fost adăugat cu succes
-                log.Info($"Participant added: {newParticipantResponse.Participant?.Name}");
-            }
-            else
-            {
-                throw new Exception($"Unexpected response type: {response.GetType().Name}");
+                log.Error($"Error in saveParticipants: {ex.Message}");
+                throw;
             }
         }
     }

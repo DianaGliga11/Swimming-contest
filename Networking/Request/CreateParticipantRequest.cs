@@ -5,17 +5,17 @@ namespace Networking.Request
 {
     public class CreateParticipantRequest : IRequest
     {
-        [JsonPropertyName("participant")]
-        public Participant Participant{get;set;}
+        [JsonPropertyName("participants")]
+        public List<Participant> Participants{get;set;}
 
         [JsonConstructor]
         public CreateParticipantRequest()
         {
         }
 
-        public CreateParticipantRequest(Participant participant)
+        public CreateParticipantRequest(List<Participant> participants)
         {
-            this.Participant = participant;
+            this.Participants = participants;
         }
     }
 }
