@@ -14,11 +14,11 @@ public class StartClient
     {
         log.Info("Client started...");
         ApplicationConfiguration.Initialize();
-        IDictionary<string, string> properties = new SortedList<string, string>();
+        //IDictionary<string, string> properties = new SortedList<string, string>();
         XmlConfigurator.Configure(new FileInfo("client.config"));
 
         IContestServices server = new ServicesProxy("127.0.0.1", 56789);
-        MainController controller = new MainController(properties, server);
+        MainController controller = new MainController( server);
         Application.Run(controller);
     }
 }

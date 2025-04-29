@@ -10,7 +10,7 @@ namespace Controller
 {
     public class HomeController : Form, IMainObserver
     {
-        private IDictionary<string, string> properties;
+        //private IDictionary<string, string> properties;
         private User currentUser;
         private IContestServices server;
         private static readonly ILog log = LogManager.GetLogger(typeof(MainController));
@@ -30,16 +30,11 @@ namespace Controller
         
         private Button refreshButton; 
 
-        public HomeController(IDictionary<string, string> properties, User currentUser, IContestServices server)
+        public HomeController(IContestServices server)
         {
-            this.properties = properties;
             this.server = server;
-
-            if (currentUser != null)
-            {
-                SetLoggedInUser(currentUser);
-            }
         }
+
 
         private void InitializeComponents()
         {
@@ -287,7 +282,7 @@ namespace Controller
 
         private void OnLogoutClicked(object sender, EventArgs e)
         {
-            var loginForm = new MainController(properties, server);
+            var loginForm = new MainController(server);
             loginForm.Show();
             this.Close();
         }
@@ -297,7 +292,7 @@ namespace Controller
             var newParticipantForm = new NewParticipantController(server);
             if (newParticipantForm.ShowDialog() == DialogResult.OK)
             {
-                LoadParticipants();
+                //LoadParticipants();
             }
         }
 
@@ -330,25 +325,22 @@ namespace Controller
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => EventEvntriesAdded(events)));
-                return;
-            }
-
-            // 🟢 Executat pe UI thread
-            LoadEvents();
+            UpdateUI(() => {
+                LoadEvents();  // Reîncarci evenimentele
+            });
         }
 
         public void SetLoggedInUser(User user)
         {
             this.currentUser = user;
-            InitializeComponents();
+            InitializeComponents();  // Initializezi UI-ul de bază aici
+
+            usernameLabel.Text = $"Logged in as: {currentUser.UserName}";
             LoadEventComboBox();
             LoadParticipants();
             LoadEvents();
-            
         }
+
         
         private void OnRefreshClicked(object sender, EventArgs e)
         {

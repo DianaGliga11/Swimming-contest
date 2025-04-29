@@ -117,10 +117,6 @@ namespace Controller
                 {
                     ShowAlert("Error adding participant", ex.Message);
                 }
-
-                //onParticipantAdded?.Invoke();
-
-               
             }
             catch (Exception ex)
             {

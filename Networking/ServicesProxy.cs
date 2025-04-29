@@ -151,7 +151,6 @@ namespace Networking
                             nameof(EntriesByEventResponse) => env.Payload.Deserialize<EntriesByEventResponse>(jsonOptions),
                             nameof(GetParticipantsForEventWithCountResponse) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
                             nameof(NewParticipantResponse) => env.Payload.Deserialize<NewParticipantResponse>(jsonOptions),
-                            nameof(ParticipantResponse) => env.Payload.Deserialize<ParticipantResponse>(jsonOptions),
                             nameof(UpdatedEventsResponse) => env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions),
                             _ => throw new Exception($"Unknown response type: {env.Type}")
                         };
@@ -180,12 +179,18 @@ namespace Networking
                     log.Info($"Received updated events: {updatedEventsResponse.Events?.Count ?? 0}");
                     client?.EventEvntriesAdded(updatedEventsResponse.Events);
                 }
+                else if (update is NewParticipantResponse newParticipantResponse)
+                {
+                    log.Info($"Received new participant: {newParticipantResponse.Participant?.Name}");
+                    client?.ParticipantAdded(newParticipantResponse.Participant);  // trebuie să implementezi și metoda asta
+                }
             }
             catch (Exception ex)
             {
                 log.Error($"Error handling update: {ex.Message}");
             }
         }
+
 
         private void CloseConnection()
         {
@@ -265,12 +270,19 @@ namespace Networking
         {
             SendRequest(new GetAllParticipantsRequest());
             IResponse response = ReadResponse();
+    
             if (response is ErrorResponse errorResponse)
             {
                 throw new Exception(errorResponse.message);
             }
-            AllParticipantsResponse allParticipantsResponse = (AllParticipantsResponse)response;
-            return allParticipantsResponse.Participants;
+            else if (response is AllParticipantsResponse allParticipantsResponse) // Verificare corectă
+            {
+                return allParticipantsResponse.Participants;
+            }
+            else
+            {
+                throw new Exception($"Unexpected response type: {response?.GetType().Name}");
+            }
         }
 
         public List<Event> GetAllEvents()

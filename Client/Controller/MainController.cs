@@ -23,9 +23,9 @@ namespace Controller
         private readonly IDictionary<string, string> properties;
 
         // Constructor
-        public MainController(IDictionary<string, string> props, IContestServices server)
+        public MainController(IContestServices server)
         {
-            this.properties = props;
+            //this.properties = props;
             this.server = server;
             InitializeComponents();
             //this.FormClosing += MainController_FormClosing;
@@ -127,26 +127,49 @@ namespace Controller
                 return;
             }
 
+            loginButton.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+
             try
             {
-                log.Debug($"Login attempt with username: {username}");
-        
-                // Dezactivează butonul pentru a preveni apăsări multiple
-                loginButton.Enabled = false;
-                Cursor.Current = Cursors.WaitCursor;
+                // Autentificare utilizator
+                var user = await Task.Run(() => server.Login(username, password, null));
 
-                // Rulează operația de login pe un thread separat
-                await Task.Run(() => PerformLogin(username, password));
+                this.Invoke((MethodInvoker)delegate {
+                    if (user != null)
+                    {
+                        log.Info($"Login successful for user: {user.UserName}");
+                
+                        // Crează HomeController și setează utilizatorul autentificat
+                        var homeController = new HomeController(server);
+                        homeController.SetLoggedInUser(user);
+                
+                        // Arată HomeController și ascunde MainController
+                        homeController.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        errorLabel.Text = "Invalid username or password.";
+                        log.Warn("Invalid login credentials.");
+                    }
+                    loginButton.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                });
             }
             catch (Exception ex)
             {
                 log.Error("Login error", ex);
-                errorLabel.Text = "Error: " + ex.Message;
-                loginButton.Enabled = true;
-                Cursor.Current = Cursors.Default;
+                this.Invoke((MethodInvoker)delegate {
+                    errorLabel.Text = "Error: " + ex.Message;
+                    loginButton.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                });
             }
         }
 
+
+/*
         private void PerformLogin(string username, string password)
         {
             try
@@ -188,6 +211,7 @@ namespace Controller
                 log.Error("Login error", ex);
             }
         }
+        */
 
         private void MainController_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -195,5 +219,7 @@ namespace Controller
             LogManager.Shutdown();
             Application.Exit();
         }
+    
     }
+
 }
