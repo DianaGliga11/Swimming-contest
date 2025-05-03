@@ -1,312 +1,163 @@
-﻿using System.Net.Sockets;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
+using log4net;
 using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
 using Service;
-using log4net;
-using Networking.Networking;
-using Networking.Request;
-using Networking.Response;
+using Networking;
 
 namespace Networking
 {
-
     public class ClientWorker : IMainObserver
     {
-        private IContestServices server;
-        private TcpClient connection;
-        private NetworkStream stream;
-        //private readonly JsonSerializerOptions jsonOptions;
-        private volatile bool connected;
-        private static readonly ILog log = LogManager.GetLogger(typeof(ClientWorker));
+        private readonly IContestServices _server;
+        private readonly TcpClient _connection;
+        private NetworkStream _stream;
+        private volatile bool _connected;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ClientWorker));
 
-        private static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             Converters = { new JsonStringEnumConverter() }
         };
 
         public ClientWorker(IContestServices server, TcpClient connection)
         {
-            this.server = server;
-            this.connection = connection;
+            this._server = server;
+            this._connection = connection;
             try
             {
-                stream = connection.GetStream();
-                connected = true;
-                //jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = false};
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.StackTrace);
-            }
-        }
-        
-        public void Run()
-        {
-            try
-            {
-                log.Info("Client Worker running...");
-                using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
-                while (connected)
-                {
-                    string line = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line)) continue;
-
-                    // parse envelope
-                    JsonEnvelope env = JsonSerializer.Deserialize<JsonEnvelope>(line, jsonOptions);
-
-                    // dispatch to concrete IRequest
-                    IRequest request = env.Type switch
-                    {
-                        nameof(LoginRequest) => env.Payload.Deserialize<LoginRequest>(jsonOptions),
-                        nameof(LogoutRequest) => env.Payload.Deserialize<LogoutRequest>(jsonOptions),
-                        nameof(GetAllEventsRequest) => env.Payload.Deserialize<GetAllEventsRequest>(jsonOptions), 
-                        nameof(GetAllParticipantsRequest) => env.Payload.Deserialize<GetAllParticipantsRequest>(jsonOptions),
-                        nameof(GetEventsWithParticipantsCountRequest) => env.Payload.Deserialize<GetEventsWithParticipantsCountRequest>(jsonOptions),
-                        nameof(CreateParticipantRequest) => env.Payload.Deserialize<CreateParticipantRequest>(jsonOptions),
-                        nameof(CreateEventEntriesRequest) => env.Payload.Deserialize<CreateEventEntriesRequest>(jsonOptions),
-                        nameof(CreateEventRequest) => env.Payload.Deserialize<CreateEventRequest>(jsonOptions),
-                        nameof(GetParticipantsForEventWithCountRequest) => env.Payload.Deserialize<GetParticipantsForEventWithCountRequest>(jsonOptions),
-                        _ => throw new Exception($"Unknown request type: {env.Type}")
-                    };
-
-                    // handle it
-                    IResponse response = HandleRequest(request);
-
-                    // send back in the same envelope form
-                    string payloadJson = JsonSerializer.Serialize(response, response.GetType(), jsonOptions);
-                    var payloadElement = JsonDocument.Parse(payloadJson).RootElement;
-                    var outEnv = new { type = response.GetType().Name, payload = payloadElement };
-                    string outLine = JsonSerializer.Serialize(outEnv, jsonOptions) + "\n";
-                    byte[] outBytes = Encoding.UTF8.GetBytes(outLine);
-                    stream.Write(outBytes, 0, outBytes.Length);
-                    stream.Flush();
-                }
+                _stream = connection.GetStream();
+                _connected = true;
             }
             catch (Exception e)
             {
-                log.Error("ClientWorker.Run: " + e.Message);
-            }
-            finally
-            {
-                log.Info("Client Worker closing connection...");
-                stream?.Close();
-                connection?.Close();
+                Log.Error("Constructor error", e);
             }
         }
-        
-        private IResponse HandleRequest(IRequest request)
+
+        public void Run()
+        {
+            using var reader = new StreamReader(_stream, Encoding.UTF8);
+            while (_connected)
+            {
+                try
+                {
+                    var line = reader.ReadLine();
+                    if (string.IsNullOrEmpty(line)) continue;
+
+                    Log.Debug($"Received JSON request: {line}");
+                    var request = JsonSerializer.Deserialize<RequestJson>(line, JsonOptions);
+                    var response = HandleRequest(request);
+                    if (response != null)
+                        SendResponse(response);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Run error", e);
+                }
+                Thread.Sleep(100);
+            }
+
+            try
+            {
+                _stream.Close();
+                _connection.Close();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error closing connection", e);
+            }
+        }
+
+        private ResponseJson HandleRequest(RequestJson request)
         {
             try
             {
-                log.Info($"Handling request of type: {request.GetType().Name}");
+                switch (request.Type)
+                {
+                    case RequestType.LOGIN:
+                        Log.Debug("Login request...");
+                        var usr = request.User;
+                        _server.Login(usr.UserName, usr.Password, this);
+                        return JsonProtocolUtils.CreateOkResponse(usr);
 
-                if (request is LoginRequest loginRequest)
-                {
-                    log.Info("Processing login request...");
-            
-                    if (string.IsNullOrEmpty(loginRequest.Username) || 
-                        string.IsNullOrEmpty(loginRequest.Password))
-                    {
-                        return new ErrorResponse("Username and password are required");
-                    }
+                    case RequestType.LOGOUT:
+                        Log.Debug("Logout request...");
+                        _server.Logout(request.User, this);
+                        _connected = false;
+                        return JsonProtocolUtils.CreateOkResponse();
 
-                    lock (server)
-                    {
-                        User user = server.Login(loginRequest.Username, loginRequest.Password, this);
-                        if (user == null)
-                        {
-                            return new ErrorResponse("Authentication failed");
-                        }
-                
-                        // Asigură-te că obiectul User este complet populat
-                        log.Debug($"User to return: {JsonSerializer.Serialize(user)}");
-                        return new OkResponse(user);
-                    }
-                }
-            
-            if (request is LogoutRequest logoutRequest)
-            {
-                log.Info("Logout request");
-                try
-                {
-                    lock (server)
-                    {
-                        server.Logout(logoutRequest.user, this);
-                    }
+                    case RequestType.CREATE_PARTICIPANT:
+                        Log.Debug("Create participant request...");
+                        _server.saveParticipant(request.Participant, this);
+                        return JsonProtocolUtils.CreateNewParticipantResponse(request.Participant);
 
-                    connected = false;
-                    return new OkResponse(null);
-                }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
-            
-            
-            if (request is CreateParticipantRequest createParticipantRequest)
-            {
-                log.Info("Create participant request");
-                try
-                {
-                    lock (server)
-                    {
-                        server.saveParticipant(createParticipantRequest.Participant);
-                        var updatedParticipants = server.GetAllParticipants();
-                        return new UpdatedParticipantsResponse(updatedParticipants);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
+                    case RequestType.GET_ALL_PARTICIPANTS:
+                        Log.Debug("Get all participants request...");
+                        var parts = _server.GetAllParticipants();
+                        return JsonProtocolUtils.CreateAllParticipantsResponse(parts);
 
-            if (request is CreateEventEntriesRequest createEventEntriesRequest)
-            {
-                log.Info("Create event entries request");
-                try
-                {
-                    lock (server)
-                    {
-                        server.saveEventsEntries(createEventEntriesRequest.EventEntries);
-                        var updatedEvents = server.GetEventsWithParticipantsCount();
-                        return new OkResponse();
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
+                    case RequestType.GET_ALL_EVENTS:
+                        Log.Debug("Get all events request...");
+                        var evs = _server.GetAllEvents();
+                        return JsonProtocolUtils.CreateAllEventsResponse(evs);
 
+                    case RequestType.GET_EVENTS_WITH_PARTICIPANTS_COUNT:
+                        Log.Debug("Get events with count request...");
+                        var evCount = _server.GetEventsWithParticipantsCount();
+                        return JsonProtocolUtils.CreateEventsWithParticipantsCountResponse(evCount);
 
-            
-            if (request is GetAllParticipantsRequest)
-            {
-                log.Info("Get all participants");
-                try
-                {
-                    lock (server)
-                    {
-                        var result = server.GetAllParticipants();
-                        return new AllParticipantsResponse(result);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
+                    case RequestType.GET_PARTICIPANTS_FOR_EVENT_WITH_COUNT:
+                        Log.Debug("Get participants for event request...");
+                        var pForEv = _server.GetParticipantsForEventWithCount(request.EventId.Value);
+                        return JsonProtocolUtils.CreateGetParticipantsForEventWithCountResponse(pForEv);
 
-            if (request is GetAllEventsRequest getAllEventsRequest)
-            {
-                log.Info("Get all events");
-                try
-                {
-                    lock (server)
-                    {
-                        var result = server.GetAllEvents();
-                        return new AllEventsResponse(result);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
+                    case RequestType.CREATE_EVENT_ENTRIES:
+                        Log.Debug("Create event entries request...");
+                        _server.saveEventsEntries(request.EventEntries);
+                        return JsonProtocolUtils.CreateOkResponse();
 
-            if (request is GetEventsWithParticipantsCountRequest getEventsWithParticipantsCountRequest)
-            {
-                log.Info("Get events with participant count");
-                try
-                {
-                    lock (server)
-                    {
-                        var result = server.GetEventsWithParticipantsCount();
-                        return new EventsWithParticipantsCountResponse(result);
-                    }
+                    default:
+                        throw new InvalidOperationException($"Unsupported request type: {request.Type}");
                 }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
-
-            if (request is GetParticipantsForEventWithCountRequest getParticipantsForEventWithCountRequest)
-            {
-                log.Info("Get participant for event count");
-                try
-                {
-                    lock (server)
-                    {
-                        List<ParticipantDTO> participants =
-                            server.GetParticipantsForEventWithCount(getParticipantsForEventWithCountRequest.EventId);
-                        return new GetParticipantsForEventWithCountResponse(participants);
-
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return new ErrorResponse(exception.Message);
-                }
-            }
             }
             catch (Exception ex)
             {
-                log.Error("Request handling failed", ex);
-                return new ErrorResponse(ex.Message);
+                Log.Error("HandleRequest error", ex);
+                return JsonProtocolUtils.CreateErrorResponse(ex.Message);
             }
-
-            return new ErrorResponse("Unsupported request type");
         }
- 
 
-        private void SendResponse(IResponse response)
+        private void SendResponse(ResponseJson response)
         {
-            var envelope = new {
-                Type    = response.GetType().Name,
-                Payload = response
-            };
-            string json = JsonSerializer.Serialize(envelope, jsonOptions) + "\n";
-            log.Debug($"Sending response: {json}");
-            byte[] data = Encoding.UTF8.GetBytes(json);
-            stream.Write(data, 0, data.Length);
-            stream.Flush();
+            var json = JsonSerializer.Serialize(response, JsonOptions);
+            Log.Debug($"Sending response: {json}");
+            lock (_stream)
+            {
+                var data = Encoding.UTF8.GetBytes(json + "\n");
+                _stream.Write(data, 0, data.Length);
+                _stream.Flush();
+            }
         }
-
-        
         public void ParticipantAdded(Participant participant)
         {
-            try
-            {
-                var response = new NewParticipantResponse(participant);
-                SendResponse(response);
-            }
-            catch (Exception ex)
-            {
-                log.Error("Failed to send UpdatedParticipantsResponse: " + ex.Message);
-            }
+            Log.Debug($"Observer: participant added {participant.Name}");
+            SendResponse(JsonProtocolUtils.CreateNewParticipantResponse(participant));
         }
 
-        public void EventEvntriesAdded(List<EventDTO> events)
+        public void EventEvntriesAdded(List<EventDTO> updatedEvents)
         {
-            try
-            {
-                var response = new UpdatedEventsResponse(events);
-                SendResponse(response);
-            }
-            catch (Exception ex)
-            {
-                log.Error("Failed to send UpdatedEventsResponse: " + ex.Message);
-            }
+            Log.Debug($"Observer: events updated ({updatedEvents.Count})");
+            SendResponse(JsonProtocolUtils.CreateUpdatedEventsResponse(updatedEvents));
         }
     }
 }

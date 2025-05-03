@@ -10,352 +10,183 @@ using log4net;
 using Networking.Networking;
 using Networking.Request;
 
+
 namespace Networking
 {
-
     public class ServicesProxy : IContestServices
     {
         private readonly string host;
         private readonly int port;
-        private IMainObserver client;
-        private NetworkStream stream;
+        private IMainObserver clientObserver;
         private TcpClient connection;
-        private readonly Queue<IResponse> responses;
+        private NetworkStream stream;
+        private Queue<ResponseJson> responseQueue = new();
         private volatile bool finished;
-        private EventWaitHandle waitHandle;
+        private AutoResetEvent responseEvent = new(false);
         private static readonly ILog log = LogManager.GetLogger(typeof(ServicesProxy));
-        private readonly object syncLock = new();
 
-        static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions {
+        static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+        {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        };
+            Converters = {
+                new JsonStringEnumConverter(namingPolicy: null, allowIntegerValues: true)
+            }        };
+
         public ServicesProxy(string host, int port)
         {
             this.host = host;
             this.port = port;
-            responses = new Queue<IResponse>();
-            InitializeConnection();
         }
 
-        private void InitializeConnection()
+        private void EnsureConnected()
         {
-            try
-            {
-                connection = new TcpClient(host, port);
-                stream = connection.GetStream();
-                finished = false;
-                waitHandle = new AutoResetEvent(false);
-                StartReader();
-            }
-            catch (Exception e)
-            {
-                log.Error(e);
-            }
-            
+            if (connection != null) return;
+            connection = new TcpClient(host, port);
+            stream = connection.GetStream();
+            finished = false;
+            new Thread(RunReader) { IsBackground = true }.Start();
         }
-        private IResponse ReadResponse()
-        {
-            log.Debug("Waiting for response...");
-            waitHandle.WaitOne();  // așteaptă până când un răspuns e pus în coadă
 
-            lock (responses)
+        private void RunReader()
+        {
+            using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
+            while (!finished)
             {
-                if (responses.Count > 0)
+                var line = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                var msg = JsonSerializer.Deserialize<ResponseJson>(line, jsonOptions);
+                log.Debug($"[proxy reader] ← {line}");
+                if (msg.Type == ResponseType.UPDATED_EVENTS || msg.Type == ResponseType.NEW_PARTICIPANT)
                 {
-                    IResponse resp = responses.Dequeue();
-                    log.Debug($"Returning response from queue: {resp.GetType().Name}");
-                    return resp;
+                    HandleUpdate(msg);
+                }
+                else
+                {
+                    lock (responseQueue)
+                        responseQueue.Enqueue(msg);
+                    responseEvent.Set();
                 }
             }
-
-            log.Warn("No response in queue after waitHandle set.");
-            return new ErrorResponse("No response received.");
         }
 
-        private void SendRequest(IRequest request)
+        private ResponseJson ReadResponse()
         {
-            string payloadJson = JsonSerializer.Serialize(request, request.GetType(), jsonOptions);
-            var payloadElement = JsonDocument.Parse(payloadJson).RootElement;
+            responseEvent.WaitOne();
+            lock (responseQueue)
+            {
+                if (responseQueue.Count > 0)
+                    return responseQueue.Dequeue();
+            }
 
-            // wrap into envelope
-            var envelope = new {
-                type = request.GetType().Name,
-                payload = payloadElement
-            };
-            log.Info($"Sending request: {envelope}");
-            string envelopeJson = JsonSerializer.Serialize(envelope, jsonOptions) + "\n";
-            byte[] bytes = Encoding.UTF8.GetBytes(envelopeJson);
-            stream.Write(bytes, 0, bytes.Length);
+            throw new Exception("No response in queue");
+        }
+
+        private void SendRequest(RequestJson req)
+        {
+            EnsureConnected();
+            var json = JsonSerializer.Serialize(req, jsonOptions) + "\n";
+            log.Debug($"[proxy] → {json}");
+            var buf = Encoding.UTF8.GetBytes(json);
+            stream.Write(buf, 0, buf.Length);
             stream.Flush();
         }
 
-
-        private void StartReader()
-        {
-            Thread threadWorker = new Thread(Run);
-            threadWorker.Start();
-        }
-
-public void Run()
-{
-    using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
-    log.Info("Client is running...");
-
-    while (!finished)
-    {
-        string line;
-        try
-        {
-            line = reader.ReadLine();
-        }
-        catch (IOException ioex)
-        {
-            log.Error("Connection closed: " + ioex.Message);
-            break;
-        }
-
-        if (string.IsNullOrWhiteSpace(line))
-            continue;
-
-        log.Debug($"Raw incoming: {line}");
-        JsonEnvelope env;
-        try
-        {
-            env = JsonSerializer.Deserialize<JsonEnvelope>(line, jsonOptions);
-        }
-        catch (Exception ex)
-        {
-            log.Error($"Invalid envelope, skipping: {ex.Message}");
-            continue;
-        }
-
-        try
-        {
-            // verificăm dacă este un update
-            if (env.Type == nameof(UpdatedEventsResponse) || env.Type == nameof(UpdatedParticipantsResponse))
-            {
-                UpdateResponse update = env.Type switch
-                {
-                    nameof(UpdatedEventsResponse) => env.Payload.Deserialize<UpdatedEventsResponse>(jsonOptions),
-                    nameof(UpdatedParticipantsResponse) => env.Payload.Deserialize<UpdatedParticipantsResponse>(jsonOptions),
-                    _ => throw new Exception($"Unknown update type: {env.Type}")
-                };
-
-                HandleUpdate(update);
-            }
-            else
-            {
-                // este răspuns la o cerere normală
-                IResponse resp = env.Type switch
-                {
-                    nameof(OkResponse) => env.Payload.Deserialize<OkResponse>(jsonOptions),
-                    nameof(ErrorResponse) => env.Payload.Deserialize<ErrorResponse>(jsonOptions),
-                    nameof(AllEventsResponse) => env.Payload.Deserialize<AllEventsResponse>(jsonOptions),
-                    nameof(AllParticipantsResponse) => env.Payload.Deserialize<AllParticipantsResponse>(jsonOptions),
-                    nameof(EventsWithParticipantsCountResponse) => env.Payload.Deserialize<EventsWithParticipantsCountResponse>(jsonOptions),
-                    nameof(EntriesByEventResponse) => env.Payload.Deserialize<EntriesByEventResponse>(jsonOptions),
-                    nameof(GetParticipantsForEventWithCountResponse) => env.Payload.Deserialize<GetParticipantsForEventWithCountResponse>(jsonOptions),
-                    // ATENȚIE: adaugă NewParticipantResponse aici DOAR dacă îl folosești și ca răspuns la cerere!
-                    //nameof(NewParticipantResponse) => env.Payload.Deserialize<NewParticipantResponse>(jsonOptions),
-                    _ => throw new Exception($"Unknown response type: {env.Type}")
-                };
-
-                lock (responses)
-                    responses.Enqueue(resp);
-                waitHandle.Set();
-            }
-        }
-        catch (Exception ex)
-        {
-            log.Error($"Error processing response of type '{env.Type}': {ex.Message}");
-        }
-    }
-
-    finished = true;
-}
-
-
-
-        private void HandleUpdate(UpdateResponse update)
+        private void HandleUpdate(ResponseJson msg)
         {
             try
             {
-                if (update is UpdatedEventsResponse updatedEventsResponse)
-                {
-                    log.Info($"Received updated events: {updatedEventsResponse.Events?.Count ?? 0}");
-                    if (updatedEventsResponse.Events != null) client?.EventEvntriesAdded(updatedEventsResponse.Events);
-                }
-                else if (update is NewParticipantResponse newParticipantResponse)
-                {
-                    log.Info($"Received new participant: {newParticipantResponse.Participant}");
-
-                    client?.ParticipantAdded(newParticipantResponse.Participant); 
-                }
+                if (msg.Type == ResponseType.UPDATED_EVENTS && msg.Events != null)
+                    clientObserver?.EventEvntriesAdded(msg.Events);
+                else if (msg.Type == ResponseType.NEW_PARTICIPANT && msg.Participant != null)
+                    Task.Run(() => clientObserver?.ParticipantAdded(msg.Participant));
             }
             catch (Exception ex)
             {
-                log.Error($"Error handling update: {ex.Message}");
+                log.Error("error in HandleUpdate", ex);
             }
         }
 
-
-        private void CloseConnection()
-        {
-            finished = true;
-            try
-            {
-                stream.Close();
-                connection.Close();
-                waitHandle.Close();
-                client = null;
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-        }
         public User Login(string username, string password, IMainObserver client)
         {
-            this.client = client;
-            var request = new LoginRequest(username, password); 
-            SendRequest(request);
-            IResponse response = ReadResponse();
-            if (response is OkResponse okResponse)
-            {
-                this.client = client;
-                log.Debug("Login response parsed successfully!");
-                return okResponse.user;
-            }
-
-            if (response is ErrorResponse errorResponse)
-            {
-                ErrorResponse error = (ErrorResponse)response;
-                CloseConnection();
-                throw new Exception(errorResponse.message);
-            }
-
-            return null;
+            EnsureConnected();
+            clientObserver = client;
+            var req = JsonProtocolUtils.CreateLoginRequest(username, password);
+            SendRequest(req);
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.OK)
+                return resp.User!;
+            throw new Exception(resp.Error ?? "Login failed");
         }
 
         public void Logout(User user, IMainObserver client)
         {
-            SendRequest(new LogoutRequest(user));
-            IResponse response = ReadResponse();
-            CloseConnection();
-            if (response is ErrorResponse errorResponse)
-            {
-                ErrorResponse error = (ErrorResponse)response;
-                throw new Exception(errorResponse.message);
-            }
+            var req = JsonProtocolUtils.CreateLogoutRequest(user);
+            SendRequest(req);
+            var resp = ReadResponse();
+            finished = true;
+            stream.Close();
+            connection.Close();
+            if (resp.Type == ResponseType.ERROR)
+                throw new Exception(resp.Error);
         }
 
         public List<EventDTO> GetEventsWithParticipantsCount()
         {
-            SendRequest(new GetEventsWithParticipantsCountRequest());
-            IResponse response = ReadResponse();
-            if (response is ErrorResponse errorResponse)
-            {
-                throw new Exception(errorResponse.message);
-            }
-            EventsWithParticipantsCountResponse eventsWithParticipantsCountResponse = (EventsWithParticipantsCountResponse)response;
-            return eventsWithParticipantsCountResponse.events;
+            var req = JsonProtocolUtils.CreateGetEventsWithParticipantsCountRequest();
+            SendRequest(req);
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.EVENTS_WITH_PARTICIPANTS_COUNT)
+                return resp.Events ?? new List<EventDTO>();
+            throw new Exception(resp.Error);
         }
 
         public List<ParticipantDTO> GetParticipantsForEventWithCount(long eventId)
         {
-            SendRequest(new GetParticipantsForEventWithCountRequest(eventId));
-            IResponse response = ReadResponse();
-            if (response is ErrorResponse errorResponse)
-            {
-                throw new Exception(errorResponse.message);
-            }
-            GetParticipantsForEventWithCountResponse getParticipantsForEventWithCountResponse = (GetParticipantsForEventWithCountResponse)response;
-            return getParticipantsForEventWithCountResponse.participants;
+            var req = JsonProtocolUtils.CreateGetParticipantsForEventWithCountRequest(eventId);
+            SendRequest(req);
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.GET_PARTICIPANTS_FOR_EVENT_WITH_COUNT)
+                return resp.Participants ?? new List<ParticipantDTO>();
+            throw new Exception(resp.Error);
         }
 
         public List<Participant> GetAllParticipants()
         {
-            SendRequest(new GetAllParticipantsRequest());
-            IResponse response = ReadResponse();
-    
-            if (response is ErrorResponse errorResponse)
-            {
-                throw new Exception(errorResponse.message);
-            }
-            else if (response is AllParticipantsResponse allParticipantsResponse) // Verificare corectă
-            {
-                return allParticipantsResponse.Participants;
-            }
-            else
-            {
-                throw new Exception($"Unexpected response type: {response?.GetType().Name}");
-            }
+            var req = JsonProtocolUtils.CreateGetAllParticipantsRequest();
+            SendRequest(req);
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.ALL_PARTICIPANTS)
+                return resp.ParticipantsRaw ?? new List<Participant>();
+            throw new Exception(resp.Error);
         }
 
         public List<Event> GetAllEvents()
         {
-            SendRequest(new GetAllEventsRequest());
-            IResponse response = ReadResponse();
-            if (response is ErrorResponse errorResponse)
-            {
-                throw new Exception(errorResponse.message);
-            }
-            AllEventsResponse allEventsResponse = (AllEventsResponse)response;
-            return allEventsResponse.events;
+            var req = JsonProtocolUtils.CreateGetAllEventsRequest();
+            SendRequest(req);
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.ALL_EVENTS)
+                return resp.EventsRaw ?? new List<Event>();
+            throw new Exception(resp.Error);
+        }
+        public void saveEventsEntries(List<Office> newEntries)
+        {
+            var req = JsonProtocolUtils.CreateCreateEventEntriesRequest(newEntries); 
+            Task.Run(()=>SendRequest(req));
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.ERROR)
+                throw new Exception(resp.Error);
         }
 
-        public void saveEventsEntries(List<Office> newEntry)
+        public void saveParticipant(Participant participant, IMainObserver sender)
         {
-            try
-            {
-                SendRequest(new CreateEventEntriesRequest(newEntry));
-                IResponse response = ReadResponse();
-
-                if (response is ErrorResponse errorResponse)
-                {
-                    throw new Exception(errorResponse.message);
-                }
-                else if (response is UpdatedEventsResponse updatedEventsResponse)
-                {
-                    // Process update on a separate thread to avoid deadlock
-                    Task.Run(() => HandleUpdate(updatedEventsResponse));
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error($"Error in saveEventsEntries: {ex.Message}");
-                throw;
-            }
-        }
-        public void saveParticipant(Participant participant)
-        {
-            try
-            {
-                SendRequest(new CreateParticipantRequest(participant));
-                IResponse response = ReadResponse();
-
-                // Gestionați corect tipurile de răspuns așteptate
-                if (response is ErrorResponse errorResponse)
-                {
-                    throw new Exception(errorResponse.message);
-                }
-                else if (response is UpdatedParticipantsResponse updatedParticipantsResponse)
-                {
-                    // Participantul a fost adăugat cu succes
-                    log.Info($"Participant added: {updatedParticipantsResponse.Participants?.Count ?? 0}");
-                    Task.Run(() => HandleUpdate(updatedParticipantsResponse));
-                }
-                else
-                {
-                    throw new Exception($"Unexpected response type: {response.GetType().Name}");
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error($"Error in saveParticipants: {ex.Message}");
-                throw;
-            }
+            var req = JsonProtocolUtils.CreateCreateParticipantRequest(participant);
+            Task.Run(()=>SendRequest(req));
+            var resp = ReadResponse();
+            if (resp.Type == ResponseType.ERROR)
+                throw new Exception(resp.Error);
         }
     }
 }

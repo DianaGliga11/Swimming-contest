@@ -42,12 +42,12 @@ public class ContestServices : IContestServices
 
     public void Logout(User user, IMainObserver client)
     {
-        IMainObserver localClients = loggedClients[user.UserName];
-        if (loggedClients == null)
+        if (!loggedClients.TryGetValue(user.UserName, out var localClient))
         {
             log.Error("User is not logged in");
             throw new Exception("User is not logged in.");
         }
+
         loggedClients.Remove(user.UserName);
     }
 
@@ -78,17 +78,21 @@ public class ContestServices : IContestServices
             eventService.saveEventEntry(entry);
         }
 
+        var updatedEvents=GetEventsWithParticipantsCount();
         foreach (IMainObserver client in loggedClients.Values)
         {
-           client.EventEvntriesAdded(GetEventsWithParticipantsCount());
+           client.EventEvntriesAdded(updatedEvents);
         }
     }
-    public void saveParticipant(Participant participant)
+    public void saveParticipant(Participant participant, IMainObserver sender)
     {
         participantService.add(participant);
         foreach (IMainObserver client in loggedClients.Values)
         {
-            client.ParticipantAdded(participant);
+            if (client != sender)
+            {
+                Task.Run(() => client.ParticipantAdded(participant));
+            }
         }
     }
 }

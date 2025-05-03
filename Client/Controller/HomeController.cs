@@ -27,9 +27,7 @@ namespace Controller
         private Button btnLogout;
         private Button btnAddParticipant;
         private Button btnNewEntry;
-
-        private Button refreshButton;
-
+        
         public HomeController(IContestServices server)
         {
             this.server = server;
@@ -145,14 +143,6 @@ namespace Controller
             };
             btnLogout.Click += OnLogoutClicked;
 
-            refreshButton = new Button
-            {
-                Text = "Refresh",
-                Location = new System.Drawing.Point(800, 20),
-                Size = new System.Drawing.Size(120, 30)
-            };
-            refreshButton.Click += OnRefreshClicked;
-
             this.Controls.Add(usernameLabel);
             this.Controls.Add(eventComboBox);
             this.Controls.Add(btnSearch);
@@ -163,8 +153,6 @@ namespace Controller
             this.Controls.Add(btnAddParticipant);
             this.Controls.Add(btnNewEntry);
             this.Controls.Add(btnLogout);
-
-            this.Controls.Add(refreshButton);
         }
 
         private void LoadEventComboBox()
@@ -189,7 +177,7 @@ namespace Controller
         {
             if (InvokeRequired)
             {
-                Invoke(action);
+                BeginInvoke(action);
             }
             else
             {
@@ -293,11 +281,11 @@ namespace Controller
         {
             var allEvents = server.GetAllEvents();
             var allParticipants = server.GetAllParticipants();
-            using (var newParticipantForm = new NewParticipantController(server, null, allEvents, allParticipants))
+            using (var newParticipantForm = new NewParticipantController(server, this, null, allEvents, allParticipants))
             {
                 if (newParticipantForm.ShowDialog() == DialogResult.OK)
                 {
-                    //LoadParticipants();
+                    LoadParticipants();
                 }
 
             }
@@ -312,7 +300,7 @@ namespace Controller
             {
                 if (eventEntriesForm.ShowDialog() == DialogResult.OK)
                 {
-                    LoadEvents(); // Reload event table to reflect updated participant counts
+                    LoadEvents();
                 }
             }
         }
@@ -337,12 +325,6 @@ namespace Controller
                 foreach (var ev in events.OrderBy(e => e.style))
                 {
                     eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
-            
-                    // Opțional: evidențiere pentru ultima modificare
-                    if (ev == events.Last())
-                    {
-                        eventTable.Rows[eventTable.Rows.Count - 1].DefaultCellStyle.BackColor = Color.LightYellow;
-                    }
                 }
             });
         }
@@ -350,22 +332,12 @@ namespace Controller
         public void SetLoggedInUser(User user)
         {
             this.currentUser = user;
-            InitializeComponents();  // Initializezi UI-ul de bază aici
+            InitializeComponents();  
 
             usernameLabel.Text = $"Logged in as: {currentUser.UserName}";
             LoadEventComboBox();
             LoadParticipants();
             LoadEvents();
-        }
-
-        
-        private void OnRefreshClicked(object sender, EventArgs e)
-        {
-            // Reîncărcăm datele
-            LoadEventComboBox();
-            LoadEvents();
-            LoadEventComboBox();
-            MessageBox.Show("Interface has been refreshed.");
         }
     }
 }

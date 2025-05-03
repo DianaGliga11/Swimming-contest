@@ -14,6 +14,7 @@ namespace Controller
         private Participant participant;
         private List<Participant> participants;
         private List<Event> events;
+        private readonly IMainObserver observer;
 
         private TextBox nameTextField;
         private TextBox ageTextField;
@@ -21,13 +22,14 @@ namespace Controller
 
         private readonly IContestServices proxy;
 
-        public NewParticipantController(IContestServices proxy, Participant participant, List<Event> events, List<Participant> participants)
+        public NewParticipantController(IContestServices proxy, IMainObserver observer, Participant participant, List<Event> events, List<Participant> participants)
         {
             InitializeComponents();
             this.proxy = proxy;
             this.participant = participant;
             this.events = events;
             this.participants = participants;
+            this.observer = observer;
             LoadData();
         }
 
@@ -37,7 +39,7 @@ namespace Controller
             {
                 if (this.InvokeRequired)
                 {
-                    this.Invoke(new Action(LoadData));
+                    this.BeginInvoke(new Action(LoadData));
                     return;
                 }
 
@@ -128,7 +130,7 @@ namespace Controller
 
             try
             {
-                await Task.Run(() => proxy.saveParticipant(participant));
+                await Task.Run(() => proxy.saveParticipant(participant, observer));
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

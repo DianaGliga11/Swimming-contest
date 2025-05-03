@@ -20,18 +20,16 @@ namespace Controller
 
         private static readonly ILog log = LogManager.GetLogger(typeof(MainController));
         private readonly IContestServices server;
-        private readonly IDictionary<string, string> properties;
+        //private readonly IDictionary<string, string> properties;
 
-        // Constructor
         public MainController(IContestServices server)
         {
             //this.properties = props;
             this.server = server;
             InitializeComponents();
-            //this.FormClosing += MainController_FormClosing;
+            this.FormClosing += MainController_FormClosing;
         }
 
-        // Initializarea componentelor formularului
         private void InitializeComponents()
         {
             this.Text = "Login - Swimming Competition";
@@ -132,64 +130,16 @@ namespace Controller
 
             try
             {
-                // Autentificare utilizator
-                var user = await Task.Run(() => server.Login(username, password, null));
+                var homeController = new HomeController(server);
+                var user = await Task.Run(() => server.Login(username, password, homeController));
 
-                this.Invoke((MethodInvoker)delegate {
+                this.BeginInvoke((MethodInvoker)delegate {
                     if (user != null)
                     {
                         log.Info($"Login successful for user: {user.UserName}");
-                
-                        // Crează HomeController și setează utilizatorul autentificat
-                        var homeController = new HomeController(server);
                         homeController.SetLoggedInUser(user);
-                
-                        // Arată HomeController și ascunde MainController
                         homeController.Show();
                         this.Hide();
-                    }
-                    else
-                    {
-                        errorLabel.Text = "Invalid username or password.";
-                        log.Warn("Invalid login credentials.");
-                    }
-                    loginButton.Enabled = true;
-                    Cursor.Current = Cursors.Default;
-                });
-            }
-            catch (Exception ex)
-            {
-                log.Error("Login error", ex);
-                this.Invoke((MethodInvoker)delegate {
-                    errorLabel.Text = "Error: " + ex.Message;
-                    loginButton.Enabled = true;
-                    Cursor.Current = Cursors.Default;
-                });
-            }
-        }
-
-
-/*
-        private void PerformLogin(string username, string password)
-        {
-            try
-            {
-                log.Info("Trying login...");
-
-                // 1. Login direct, fără observer în apel (dacă nu e nevoie acolo)
-                User user = server.Login(username, password, null);
-
-                this.Invoke((MethodInvoker)delegate {
-                    if (user != null)
-                    {
-                        log.Info($"Login successful for user: {user.UserName}");
-
-                        // 2. Creezi controllerul doar dacă login-ul a reușit
-                        var homeController = new HomeController(properties, user, server);
-                        homeController.SetLoggedInUser(user);
-
-                        this.Hide();
-                        homeController.Show();
                     }
                     else
                     {
@@ -203,16 +153,14 @@ namespace Controller
             }
             catch (Exception ex)
             {
-                this.Invoke((MethodInvoker)delegate {
+                log.Error("Login error", ex);
+                this.BeginInvoke((MethodInvoker)delegate {
                     errorLabel.Text = "Error: " + ex.Message;
                     loginButton.Enabled = true;
                     Cursor.Current = Cursors.Default;
                 });
-                log.Error("Login error", ex);
             }
         }
-        */
-
         private void MainController_FormClosing(object sender, FormClosingEventArgs e)
         {
             log.Info("App is closing...");
