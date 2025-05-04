@@ -19,31 +19,19 @@ namespace Controller
         private readonly IContestServices proxy;
         private readonly List<Event> allEvents;
         private List<Participant> allParticipants;
-
+        private readonly IMainObserver observer;
     
 
-        public EventEntriesController(IContestServices proxy, Participant participant, List<Event> events, List<Participant> allParticipants)
+        public EventEntriesController(IContestServices proxy, IMainObserver observer,  Participant participant, List<Event> events, List<Participant> allParticipants)
         {
             InitializeComponents();
             this.proxy = proxy;
             this.currentParticipant = participant;
             this.allEvents = events;
             this.allParticipants = allParticipants;
+            this.observer = observer;
             LoadData();
         }
-
-
-        /*
-        private void InitializeServices()
-        {
-            EventDBRepository eventRepository = new EventDBRepository(properties);
-            ParticipantDBRepository participantRepository = new ParticipantDBRepository(properties);
-            OfficeDBRepository officeRepository = new OfficeDBRepository(properties, participantRepository, eventRepository);
-            
-            eventService = new EventService(eventRepository, officeRepository);
-            participantService = new ParticipantService(participantRepository);
-        }
-        */
 
         private void InitializeComponents()
         {
@@ -101,10 +89,9 @@ namespace Controller
         {
             try
             {
-                // Actualizează UI-ul doar pe thread-ul principal
                 if (this.InvokeRequired)
                 {
-                    this.Invoke(new Action(() =>
+                    this.BeginInvoke(new Action(() =>
                     {
                         participantBox.DataSource = allParticipants;
                         participantBox.SelectedItem = allParticipants
@@ -145,43 +132,36 @@ namespace Controller
         }
         private async void OnConfirmClicked(object sender, EventArgs e)
         {
+            if (currentParticipant == null || currentParticipant.Id <= 0)
+            {
+                MessageBox.Show("Please select a valid participant first");
+                return;
+            }
+
+            var selectedEvents = eventListView.CheckedItems
+                .Cast<Event>()
+                .Where(ev => ev.Id > 0)
+                .ToList();
+
+            if (!selectedEvents.Any())
+            {
+                MessageBox.Show("Please select at least one valid event");
+                return;
+            }
+
+            var entries = selectedEvents
+                .Select(ev => new Office(currentParticipant, ev))
+                .ToList();
             try
             {
-                if (currentParticipant == null || currentParticipant.Id <= 0)
-                {
-                    MessageBox.Show("Please select a valid participant first");
-                    return;
-                }
-
-                var selectedEvents = eventListView.CheckedItems
-                    .Cast<Event>()
-                    .Where(ev => ev.Id > 0)
-                    .ToList();
-
-                if (!selectedEvents.Any())
-                {
-                    MessageBox.Show("Please select at least one valid event");
-                    return;
-                }
-
-                var entries = selectedEvents
-                    .Select(ev => new Office(currentParticipant, ev))
-                    .ToList();
-
-                // Execută pe un thread separat
                 await Task.Run(() => proxy.saveEventsEntries(entries));
-
-                // După ce datele au fost salvate, actualizează datele în interfață
-                LoadData(); // Actualizează UI-ul cu noile date
-
-                // Dacă nu a aruncat excepții, închidem fereastra
                 this.DialogResult = DialogResult.OK;
                 this.Close();
-            }
-            catch (Exception ex)
-            {
+            }catch (Exception ex) 
+            { 
                 MessageBox.Show($"Registration failed: {ex.Message}");
             }
+            
         }
 
     }

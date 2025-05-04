@@ -98,9 +98,12 @@ namespace Networking
             try
             {
                 if (msg.Type == ResponseType.UPDATED_EVENTS && msg.Events != null)
+                {
                     clientObserver?.EventEvntriesAdded(msg.Events);
+                    log.Debug($"Received update: Type={msg.Type}, EventCount={msg.Events.Count}");
+                }
                 else if (msg.Type == ResponseType.NEW_PARTICIPANT && msg.Participant != null)
-                    Task.Run(() => clientObserver?.ParticipantAdded(msg.Participant));
+                    clientObserver?.ParticipantAdded(msg.Participant);
             }
             catch (Exception ex)
             {

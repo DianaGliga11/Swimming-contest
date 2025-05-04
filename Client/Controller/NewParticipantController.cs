@@ -33,30 +33,6 @@ namespace Controller
             LoadData();
         }
 
-        private void LoadData()
-        {
-            try
-            {
-                if (this.InvokeRequired)
-                {
-                    this.BeginInvoke(new Action(LoadData));
-                    return;
-                }
-
-                if (participant != null)
-                {
-                    nameTextField.Text = participant.Name;
-                    ageTextField.Text = participant.Age.ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading participant data: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
         private void InitializeComponents()
         {
             this.Text = "Add New Participant";
@@ -109,6 +85,29 @@ namespace Controller
             this.Controls.Add(ageLabel);
             this.Controls.Add(ageTextField);
             this.Controls.Add(confirmButton);
+        }
+        
+        private void LoadData()
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                {
+                    this.BeginInvoke(new Action(LoadData));
+                    return;
+                }
+
+                if (participant != null)
+                {
+                    nameTextField.Text = participant.Name;
+                    ageTextField.Text = participant.Age.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading participant data: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         
         private async void OnConfirmClicked(object sender, EventArgs e)

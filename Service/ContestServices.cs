@@ -11,7 +11,8 @@ public class ContestServices : IContestServices
     private readonly I_EventService eventService;
     private readonly IDictionary<string, IMainObserver> loggedClients;
     private static readonly ILog log = LogManager.GetLogger(typeof(ContestServices));
-    
+    private readonly object _syncLock = new object();
+
     public ContestServices(I_UserService userService, I_ParticipantService participantService, I_EventService eventService)
     {
         this.eventService = eventService;
@@ -78,7 +79,7 @@ public class ContestServices : IContestServices
             eventService.saveEventEntry(entry);
         }
 
-        var updatedEvents=GetEventsWithParticipantsCount();
+        var updatedEvents= GetEventsWithParticipantsCount();
         foreach (IMainObserver client in loggedClients.Values)
         {
            client.EventEvntriesAdded(updatedEvents);
@@ -91,7 +92,7 @@ public class ContestServices : IContestServices
         {
             if (client != sender)
             {
-                Task.Run(() => client.ParticipantAdded(participant));
+               client.ParticipantAdded(participant);
             }
         }
     }

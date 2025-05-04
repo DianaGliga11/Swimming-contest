@@ -295,8 +295,7 @@ namespace Controller
         {
             var allEvents = server.GetAllEvents();
             var allParticipants = server.GetAllParticipants();
-
-            using (var eventEntriesForm = new EventEntriesController(server, null, allEvents, allParticipants))
+            using (var eventEntriesForm = new EventEntriesController(server, this, null, allEvents, allParticipants))
             {
                 if (eventEntriesForm.ShowDialog() == DialogResult.OK)
                 {
@@ -322,7 +321,7 @@ namespace Controller
         {
             UpdateUI(() => {
                 eventTable.Rows.Clear();
-                foreach (var ev in events.OrderBy(e => e.style))
+                foreach (var ev in events)
                 {
                     eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
                 }
