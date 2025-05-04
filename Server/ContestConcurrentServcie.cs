@@ -7,19 +7,19 @@ namespace Server;
 
 public class ContestConcurrentServcie : ConcurrentServer
 {
-    private readonly IContestServices server;
-    private ClientWorker? worker;
-    private static readonly ILog log = LogManager.GetLogger(typeof(ContestConcurrentServcie));
+    private readonly IContestServices _server;
+    private ClientWorker? _worker;
+    private static readonly ILog Log = LogManager.GetLogger(typeof(ContestConcurrentServcie));
     
     public ContestConcurrentServcie(int port, string host, IContestServices server) : base(port, host)
     {
-        this.server = server;
-        log.Info("Server started...");
+        this._server = server;
+        Log.Info("Server started...");
     }
 
     protected override Thread CreateWorker(TcpClient client)
     {
-        worker = new ClientWorker(server, client);
-        return new Thread(new ThreadStart(worker.Run));
+        _worker = new ClientWorker(_server, client);
+        return new Thread(new ThreadStart(_worker.Run));
     }
 }

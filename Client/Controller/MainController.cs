@@ -1,9 +1,4 @@
 ﻿using log4net;
-using mpp_proiect_csharp_DianaGliga11.Model;
-using Service;
-using System.Drawing;
-using System.Windows.Forms;
-using Networking.Request;
 using Service;
 
 namespace Controller
@@ -30,87 +25,101 @@ namespace Controller
             this.FormClosing += MainController_FormClosing;
         }
 
-        private void InitializeComponents()
-        {
-            this.Text = "Login - Swimming Competition";
-            this.Size = new Size(500, 400);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.White;
+private void InitializeComponents()
+{
+    this.Text = "Login - Swimming Competition";
+    this.Size = new Size(800, 500);  
+    this.FormBorderStyle = FormBorderStyle.FixedDialog;
+    this.MaximizeBox = false;
+    this.StartPosition = FormStartPosition.CenterScreen;
+    this.BackColor = Color.White;
+    this.Padding = new Padding(20);  
 
-            label1 = new Label
-            {
-                Text = "SWIMMING COMPETITION",
-                Font = new Font("Segoe UI", 18F, FontStyle.Bold),
-                AutoSize = true,
-                Location = new Point(100, 50)
-            };
+    int centerX = (this.ClientSize.Width - 300) / 2;
+    label1 = new Label
+    {
+        Text = "SWIMMING COMPETITION",
+        Font = new Font("Segoe UI", 15F, FontStyle.Bold),
+        AutoSize = true,
+        Location = new Point(centerX, 80),
+        ForeColor = Color.FromArgb(0, 84, 147)  
+    };
 
-            label2 = new Label
-            {
-                Text = "Username:",
-                Font = new Font("Segoe UI", 12F),
-                Location = new Point(150, 120),
-                AutoSize = true
-            };
+    label1.Location = new Point((this.ClientSize.Width - label1.Width) / 2, 80);
 
-            usernameTextField = new TextBox
-            {
-                Font = new Font("Segoe UI", 12F),
-                Location = new Point(150, 150),
-                Size = new Size(200, 30),
-                BackColor = Color.WhiteSmoke,
-                BorderStyle = BorderStyle.FixedSingle
-            };
+    label2 = new Label
+    {
+        Text = "Username:",
+        Font = new Font("Segoe UI", 11F),
+        Location = new Point(centerX, 150),
+        AutoSize = true,
+        ForeColor = Color.FromArgb(64, 64, 64)  
+    };
 
-            label3 = new Label
-            {
-                Text = "Password:",
-                Font = new Font("Segoe UI", 12F),
-                Location = new Point(150, 190),
-                AutoSize = true
-            };
+    usernameTextField = new TextBox
+    {
+        Font = new Font("Segoe UI", 11F),
+        Location = new Point(centerX, 175),
+        Size = new Size(300, 34),  
+        BackColor = Color.White,
+        BorderStyle = BorderStyle.FixedSingle,
+        Margin = new Padding(0, 0, 0, 20) 
+    };
 
-            passwordTextField = new TextBox
-            {
-                Font = new Font("Segoe UI", 12F),
-                Location = new Point(150, 220),
-                Size = new Size(200, 30),
-                BackColor = Color.WhiteSmoke,
-                BorderStyle = BorderStyle.FixedSingle,
-                PasswordChar = '*'
-            };
+    label3 = new Label
+    {
+        Text = "Password:",
+        Font = new Font("Segoe UI", 11F),
+        Location = new Point(centerX, 235),
+        AutoSize = true,
+        ForeColor = Color.FromArgb(64, 64, 64)
+    };
 
-            loginButton = new Button
-            {
-                Text = "LOGIN",
-                Font = new Font("Segoe UI", 12F),
-                Location = new Point(150, 270),
-                Size = new Size(200, 35),
-                BackColor = Color.LightSkyBlue,
-                FlatStyle = FlatStyle.Flat,
-                ForeColor = Color.White
-            };
-            loginButton.FlatAppearance.BorderSize = 0;
-            loginButton.Click += OnLoginButtonClick;
+    passwordTextField = new TextBox
+    {
+        Font = new Font("Segoe UI", 11F),
+        Location = new Point(centerX, 260),
+        Size = new Size(300, 34),
+        BackColor = Color.White,
+        BorderStyle = BorderStyle.FixedSingle,
+        PasswordChar = '•' 
+    };
 
-            errorLabel = new Label
-            {
-                ForeColor = Color.Red,
-                Location = new Point(150, 320),
-                Size = new Size(200, 20),
-                TextAlign = ContentAlignment.MiddleCenter
-            };
+    loginButton = new Button
+    {
+        Text = "LOGIN",
+        Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+        Location = new Point(centerX, 330),
+        Size = new Size(300, 40),
+        BackColor = Color.FromArgb(0, 120, 215), 
+        FlatStyle = FlatStyle.Flat,
+        ForeColor = Color.White,
+        Cursor = Cursors.Hand
+    };
+    loginButton.FlatAppearance.BorderSize = 0;
+    loginButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(0, 100, 190); 
+    loginButton.FlatAppearance.MouseDownBackColor = Color.FromArgb(0, 80, 170);  
+    loginButton.Click += OnLoginButtonClick;
 
-            this.Controls.Add(label1);
-            this.Controls.Add(label2);
-            this.Controls.Add(label3);
-            this.Controls.Add(usernameTextField);
-            this.Controls.Add(passwordTextField);
-            this.Controls.Add(loginButton);
-            this.Controls.Add(errorLabel);
-        }
+    errorLabel = new Label
+    {
+        ForeColor = Color.FromArgb(200, 0, 0), 
+        Location = new Point(centerX, 380),
+        Size = new Size(300, 25),
+        TextAlign = ContentAlignment.MiddleCenter,
+        Font = new Font("Segoe UI", 9F)
+    };
+
+    this.Controls.Add(label1);
+    this.Controls.Add(label2);
+    this.Controls.Add(label3);
+    this.Controls.Add(usernameTextField);
+    this.Controls.Add(passwordTextField);
+    this.Controls.Add(loginButton);
+    this.Controls.Add(errorLabel);
+
+    this.DoubleBuffered = true; 
+}
 
         private async void OnLoginButtonClick(object sender, EventArgs e)
         {

@@ -1,7 +1,5 @@
 ﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
-using Networking.Request;
-using Networking.Response;
 
 namespace Networking
 {

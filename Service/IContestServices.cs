@@ -11,7 +11,7 @@ public interface IContestServices
     List<ParticipantDTO> GetParticipantsForEventWithCount(long eventId);
     List<Participant> GetAllParticipants();
     List<Event> GetAllEvents();
-    void saveEventsEntries(List<Office> newEntry);
-    void saveParticipant(Participant participant, IMainObserver sender);
+    void SaveEventsEntries(List<Office> newEntry);
+    void SaveParticipant(Participant participant, IMainObserver sender);
     
 }

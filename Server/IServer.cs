@@ -5,28 +5,28 @@ using log4net;
 
 public abstract class IServer
 {
-    private readonly TcpListener server;
-    private readonly int port;
-    private readonly string host;
-    private static readonly ILog log = LogManager.GetLogger(typeof(IServer));
+    private readonly TcpListener _server;
+    private readonly int _port;
+    private readonly string _host;
+    private static readonly ILog Log = LogManager.GetLogger(typeof(IServer));
 
     public IServer(int port, string host)
     {
-        this.port = port;
-        this.host = host;
+        this._port = port;
+        this._host = host;
         IPAddress adr = IPAddress.Parse(host);
         IPEndPoint endPoint = new IPEndPoint(adr, port);
-        server = new TcpListener(endPoint);
+        _server = new TcpListener(endPoint);
     }
 
     public void Start()
     {
-        server.Start();
+        _server.Start();
         while (true)
         {
-            log.Info("Waiting for clients...");
-            TcpClient client = server.AcceptTcpClient();
-            log.Info("Client connected...");
+            Log.Info("Waiting for clients...");
+            TcpClient client = _server.AcceptTcpClient();
+            Log.Info("Client connected...");
             ProcessRequest(client);
         }
     }

@@ -1,7 +1,5 @@
-﻿using Microsoft.VisualBasic.Logging;
-using mpp_proiect_csharp_DianaGliga11.Model;
+﻿using mpp_proiect_csharp_DianaGliga11.Model;
 using mpp_proiect_csharp_DianaGliga11.Model.DTO;
-using Service;
 using Service;
 using log4net;
 
@@ -11,22 +9,22 @@ namespace Controller
     public class HomeController : Form, IMainObserver
     {
         //private IDictionary<string, string> properties;
-        private User currentUser;
-        private IContestServices server;
-        private static readonly ILog log = LogManager.GetLogger(typeof(MainController));
+        private User _currentUser;
+        private readonly IContestServices server;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MainController));
 
-        private ComboBox eventComboBox;
-        private Label usernameLabel;
-        private Label searchMessageLabel;
-        private DataGridView eventTable;
-        private DataGridView participantTable;
-        private DataGridView searchResultsTable;
-        private Panel searchResultsContainer;
-        private Button btnCloseSearchResults;
-        private Button btnSearch;
-        private Button btnLogout;
-        private Button btnAddParticipant;
-        private Button btnNewEntry;
+        private ComboBox _eventComboBox;
+        private Label _usernameLabel;
+        private Label _searchMessageLabel;
+        private DataGridView _eventTable;
+        private DataGridView _participantTable;
+        private DataGridView _searchResultsTable;
+        private Panel _searchResultsContainer;
+        private Button _btnCloseSearchResults;
+        private Button _btnSearch;
+        private Button _btnLogout;
+        private Button _btnAddParticipant;
+        private Button _btnNewEntry;
         
         public HomeController(IContestServices server)
         {
@@ -37,122 +35,127 @@ namespace Controller
         private void InitializeComponents()
         {
             this.Text = "Swimming Contest";
-            this.Size = new Size(800, 600);
+            this.Size = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            usernameLabel = new Label
+            _usernameLabel = new Label
             {
-                Text = $"User: {currentUser.UserName}",
+                Text = $"User: {_currentUser.UserName}",
                 Location = new Point(20, 20),
                 AutoSize = true
             };
 
-            eventComboBox = new ComboBox
+            _eventComboBox = new ComboBox
             {
                 Location = new Point(20, 50),
                 Width = 200,
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
 
-            btnSearch = new Button
+            _btnSearch = new Button
             {
                 Text = "Search",
-                Location = new Point(230, 50),
-                Width = 80
+                Location = new Point(280, 50),
+                Width = 80,
+                Height = 30
             };
-            btnSearch.Click += OnSearchClicked;
+            _btnSearch.Click += OnSearchClicked;
 
-            searchMessageLabel = new Label
+            _searchMessageLabel = new Label
             {
-                Location = new Point(320, 55),
+                Location = new Point(390, 55),
                 AutoSize = true,
                 Visible = false
             };
 
-            eventTable = new DataGridView
+            _eventTable = new DataGridView
             {
-                Location = new Point(20, 100),
-                Width = 400,
-                Height = 150,
+                Location = new Point(20, 90),
+                Width = 450,
+                Height = 200,
                 ReadOnly = true,
                 AllowUserToAddRows = false
             };
-            eventTable.Columns.Add("Style", "Style");
-            eventTable.Columns.Add("Distance", "Distance");
-            eventTable.Columns.Add("ParticipantsCount", "Participants Count");
+            _eventTable.Columns.Add("Style", "Style");
+            _eventTable.Columns.Add("Distance", "Distance");
+            _eventTable.Columns.Add("ParticipantsCount", "Participants Count");
 
-            participantTable = new DataGridView
+            _participantTable = new DataGridView
             {
-                Location = new Point(20, 270),
-                Width = 400,
-                Height = 150,
+                Location = new Point(20, 310),
+                Width = 450,
+                Height = 200,
                 ReadOnly = true,
                 AllowUserToAddRows = false
             };
-            participantTable.Columns.Add("Name", "Name");
-            participantTable.Columns.Add("Age", "Age");
+            _participantTable.Columns.Add("Name", "Name");
+            _participantTable.Columns.Add("Age", "Age");
 
-            searchResultsContainer = new Panel
+            _searchResultsContainer = new Panel
             {
-                Location = new Point(450, 100),
-                Size = new Size(300, 320),
+                Location = new Point(500, 90),
+                Size = new Size(450, 200),
                 BorderStyle = BorderStyle.FixedSingle,
                 Visible = false
             };
 
-            searchResultsTable = new DataGridView
+            _searchResultsTable = new DataGridView
             {
                 Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false
             };
-            searchResultsTable.Columns.Add("Name", "Name");
-            searchResultsTable.Columns.Add("Age", "Age");
-            searchResultsTable.Columns.Add("EventsCount", "Events Count");
-            searchResultsContainer.Controls.Add(searchResultsTable);
+            _searchResultsTable.Columns.Add("Name", "Name");
+            _searchResultsTable.Columns.Add("Age", "Age");
+            _searchResultsTable.Columns.Add("EventsCount", "Events Count");
+            _searchResultsContainer.Controls.Add(_searchResultsTable);
 
-            btnCloseSearchResults = new Button
+            _btnCloseSearchResults = new Button
             {
                 Text = "Close",
+                Height = 30,
                 Dock = DockStyle.Bottom
             };
-            btnCloseSearchResults.Click += OnCloseSearchResults;
-            searchResultsContainer.Controls.Add(btnCloseSearchResults);
+            _btnCloseSearchResults.Click += OnCloseSearchResults;
+            _searchResultsContainer.Controls.Add(_btnCloseSearchResults);
 
-            btnAddParticipant = new Button
+            _btnAddParticipant = new Button
             {
                 Text = "Add Participant",
-                Location = new Point(20, 450),
-                Width = 120
+                Location = new Point(20, 530),
+                Width = 150,
+                Height = 30
             };
-            btnAddParticipant.Click += OnParticipantButtonClicked;
+            _btnAddParticipant.Click += OnParticipantButtonClicked;
 
-            btnNewEntry = new Button
+            _btnNewEntry = new Button
             {
                 Text = "New Event Entry",
-                Location = new Point(150, 450),
-                Width = 120
+                Location = new Point(180, 530),
+                Width = 150,
+                Height = 30
             };
-            btnNewEntry.Click += OnNewEntryClicked;
+            _btnNewEntry.Click += OnNewEntryClicked;
 
-            btnLogout = new Button
+            _btnLogout = new Button
             {
                 Text = "Logout",
-                Location = new Point(700, 20),
-                Width = 80
+                Location = new Point(800, 20),
+                Width = 100,
+                Height = 30
             };
-            btnLogout.Click += OnLogoutClicked;
+            _btnLogout.Click += OnLogoutClicked;
 
-            this.Controls.Add(usernameLabel);
-            this.Controls.Add(eventComboBox);
-            this.Controls.Add(btnSearch);
-            this.Controls.Add(searchMessageLabel);
-            this.Controls.Add(eventTable);
-            this.Controls.Add(participantTable);
-            this.Controls.Add(searchResultsContainer);
-            this.Controls.Add(btnAddParticipant);
-            this.Controls.Add(btnNewEntry);
-            this.Controls.Add(btnLogout);
+            this.Controls.Add(_usernameLabel);
+            this.Controls.Add(_eventComboBox);
+            this.Controls.Add(_btnSearch);
+            this.Controls.Add(_searchMessageLabel);
+            this.Controls.Add(_eventTable);
+            this.Controls.Add(_participantTable);
+            this.Controls.Add(_searchResultsContainer);
+            this.Controls.Add(_btnAddParticipant);
+            this.Controls.Add(_btnNewEntry);
+            this.Controls.Add(_btnLogout);
         }
 
         private void LoadEventComboBox()
@@ -166,8 +169,8 @@ namespace Controller
                     return;
                 }
 
-                eventComboBox.DataSource = events.ToList();
-                eventComboBox.SelectedIndex = -1;
+                _eventComboBox.DataSource = events.ToList();
+                _eventComboBox.SelectedIndex = -1;
 
             });
         }
@@ -189,11 +192,11 @@ namespace Controller
         {
             UpdateUI(() =>
             {
-                participantTable.Rows.Clear();
+                _participantTable.Rows.Clear();
                 foreach (var participant in server.GetAllParticipants())
                 {
-                    log.Debug($"Loading participant: {participant.Name}");
-                    participantTable.Rows.Add(participant.Name, participant.Age, participant.Id);
+                    Log.Debug($"Loading participant: {participant.Name}");
+                    _participantTable.Rows.Add(participant.Name, participant.Age, participant.Id);
                 }
             });
         }
@@ -206,20 +209,18 @@ namespace Controller
                 return;
             }
 
-            eventTable.Rows.Clear();
+            _eventTable.Rows.Clear();
             var events = server.GetEventsWithParticipantsCount();
             foreach (var ev in events)
             {
-                eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
+                _eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
             }
         }
 
-
-
         private void OnSearchClicked(object sender, EventArgs e)
         {
-            var selectedEvent = eventComboBox.SelectedItem as Event;
-            log.Info($"Selected item: {selectedEvent}");
+            var selectedEvent = _eventComboBox.SelectedItem as Event;
+            Log.Info($"Selected item: {selectedEvent}");
             if (selectedEvent == null)
             {
                 ShowSearchMessage("Please select an event first!", true);
@@ -232,42 +233,40 @@ namespace Controller
                 if (results == null || !results.Any())
                 {
                     ShowSearchMessage("No participants found for this event.", true);
-                    searchResultsContainer.Visible = false;
+                    _searchResultsContainer.Visible = false;
                 }
                 else
                 {
                     UpdateSearchResults(results);
-                    searchResultsContainer.Visible = true;
+                    _searchResultsContainer.Visible = true;
                 }
             }
             catch (Exception ex)
             {
                 ShowAlert("Search Error", ex.Message);
-                searchResultsContainer.Visible = false;
+                _searchResultsContainer.Visible = false;
             }
         }
-
 
         private void UpdateSearchResults(IEnumerable<ParticipantDTO> results)
         {
-            searchResultsTable.Rows.Clear();
+            _searchResultsTable.Rows.Clear();
             foreach (var result in results)
             {
-                searchResultsTable.Rows.Add(result.name, result.age, result.eventCount);
+                _searchResultsTable.Rows.Add(result.name, result.age, result.eventCount);
             }
         }
-
-
+        
         private void ShowSearchMessage(string message, bool isError)
         {
-            searchMessageLabel.Text = message;
-            searchMessageLabel.ForeColor = isError ? Color.DarkRed : Color.DarkGreen;
-            searchMessageLabel.Visible = true;
+            _searchMessageLabel.Text = message;
+            _searchMessageLabel.ForeColor = isError ? Color.DarkRed : Color.DarkGreen;
+            _searchMessageLabel.Visible = true;
         }
 
         private void OnCloseSearchResults(object sender, EventArgs e)
         {
-            searchResultsContainer.Visible = false;
+            _searchResultsContainer.Visible = false;
         }
 
         private void OnLogoutClicked(object sender, EventArgs e)
@@ -313,27 +312,27 @@ namespace Controller
         {
             UpdateUI(() =>
             {
-                participantTable.Rows.Add(participant.Name, participant.Age); 
+                _participantTable.Rows.Add(participant.Name, participant.Age); 
             });
         }
 
         public void EventEvntriesAdded(List<EventDTO> events)
         {
             UpdateUI(() => {
-                eventTable.Rows.Clear();
+                _eventTable.Rows.Clear();
                 foreach (var ev in events)
                 {
-                    eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
+                    _eventTable.Rows.Add(ev.style, ev.distance, ev.participantsCount);
                 }
             });
         }
 
         public void SetLoggedInUser(User user)
         {
-            this.currentUser = user;
+            this._currentUser = user;
             InitializeComponents();  
 
-            usernameLabel.Text = $"Logged in as: {currentUser.UserName}";
+            _usernameLabel.Text = $"Logged in as: {_currentUser.UserName}";
             LoadEventComboBox();
             LoadParticipants();
             LoadEvents();

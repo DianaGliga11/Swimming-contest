@@ -154,7 +154,7 @@ namespace Controller
                 .ToList();
             try
             {
-                await Task.Run(() => proxy.saveEventsEntries(entries));
+                await Task.Run(() => proxy.SaveEventsEntries(entries));
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }catch (Exception ex) 

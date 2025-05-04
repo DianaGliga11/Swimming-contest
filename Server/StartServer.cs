@@ -8,7 +8,7 @@ namespace Server;
 
 public class StartServer
 {
-    private static readonly ILog log = LogManager.GetLogger(typeof(IServer));
+    private static readonly ILog Log = LogManager.GetLogger(typeof(IServer));
 
     private static void Main(string[] args)
     {
@@ -18,7 +18,7 @@ public class StartServer
         string? connectionString = GetConnectionStringByName("SwimingContest");
         if (connectionString == null)
         {
-            log.Error("Null connection string");
+            Log.Error("Null connection string");
             return;
         }
         props.Add("ConnectionString", connectionString);
@@ -36,7 +36,7 @@ public class StartServer
 
         IServer scs = new ContestConcurrentServcie(56789, "127.0.0.1", server);
         scs.Start();
-        log.Info("Server started...");
+        Log.Info("Server started...");
         Console.ReadKey();
     }
 

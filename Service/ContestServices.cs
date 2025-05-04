@@ -6,89 +6,88 @@ namespace Service;
 
 public class ContestServices : IContestServices
 {
-    private readonly I_UserService userService;
-    private readonly I_ParticipantService participantService;
-    private readonly I_EventService eventService;
-    private readonly IDictionary<string, IMainObserver> loggedClients;
-    private static readonly ILog log = LogManager.GetLogger(typeof(ContestServices));
-    private readonly object _syncLock = new object();
+    private readonly I_UserService _userService;
+    private readonly I_ParticipantService _participantService;
+    private readonly I_EventService _eventService;
+    private readonly IDictionary<string, IMainObserver> _loggedClients;
+    private static readonly ILog Log = LogManager.GetLogger(typeof(ContestServices));
 
     public ContestServices(I_UserService userService, I_ParticipantService participantService, I_EventService eventService)
     {
-        this.eventService = eventService;
-        this.participantService = participantService;
-        this.userService = userService;
-        loggedClients = new Dictionary<string, IMainObserver>();
+        this._eventService = eventService;
+        this._participantService = participantService;
+        this._userService = userService;
+        _loggedClients = new Dictionary<string, IMainObserver>();
     }
 
     public User Login(string username, string password, IMainObserver client)
     {
-        User? foundUser = userService.getLogin(username, password);
+        User? foundUser = _userService.getLogin(username, password);
         if (foundUser != null)
         {
-            if (loggedClients.ContainsKey(foundUser.UserName))
+            if (_loggedClients.ContainsKey(foundUser.UserName))
             {
-                log.Error("User already log in");
+                Log.Error("User already log in");
                 throw new Exception("User already logged in.");
             }
-            loggedClients[foundUser.UserName] = client;
+            _loggedClients[foundUser.UserName] = client;
             return foundUser;
         }
         else
         {
-            log.Error("Authentication failed");
+            Log.Error("Authentication failed");
             throw new Exception("Authentication failed.");
         }
     }
 
     public void Logout(User user, IMainObserver client)
     {
-        if (!loggedClients.TryGetValue(user.UserName, out var localClient))
+        if (!_loggedClients.TryGetValue(user.UserName, out var localClient))
         {
-            log.Error("User is not logged in");
+            Log.Error("User is not logged in");
             throw new Exception("User is not logged in.");
         }
 
-        loggedClients.Remove(user.UserName);
+        _loggedClients.Remove(user.UserName);
     }
 
     public List<EventDTO> GetEventsWithParticipantsCount()
     {
-        return eventService.getEventsWithParticipantsCount().ToList();
+        return _eventService.getEventsWithParticipantsCount().ToList();
     }
 
     public List<ParticipantDTO> GetParticipantsForEventWithCount(long eventId)
     {
-        return eventService.getParticipantsForEventWithCount(eventId).ToList();
+        return _eventService.getParticipantsForEventWithCount(eventId).ToList();
     }
 
     public List<Participant> GetAllParticipants()
     {
-        return participantService.getAll().ToList();
+        return _participantService.getAll().ToList();
     }
 
     public List<Event> GetAllEvents()
     {
-        return eventService.getAll().ToList();
+        return _eventService.getAll().ToList();
     }
 
-    public void saveEventsEntries(List<Office> newEntries)
+    public void SaveEventsEntries(List<Office> newEntries)
     {
         foreach (Office entry in newEntries)
         {
-            eventService.saveEventEntry(entry);
+            _eventService.saveEventEntry(entry);
         }
 
         var updatedEvents= GetEventsWithParticipantsCount();
-        foreach (IMainObserver client in loggedClients.Values)
+        foreach (IMainObserver client in _loggedClients.Values)
         {
            client.EventEvntriesAdded(updatedEvents);
         }
     }
-    public void saveParticipant(Participant participant, IMainObserver sender)
+    public void SaveParticipant(Participant participant, IMainObserver sender)
     {
-        participantService.add(participant);
-        foreach (IMainObserver client in loggedClients.Values)
+        _participantService.add(participant);
+        foreach (IMainObserver client in _loggedClients.Values)
         {
             if (client != sender)
             {

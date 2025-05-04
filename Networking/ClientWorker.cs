@@ -98,7 +98,7 @@ namespace Networking
 
                     case RequestType.CREATE_PARTICIPANT:
                         Log.Debug("Create participant request...");
-                        _server.saveParticipant(request.Participant, this);
+                        _server.SaveParticipant(request.Participant, this);
                         return JsonProtocolUtils.CreateNewParticipantResponse(request.Participant);
 
                     case RequestType.GET_ALL_PARTICIPANTS:
@@ -123,7 +123,7 @@ namespace Networking
 
                     case RequestType.CREATE_EVENT_ENTRIES:
                         Log.Debug("Create event entries request...");
-                        _server.saveEventsEntries(request.EventEntries);
+                        _server.SaveEventsEntries(request.EventEntries);
                         return JsonProtocolUtils.CreateOkResponse();
 
                     default:

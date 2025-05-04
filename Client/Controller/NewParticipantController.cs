@@ -129,7 +129,7 @@ namespace Controller
 
             try
             {
-                await Task.Run(() => proxy.saveParticipant(participant, observer));
+                await Task.Run(() => proxy.SaveParticipant(participant, observer));
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
