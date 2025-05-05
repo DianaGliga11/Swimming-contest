@@ -32,7 +32,7 @@ public class StartServer {
         }
         logger.info("Starting server on port " + server_port);
 
-        Server server = new ContestConcurrentServer(server_port, eventServices);
+        Server server = new ProtocolBufferServer(server_port, eventServices);
         try{
             server.start();
         } catch (ServerException e) {
@@ -41,6 +41,7 @@ public class StartServer {
     }
 
     private static IContestServices initializeServices(Properties serverProperties) {
+
         ParticipantRepository participantRepository = new ParticipantDBRepository(serverProperties);
         EventRepository eventRepository = new EventDBRepository(serverProperties);
         OfficeRepository officeRepository = new OfficeDBRepository(serverProperties, participantRepository, eventRepository);
