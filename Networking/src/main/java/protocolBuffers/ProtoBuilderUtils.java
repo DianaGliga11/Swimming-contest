@@ -162,12 +162,16 @@ public class ProtoBuilderUtils {
     }
 
     private static SwimmingContestProtocol.Office buildEventEntry(final Office office) {
-        return SwimmingContestProtocol.Office.newBuilder()
-                .setId(office.getId())
+        SwimmingContestProtocol.Office.Builder builder = SwimmingContestProtocol.Office.newBuilder()
                 .setParticipant(buildParticipant(office.getParticipant()))
-                .setEvent(buildEvent(office.getEvent()))
-                .build();
+                .setEvent(buildEvent(office.getEvent()));
+
+        if (office.getId() != null) {
+            builder.setId(office.getId());
+        }
+        return builder.build();
     }
+
 
     private static SwimmingContestProtocol.Event buildEvent(final Event event) {
         return SwimmingContestProtocol.Event.newBuilder()
@@ -178,11 +182,14 @@ public class ProtoBuilderUtils {
     }
 
     private static SwimmingContestProtocol.Participant buildParticipant(final Participant participant) {
-        return SwimmingContestProtocol.Participant.newBuilder()
-                .setId(participant.getId())
+        SwimmingContestProtocol.Participant.Builder builder =  SwimmingContestProtocol.Participant.newBuilder()
                 .setName(participant.getName())
-                .setAge(participant.getAge())
-                .build();
+                .setAge(participant.getAge());
+
+        if(participant.getId() != null) {
+            builder.setId(participant.getId());
+        }
+        return builder.build();
     }
 
     private static SwimmingContestProtocol.EventDTO buildEventDTO(final EventDTO eventDTO) {

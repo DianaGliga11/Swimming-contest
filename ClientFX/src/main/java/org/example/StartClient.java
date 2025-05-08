@@ -9,12 +9,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import protocolBuffers.ProtocolBufferServicesProxy;
 
 import java.io.IOException;
 import java.util.Properties;
 
 public class StartClient extends Application {
-    private static final int DEFAULT_PORT = 55558;
+    private static final int DEFAULT_PORT = 56789;
     private static final String DEFAULT_SERVER = "localhost";
     private static final Logger logger = LogManager.getLogger();
 
@@ -40,7 +41,7 @@ public class StartClient extends Application {
         }
 
         logger.info("Using IP: " + serverIP + " on port " + port);
-        IContestServices server = new ServicesProxy(serverIP, port);
+        IContestServices server = new ProtocolBufferServicesProxy(serverIP, port);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/main-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());

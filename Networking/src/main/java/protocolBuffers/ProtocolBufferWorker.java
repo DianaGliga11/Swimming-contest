@@ -76,11 +76,12 @@ public class ProtocolBufferWorker implements Runnable, IMainObserver {
         switch (request.getType()) {
             case Login -> {
                 try {
-                    String username = request.getUserName();
-                    String password = request.getPassword();
-                    User user = contestServices.login(username, password, this);
+                    logger.info("Login attempt for user: " + request.getUserName());
+                    User user = contestServices.login(request.getUserName(), request.getPassword(), this);
+                    logger.info("Login successful for user: " + user.getUserName());
                     return ProtoBuilderUtils.createOkResponse(user);
                 } catch (Exception e) {
+                    logger.error("Login failed: " + e.getMessage());
                     return ProtoBuilderUtils.createErrorResponse(e.getMessage());
                 }
             }

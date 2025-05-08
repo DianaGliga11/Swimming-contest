@@ -172,9 +172,9 @@ public class ProtocolBufferServicesProxy implements IContestServices {
     private void initializeConnection() {
         try {
             connection = new Socket(host, port);
-            output = new ObjectOutputStream(connection.getOutputStream());
+            output = connection.getOutputStream();
             output.flush();
-            input = new ObjectInputStream(connection.getInputStream());
+            input = connection.getInputStream();
             finished = false;
             startResponseReader();
         } catch (IOException e) {
