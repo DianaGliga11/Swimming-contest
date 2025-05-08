@@ -3,6 +3,7 @@ using log4net;
 using log4net.Config;
 using Microsoft.VisualBasic.Logging;
 using Networking;
+using Networking.ProtocolBuffers;
 using Service;
 
 namespace Client;
@@ -17,7 +18,7 @@ public class StartClient
         //IDictionary<string, string> properties = new SortedList<string, string>();
         XmlConfigurator.Configure(new FileInfo("client.config"));
 
-        IContestServices server = new ServicesProxy("127.0.0.1", 56789);
+        IContestServices server = new ProtocolBufferServicesProxy("127.0.0.1", 56789);
         MainController controller = new MainController( server);
         Application.Run(controller);
     }

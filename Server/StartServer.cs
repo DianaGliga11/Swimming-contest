@@ -34,7 +34,7 @@ public class StartServer
 
         IContestServices server = new ContestServices(userService, participantService, eventService);
 
-        IServer scs = new ContestConcurrentServcie(56789, "127.0.0.1", server);
+        IServer scs = new ProtocolBuffersServer(56789, "127.0.0.1", server);
         scs.Start();
         Log.Info("Server started...");
         Console.ReadKey();
