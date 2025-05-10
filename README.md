@@ -60,3 +60,13 @@ Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc
 - partea de controller ramane aproximativ la fel, exceptie facand faptul ca trebuie sa folosim runLater pentru a nu bloca interfata si sa sincronizam tot ce apare nou in interfata (ex. Initializerea tabelelor)
 - in pornirea clientului verific portul si serverul, ca in caz ca nu este disponibil sa foloseasca un port si server default
 - HomeController trebuie sa implementeze interfata pentru IMainObserver pentru a putea actualiza modificarile efectuate in interfata, dar si logarea/delogarea clientilor.
+
+
+--Lab 8--
+
+-> In ba=ranch-ul lab8
+1. Am instalat compiler-ul necesar pentru a utiliza Protocol Buffers (tehnologia de la Google). De asemenea, am configurat build.gradle pentru a folosi acest protocol.
+2. Fisierul de configurare:
+- SwimingContest.proto - contine identificarea tuturor claselor si actiunilor de Request/Response, dar si a atributelor care rezulta din aceste Request-uri si Response-uri.
+3. Networking:
+- Directorul protocolBuffers contine patru clase, dintre care una generata de compiler-ul pentru protocol buffers.   
