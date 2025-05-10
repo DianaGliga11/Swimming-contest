@@ -1,10 +1,10 @@
 package DTO;
 
-import example.example.Entity;
+import example.example.Identifiable;
 
 import java.io.Serializable;
 
-public class EventDTO extends Entity<Long> implements Serializable {
+public class EventDTO extends Identifiable<Long> implements Serializable {
     private final String style;
     private final Integer distance;
     private final Integer participantsCount;

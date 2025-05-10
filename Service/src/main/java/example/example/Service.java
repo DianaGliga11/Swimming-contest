@@ -2,7 +2,7 @@ package example.example;
 
 import java.util.List;
 
-public interface Service<ID, E extends Entity<ID>> {
+public interface Service<ID, E extends Identifiable<ID>> {
     void add(E entity) throws EntityRepoException;
 
     void remove(ID id) throws EntityRepoException;

@@ -2,7 +2,7 @@ package example.example;
 
 import java.io.Serializable;
 
-public abstract class Entity<Long> implements Serializable {
+public abstract class Identifiable<Long> implements Serializable {
     private Long id;
 
     public Long getId() {

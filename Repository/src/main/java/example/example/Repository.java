@@ -3,7 +3,7 @@ package example.example;
 import java.io.Serializable;
 import java.util.List;
 
-public interface Repository<E extends Entity<Long>> extends Serializable {
+public interface Repository<E extends Identifiable<Long>> extends Serializable {
     void add(E entity) throws EntityRepoException;
 
     void remove(long id) throws EntityRepoException;

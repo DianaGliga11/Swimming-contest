@@ -2,7 +2,7 @@ package example.example;
 
 import java.io.Serializable;
 
-public class User extends Entity<Long> implements Serializable {
+public class User extends Identifiable<Long> implements Serializable {
     private String userName;
     private String password;
 

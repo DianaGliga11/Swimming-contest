@@ -2,7 +2,7 @@ package example.example;
 
 import java.io.Serializable;
 
-public class Office extends Entity<Long> implements Serializable {
+public class Office extends Identifiable<Long> implements Serializable {
     private Participant participant;
     private Event event;
 
