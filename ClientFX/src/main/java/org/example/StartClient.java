@@ -41,7 +41,8 @@ public class StartClient extends Application {
         }
 
         logger.info("Using IP: " + serverIP + " on port " + port);
-        IContestServices server = new ProtocolBufferServicesProxy(serverIP, port);
+        //IContestServices server = new ProtocolBufferServicesProxy(serverIP, port);
+        IContestServices server = new ServicesProxy(serverIP, port);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/main-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());

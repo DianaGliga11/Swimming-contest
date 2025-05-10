@@ -1,3 +1,5 @@
+import Hibernate.EventORMRepository;
+import Hibernate.ParticipantORMRepository;
 import example.example.*;
 import contestUtils.ContestServices;
 import contestUtils.IContestServices;
@@ -32,7 +34,8 @@ public class StartServer {
         }
         logger.info("Starting server on port " + server_port);
 
-        Server server = new ProtocolBufferServer(server_port, eventServices);
+        Server server = new ContestConcurrentServer(server_port, eventServices);
+        //Server server = new ProtocolBufferServer(server_port, eventServices);
         try{
             server.start();
         } catch (ServerException e) {
@@ -41,9 +44,12 @@ public class StartServer {
     }
 
     private static IContestServices initializeServices(Properties serverProperties) {
+        var sessionFactory = Hibernate.HibernateUtil.getSessionFactory();
+        ParticipantRepository participantRepository = new ParticipantORMRepository(sessionFactory);
+        EventRepository eventRepository = new EventORMRepository(sessionFactory);
 
-        ParticipantRepository participantRepository = new ParticipantDBRepository(serverProperties);
-        EventRepository eventRepository = new EventDBRepository(serverProperties);
+//        ParticipantRepository participantRepository = new ParticipantDBRepository(serverProperties);
+//        EventRepository eventRepository= new EventDBRepository(serverProperties);
         OfficeRepository officeRepository = new OfficeDBRepository(serverProperties, participantRepository, eventRepository);
         UserRepository userRepository = new UserDBRepository(serverProperties);
 
