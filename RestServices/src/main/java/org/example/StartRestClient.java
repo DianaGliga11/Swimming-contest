@@ -15,7 +15,7 @@ public class StartRestClient {
     private static final Logger logger = (Logger) LogManager.getLogger();
 
     public static void main(String[] args) {
-        Event newEvent = new Event("sub apa", 800);
+        Event newEvent = new Event("sub apa", 1500);
         newEvent.setId(newEvent.getId());
         try {
             show(() -> {

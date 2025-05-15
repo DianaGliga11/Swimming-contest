@@ -29,13 +29,13 @@ public class RestClient {
         return execute(() -> restTemplate.getForObject(String.format("%s/%s", URL, id), Event.class));
     }
 
-    public Event create(Event race) throws Exception {
-        return execute(() -> restTemplate.postForObject(URL, race, Event.class));
+    public Event create(Event event) throws Exception {
+        return execute(() -> restTemplate.postForObject(URL, event, Event.class));
     }
 
-    public void update(Event race) throws Exception {
+    public void update(Event event) throws Exception {
         execute(() -> {
-            restTemplate.put(String.format("%s/%s", URL, race.getId()), race);
+            restTemplate.put(String.format("%s/%s", URL, event.getId()), event);
             return null;
         });
     }
