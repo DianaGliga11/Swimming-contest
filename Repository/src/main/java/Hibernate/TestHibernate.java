@@ -1,8 +1,8 @@
 package Hibernate;
 
-import example.example.EntityRepoException;
-import example.example.Event;
-import example.example.Participant;
+import example.repo.EntityRepoException;
+import example.model.Event;
+import example.model.Participant;
 
 import java.util.List;
 import java.util.Optional;

@@ -4,8 +4,8 @@ import DTO.EventDTO;
 import DTO.ParticipantDTO;
 import contestUtils.IContestServices;
 import contestUtils.IMainObserver;
-import example.example.Event;
-import example.example.Participant;
+import example.model.Event;
+import example.model.Participant;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import example.example.User;
+import example.model.User;
 import request.*;
 import response.*;
 

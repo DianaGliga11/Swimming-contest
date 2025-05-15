@@ -1,6 +1,6 @@
 package request;
 
-import example.example.Participant;
+import example.model.Participant;
 
 public class CreateParticipantRequest implements Request{
     private final Participant participant;

@@ -2,6 +2,9 @@ package example.example;
 
 import DTO.EventDTO;
 import DTO.ParticipantDTO;
+import example.model.Event;
+import example.model.Office;
+import example.repo.EntityRepoException;
 
 import java.util.Collection;
 

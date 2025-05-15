@@ -1,6 +1,6 @@
 package DTO;
 
-import example.example.Identifiable;
+import example.model.Identifiable;
 
 import java.io.Serializable;
 

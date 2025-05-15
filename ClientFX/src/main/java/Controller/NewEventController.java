@@ -7,13 +7,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import example.example.EntityRepoException;
-import example.example.Event;
-import example.example.EventImplementationService;
-import example.example.User;
+import example.model.Event;
+import example.model.User;
 
 import java.io.IOException;
-import java.util.Properties;
 
 public class NewEventController extends AnchorPane {
     //private EventImplementationService eventService;

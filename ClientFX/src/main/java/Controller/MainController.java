@@ -1,8 +1,7 @@
 package Controller;
 
-import DTO.EventDTO;
 import contestUtils.IContestServices;
-import example.example.*;
+import example.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -1,6 +1,6 @@
 package request;
 
-import example.example.User;
+import example.model.User;
 
 public class LogoutRequest implements Request {
     public final User user;

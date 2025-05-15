@@ -12,7 +12,7 @@
 <property name="hibernate.show_sql">true</property>
 <property name="hibernate.format_sql">true</property>
 
-<mapping class="example.example.Participant"/>
-<mapping class="example.example.Event"/>
+<mapping class="example.model.Participant"/>
+<mapping class="example.model.Event"/>
 </session-factory>
 </hibernate-configuration>

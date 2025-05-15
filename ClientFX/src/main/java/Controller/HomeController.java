@@ -3,7 +3,9 @@ package Controller;
 import DTO.EventDTO;
 import DTO.ParticipantDTO;
 import contestUtils.IContestServices;
-import example.example.*;
+import example.model.Event;
+import example.model.Participant;
+import example.model.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +20,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 import contestUtils.IMainObserver;

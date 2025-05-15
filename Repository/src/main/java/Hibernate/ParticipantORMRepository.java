@@ -1,8 +1,8 @@
 package Hibernate;
 
-import example.example.EntityRepoException;
-import example.example.Participant;
-import example.example.ParticipantRepository;
+import example.repo.EntityRepoException;
+import example.model.Participant;
+import example.repo.ParticipantRepository;
 import org.apache.logging.log4j.LogManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

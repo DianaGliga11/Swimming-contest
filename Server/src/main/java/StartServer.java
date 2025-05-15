@@ -3,6 +3,7 @@ import Hibernate.ParticipantORMRepository;
 import example.example.*;
 import contestUtils.ContestServices;
 import contestUtils.IContestServices;
+import example.repo.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,8 +1,8 @@
 package Hibernate;
 
-import example.example.EntityRepoException;
-import example.example.Event;
-import example.example.EventRepository;
+import example.repo.EntityRepoException;
+import example.model.Event;
+import example.repo.EventRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;

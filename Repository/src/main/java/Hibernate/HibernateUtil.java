@@ -9,7 +9,7 @@ public class HibernateUtil {
     static {
         try {
             sessionFactory = new Configuration()
-                    .configure() // asigură-te că ai hibernate.cfg.xml sau hibernate.cfg.xml
+                    .configure()
                     .buildSessionFactory();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);

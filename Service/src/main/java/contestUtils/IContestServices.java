@@ -2,10 +2,10 @@ package contestUtils;
 
 import DTO.EventDTO;
 import DTO.ParticipantDTO;
-import example.example.Event;
-import example.example.Office;
-import example.example.Participant;
-import example.example.User;
+import example.model.Event;
+import example.model.Office;
+import example.model.Participant;
+import example.model.User;
 
 import java.util.Collection;
 import java.util.List;

@@ -6,4 +6,5 @@ include 'Service'
 include 'ClientFX'
 include 'Networking'
 include 'Server'
+include 'RestServices'
 

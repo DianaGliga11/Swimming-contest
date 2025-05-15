@@ -1,11 +1,12 @@
 package Controller;
 
 import contestUtils.IContestServices;
-import example.example.*;
+import example.model.Event;
+import example.model.Office;
+import example.model.Participant;
+import example.model.User;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 public class EventEntriesController extends AnchorPane {
     private IContestServices server;

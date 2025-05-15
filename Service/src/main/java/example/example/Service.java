@@ -1,5 +1,8 @@
 package example.example;
 
+import example.model.Identifiable;
+import example.repo.EntityRepoException;
+
 import java.util.List;
 
 public interface Service<ID, E extends Identifiable<ID>> {

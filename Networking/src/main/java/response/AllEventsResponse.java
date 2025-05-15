@@ -1,6 +1,6 @@
 package response;
 
-import example.example.Event;
+import example.model.Event;
 
 import java.util.Collection;
 

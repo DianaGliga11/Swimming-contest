@@ -2,6 +2,12 @@ package example.example;
 
 import DTO.EventDTO;
 import DTO.ParticipantDTO;
+import example.model.Event;
+import example.model.Office;
+import example.model.Participant;
+import example.repo.EntityRepoException;
+import example.repo.EventRepository;
+import example.repo.OfficeRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;

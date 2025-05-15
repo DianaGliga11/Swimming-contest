@@ -1,6 +1,6 @@
 package response;
 
-import example.example.User;
+import example.model.User;
 
 public class OKResponse implements Response {
     private final User user;

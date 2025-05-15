@@ -1,6 +1,6 @@
 package response;
 
-import example.example.Participant;
+import example.model.Participant;
 
 public class NewParticipantResponse implements UpdateResponse{
     private final Participant participant;

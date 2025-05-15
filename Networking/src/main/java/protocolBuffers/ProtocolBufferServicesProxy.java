@@ -4,14 +4,12 @@ import DTO.EventDTO;
 import DTO.ParticipantDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import request.*;
-import response.*;
 import contestUtils.IContestServices;
 import contestUtils.IMainObserver;
-import example.example.Event;
-import example.example.Office;
-import example.example.Participant;
-import example.example.User;
+import example.model.Event;
+import example.model.Office;
+import example.model.Participant;
+import example.model.User;
 
 import java.io.*;
 import java.net.Socket;

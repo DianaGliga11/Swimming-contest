@@ -1,6 +1,11 @@
 package contestUtils;
 
 import example.example.*;
+import example.model.Event;
+import example.model.Office;
+import example.model.Participant;
+import example.model.User;
+import example.repo.EntityRepoException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import DTO.EventDTO;

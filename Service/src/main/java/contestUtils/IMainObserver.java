@@ -1,7 +1,7 @@
 package contestUtils;
 
 import DTO.EventDTO;
-import example.example.Participant;
+import example.model.Participant;
 
 import java.util.List;
 

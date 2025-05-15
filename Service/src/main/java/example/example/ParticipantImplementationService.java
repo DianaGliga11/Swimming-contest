@@ -1,5 +1,9 @@
 package example.example;
 
+import example.model.Participant;
+import example.repo.EntityRepoException;
+import example.repo.ParticipantRepository;
+
 import java.util.List;
 import java.util.Optional;
 
