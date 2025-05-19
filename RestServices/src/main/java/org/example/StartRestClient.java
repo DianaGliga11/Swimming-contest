@@ -56,6 +56,7 @@ public class StartRestClient {
             try{
                 updatedEvent.setDistance(200);
                 restClient.update(updatedEvent);
+                logger.info("Updated Event: " + updatedEvent.toString());
             }catch(Exception e) {
                 logger.error("Error in Test update: " + e);
             }
@@ -64,6 +65,7 @@ public class StartRestClient {
         show(()->{
             logger.info("\n\nTest delete:\n\n");
             try{
+                logger.info("Deleted Event with ID: " + updatedEvent.getId());
                 restClient.delete(updatedEvent.getId());
             }catch(Exception e) {
                 logger.error("Error in Test delete: " + e);

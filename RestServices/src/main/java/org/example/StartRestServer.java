@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @ComponentScan({"org.example.client", "org.example.controller", "example.repo", "example.model"})
@@ -25,12 +26,17 @@ public class StartRestServer {
     @Primary
     public Properties getProperties() {
         Properties properties = new Properties();
-        properties.setProperty("jdbc.url", "jdbc:sqlite:D:\\Java programs\\mpp-proiect-java-DianaGliga11-lab4\\mpp-proiect-java-DianaGliga11-lab4\\SwimingContest.db");
-//        try{
-//            properties.load(new FileReader("db.config"));
-//        }catch(IOException e){
-//            logger.error("Error in org.example.StartRestServer loading db.config" + e.getMessage());
-//        }
+        //properties.setProperty("jdbc.url", "jdbc:sqlite:D:\\Java programs\\mpp-proiect-java-DianaGliga11-lab4\\mpp-proiect-java-DianaGliga11-lab4\\SwimingContest.db");
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("bd.config")) {
+            if (input == null) {
+                logger.error("bd.config not found in classpath!");
+            } else {
+                properties.load(input);
+            }
+        } catch (IOException e) {
+            logger.error("Error loading bd.config: " + e.getMessage(), e);
+        }
+
         return properties;
     }
 }
