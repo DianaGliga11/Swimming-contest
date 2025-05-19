@@ -43,15 +43,6 @@ public class StartRestClient {
         });
 
         show(()-> {
-            logger.info("\n\nTest find by ID:\n\n");
-            try{
-                System.out.println(restClient.getById(updatedEvent.getId()));
-            }catch(Exception e) {
-                logger.error("Error in Test find by ID: " + e);
-            }
-        });
-
-        show(()-> {
             logger.info("\n\nTest update:\n\n");
             try{
                 updatedEvent.setDistance(200);
@@ -59,6 +50,15 @@ public class StartRestClient {
                 logger.info("Updated Event: " + updatedEvent.toString());
             }catch(Exception e) {
                 logger.error("Error in Test update: " + e);
+            }
+        });
+
+        show(()-> {
+            logger.info("\n\nTest find by ID:\n\n");
+            try{
+                System.out.println(restClient.getById(updatedEvent.getId()));
+            }catch(Exception e) {
+                logger.error("Error in Test find by ID: " + e);
             }
         });
 
