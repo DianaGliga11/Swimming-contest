@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,4 +41,18 @@ public class StartRestServer {
 
         return properties;
     }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/contest/events/greeting-javaconfig")
+                        .allowedOrigins("http://localhost:8080");
+                registry.addMapping("/contest/events-javaconfig").allowedOrigins("http://localhost:8080")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE");
+            }
+        };
+    }
 }
+

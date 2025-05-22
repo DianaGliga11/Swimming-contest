@@ -23,17 +23,20 @@ public class RestController {
     @Autowired
     private EventDBRepository eventDBRepository;
 
+    @CrossOrigin
     @GetMapping("/greeting")
     public String greeting(@RequestParam(value = "name", defaultValue = "Hello") String name){
         return String.format(template, name);
     }
 
+    @CrossOrigin
     @GetMapping
     public List<Event> getAll() throws EntityRepoException {
         logger.info("Getting all events");
         return eventDBRepository.getAll().stream().toList();
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<?> getById (@PathVariable String id) throws EntityRepoException {
         logger.info("Getting event with id {}", id);
@@ -47,12 +50,14 @@ public class RestController {
         }
     }
 
+    @CrossOrigin
     @PostMapping
     public Event create(@RequestBody Event event) throws EntityRepoException {
         logger.info("Creating event {}", event);
         eventDBRepository.add(event);
         return event;
     }
+    @CrossOrigin
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody Event event) throws EntityRepoException {
@@ -61,6 +66,7 @@ public class RestController {
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) throws EntityRepoException {
         logger.info("Deleting event {}", id);
