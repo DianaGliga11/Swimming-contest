@@ -21,10 +21,15 @@ class _HomePageState extends State<HomePage>{
   String _searchQuery = "";
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    WebSocketService.connect((message) {
+      print('Received event: $message');
+      _setEvents();
+    });
     _setEvents();
   }
+
 
   Future<void> _setEvents() async{
     setState(() {

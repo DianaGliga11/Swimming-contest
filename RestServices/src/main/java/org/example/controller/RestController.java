@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,8 @@ import java.util.List;
 public class RestController {
     private static final String template = "Hello, %s!";
     private static final Logger logger = LogManager.getLogger();
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
 
     @Autowired
     private EventDBRepository eventDBRepository;
@@ -55,6 +58,7 @@ public class RestController {
     public Event create(@RequestBody Event event) throws EntityRepoException {
         logger.info("Creating event {}", event);
         eventDBRepository.add(event);
+        messagingTemplate.convertAndSend("/topic/events", event);
         return event;
     }
     @CrossOrigin
@@ -63,6 +67,7 @@ public class RestController {
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody Event event) throws EntityRepoException {
         logger.info("Updating event {}", event);
         eventDBRepository.update(Long.parseLong(id), event);
+        messagingTemplate.convertAndSend("/topic/events", "Updated event with id: " + id);
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 
@@ -71,6 +76,7 @@ public class RestController {
     public ResponseEntity<?> delete(@PathVariable String id) throws EntityRepoException {
         logger.info("Deleting event {}", id);
         eventDBRepository.remove(Long.parseLong(id));
+        messagingTemplate.convertAndSend("/topic/events", "Deleted event with id: " + id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

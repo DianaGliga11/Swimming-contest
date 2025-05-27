@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@ComponentScan({"org.example.client", "org.example.controller", "example.repo", "example.model"})
+@ComponentScan({"org.example.client", "org.example.controller", "example.repo", "example.model", "org.example"})
 @SpringBootApplication
 public class StartRestServer {
     private static final Logger logger = LogManager.getLogger();

@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import '../api_utils.dart';
 import '../models/event.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
+
 
 class ApiService {
   static Future<List<Event>> getEvents() async {
@@ -73,4 +77,34 @@ class ApiService {
 
     return response.statusCode;
   }
+}
+
+class WebSocketService {
+  static StompClient? stompClient;
+
+  static void connect(void Function(String message) onMessage) {
+    stompClient = StompClient(
+      config: StompConfig.SockJS(
+        url: 'http://localhost:8080/ws',
+        onConnect: (StompFrame frame) {
+          stompClient!.subscribe(
+            destination: '/topic/events',
+            callback: (StompFrame frame) {
+              if (frame.body != null) {
+                onMessage(frame.body!);
+              }
+            },
+          );
+        },
+        onWebSocketError: (dynamic error) => print('WebSocket Error: $error'),
+      ),
+    );
+
+    stompClient!.activate();
+  }
+
+  static void disconnect() {
+    stompClient?.deactivate();
+  }
+
 }
