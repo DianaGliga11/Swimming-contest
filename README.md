@@ -64,9 +64,22 @@ Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc
 
 --Lab 8--
 
--> In ba=ranch-ul lab8
+-> In branch-ul lab8
 1. Am instalat compiler-ul necesar pentru a utiliza Protocol Buffers (tehnologia de la Google). De asemenea, am configurat build.gradle pentru a folosi acest protocol.
 2. Fisierul de configurare:
 - SwimingContest.proto - contine identificarea tuturor claselor si actiunilor de Request/Response, dar si a atributelor care rezulta din aceste Request-uri si Response-uri.
 3. Networking:
-- Directorul protocolBuffers contine patru clase, dintre care una generata de compiler-ul pentru protocol buffers.   
+- Directorul protocolBuffers contine patru clase, dintre care una generata de compiler-ul pentru protocol buffers.
+- In ProtoBuilderUtils apelez metodele generate cu gRpc. Pentru partea de server si client am refacut ServizesProxy si Worker pentru a folosi aceasta tehnologie.
+4. Modificari pentru Servicem si ClientFX:
+- Am modificat ServicesProxy-ul si Worker-ul clasic cu cel pentru Protocol Buffers.
+
+
+  --Lab 9--
+
+  -> In branch-ul lab9
+  1. Modificari asupra Model pentru a folosi ORM (Hibernate). Event si Participant vor utiliza hibernate pentru a mapa datele, pe care l-am inclus in dependentele gradle, alaturi de jakarta.
+  2. Repository:
+  - Folosesc un sessionFactory pentru a putea defini clasele cu hibernate, pe care le-am inclus prin intermediul unui fisier de configurare hibernate.cfg.xml.
+  - Am facut repository-uri care se folosesc de clasele hibernate. Utilizez transactions pentru a defini operatiile CRUD.
+  3. Modificari la nivel de server pentru a ma utiliza de repository-urile care folosesc ORM-uri.
