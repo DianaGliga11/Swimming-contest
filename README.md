@@ -59,3 +59,20 @@ Am creat partea de Client, Server si Networking a aplicatiei.
 - de asemenea, imi definesc parametrii din aceste Request-uri si Response-uri pentru a le accesa corect atunci cand trebuiesc serializate si deserializate.
 - partea de server (ClientWorker) foloseste serializarea Json si implementeaza metodele lui IMainObserver pentru a notifica toti clientii de pe server.
 - partea de client (ServicesProxy) primeste si transmite datele tot prin serializarea Json si implementeaza IContestServices pentru a actualiza datele in interfata/persistenta.
+
+
+--Lab 8--
+
+-> In branch-ul lab8
+1. Am facut fisierul de configurare in Protoconfig, pentru a putea genera cu gRpc fisierul necesar.
+2. In Networking:
+- Mi-am redefinit petodele in ProtocolBuilderUtils pentru a folosi ceea ce s-a genetrat cu gRpc.
+- Am rescris ServicesProxy si Worker pentru a folosi ceea ce am scris in ProtocolBuilderUtils.
+3. In Server am facut si ProtocolBuffersServer pentru a utiliza Worker-ul cu protocol buffers, insa nu am folosit-o. In schimb am folosit in client ProtocolBuffersServicesProxy, drept IContestServices.
+
+
+--Lab 10--
+
+-> In brunch-ul lab10
+- Aici am facut doar un HttpClient care sa se conecteze la server-ul rest (spring) din java (in alt repository).
+- Am utilizat Task-uri si practic am rescris metodele pentru POST, PUT, GET, DELETE.
