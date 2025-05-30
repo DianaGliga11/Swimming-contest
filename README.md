@@ -83,3 +83,27 @@ Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc
   - Folosesc un sessionFactory pentru a putea defini clasele cu hibernate, pe care le-am inclus prin intermediul unui fisier de configurare hibernate.cfg.xml.
   - Am facut repository-uri care se folosesc de clasele hibernate. Utilizez transactions pentru a defini operatiile CRUD.
   3. Modificari la nivel de server pentru a ma utiliza de repository-urile care folosesc ORM-uri.
+
+
+  --Lab 10--
+
+  -> In branch-ul lab10
+  1. Directorul RestServices:
+  - Am adaugat dependentele in build.gradle pentru a folosi framework-ul spring.
+  - Am realizat un client rest care suprascrie metodele CRUD.
+  - In Controller, am realizat actiunile de POST, GET, DELETE, PUT si am injectat EventDBRepository pentru a-l putea folosi in acest context.
+  - Serverul atre acces la package-urile utilizate, pentru a putea porni aplicatia spring, dar si asupra proprietatilor legate de baza de date.
+  - Pentru partea de client Http, se poate observa in partea de C# din celalat repository.
+ 
+
+  --Lab 11--
+
+  -> In branch-ul lab11
+  1. Am utilizat flutter pentru a crea Clientul Web:
+  - Am definit entitatea pe care vreau sa o folosesc in flutter: Event.
+  - In api_services.dart mi-am definit metodele CRUD si le-am preschimbat in format json.
+  - In api_util.dart, am realizat conexiunea la server si am tratat operatiile de POST, PUT, GET, DELETE.
+  - In homepage_dart ma folosesc de statusuri pentru a trata actiuniile clientului (paginii) de incarcare, de actualizare. De asemenea, am tratat si posibilele erori care ar putea surveni din cauza datelor introduse gresit. Tot aici am gestionat ce tine de aspectul paginii.
+  - In main.dart doar am oferit titlu si tema pentru aplicatie, urmand ca acesta sa apeleze pagina principala ce contine toate state-urile.
+  2. Modificari in RestServices:
+  - A trebuit sa activez CORS pentru a putea folosi URI-urile de pe server si clientul sa se poatea conecta fara probleme la acesta.
