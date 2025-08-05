@@ -21,7 +21,8 @@ Interfata principala:
 <img width="1280" height="1020" alt="Captură de ecran 2025-08-05 091000" src="https://github.com/user-attachments/assets/b433a5e5-eec1-4dc1-84f1-5ca298b77dff" />
 
 Cautare participanti dupa un eveniment:
-<img width="1264" height="587" alt="Captură de ecran 2025-08-05 091048" src="https://github.com/user-attachments/assets/d47cfd07-65b7-4597-9c22-d92a991ba796" />
+<img width="491" height="430" alt="Captură de ecran 2025-08-05 091011" src="https://github.com/user-attachments/assets/1d444563-9492-4423-b6a3-e367a78d787f" />
+<img width="1264" height="587" alt="Captură de ecran 2025-08-05 091048" src="https://github.com/user-attachments/assets/425023f8-30d8-4fe4-bd91-2052b715d3d6" />
 
 Adaugare participant:
 <img width="523" height="416" alt="Captură de ecran 2025-08-05 091110" src="https://github.com/user-attachments/assets/6ab1e55e-770b-4fa9-a2f2-df3be00fc6ac" />
