@@ -7,4 +7,5 @@ Principalele functionalitati sunt de:
 - actualizare eveniment
 
 Limbaje folosite: Java, C#, Dart
+
 Framework-uri: Spring, Flutter, Hibernate, 
