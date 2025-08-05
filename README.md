@@ -12,3 +12,21 @@
 - am realizat ulterior ca OfficeController nu este necesar in acest caz, deoarece am implementat EventEntriesController cu aceleasi functionalitati
 - fiecare are fisiere fxml pentru partea de frontend a aplicatiei
 - aplicatia va porni din HelloApplication care deschide initial fereastra de logare, care va face trecerea spre fereastra principala.
+
+Logare client:
+<img width="615" height="808" alt="Captură de ecran 2025-08-05 090944" src="https://github.com/user-attachments/assets/7520da4b-8cbd-43c6-8157-a8213f3662bf" />
+
+Interfata principala:
+<img width="1280" height="1020" alt="Captură de ecran 2025-08-05 091000" src="https://github.com/user-attachments/assets/b433a5e5-eec1-4dc1-84f1-5ca298b77dff" />
+
+Cautare participanti dupa un eveniment:
+<img width="546" height="462" alt="Captură de ecran 2025-08-05 091011" src="https://github.com/user-attachments/assets/de36ad61-d48f-4254-bda8-63a350c4e077" />
+<img width="1264" height="587" alt="Captură de ecran 2025-08-05 091048" src="https://github.com/user-attachments/assets/d47cfd07-65b7-4597-9c22-d92a991ba796" />
+
+Adaugare participant:
+<img width="523" height="416" alt="Captură de ecran 2025-08-05 091110" src="https://github.com/user-attachments/assets/6ab1e55e-770b-4fa9-a2f2-df3be00fc6ac" />
+<img width="581" height="291" alt="Captură de ecran 2025-08-05 091117" src="https://github.com/user-attachments/assets/1a78b08a-869d-46b4-a11c-428d25df041f" />
+
+Inscriere participant la evenimente:
+<img width="1371" height="125" alt="Captură de ecran 2025-08-05 091239" src="https://github.com/user-attachments/assets/15ba3bbf-f4f3-4b46-949a-d601e0316cf6" />
+<img width="749" height="791" alt="Captură de ecran 2025-08-05 091132" src="https://github.com/user-attachments/assets/6027b1d0-c16a-4f4e-b77e-211cb00f7f36" />
