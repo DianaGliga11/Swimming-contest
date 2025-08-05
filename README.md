@@ -13,29 +13,6 @@ Tot proiectul este legat folosind gradle: in settings.gradle se introduc modulel
 Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc un nou modul care imi permite rularea intregului proiect.
 
 
---Lab 7--
-
--> barnch-ul lab7
-Am creat partea de Client, Server si Networking a aplicatiei.
-1. Service:
-- in Service am adaugat partea de observer care notifica clientii si actualizarile produse la nivelul datelor.
-- folosesc design pattern-ul Observer .
-2. Server:
-- aici se creaza port-ul, host-ul si thread-urile pentru clienti.
-- server-ul ia aceste date necesare la creerea conexiunii dintr-un fisier de configurare.
-3. Client:
-- clientul se conecteaza la host-ul si port-ul respectiv server-ului prin intermediul clasei ServicesProxy.
-- fereastra principala HomeController implementeaza IMainObserver pentru a putea sa actualizeze datele interfetei corect.
-- folosesc BeginInvoke pentru a evita blocarea interfetei si gestionarea eficenta a thread-urilor.
-- am modificat si constructorii pentru NewParticipantController si EventEntriesController pentru a avea acces mai usor la observer si datelele acestora. De asemenea folsoesc sincronizarea cu await pentru a nu bloca interfata.
-4. Networking:
-- folosesc protocolul Json, care imi va scrie datele sub forma Type, ce trebuie transmis.
-- folosesc clase de tip enum pentru a gestiona Request-urile si Response-urile.
-- de asemenea, imi definesc parametrii din aceste Request-uri si Response-uri pentru a le accesa corect atunci cand trebuiesc serializate si deserializate.
-- partea de server (ClientWorker) foloseste serializarea Json si implementeaza metodele lui IMainObserver pentru a notifica toti clientii de pe server.
-- partea de client (ServicesProxy) primeste si transmite datele tot prin serializarea Json si implementeaza IContestServices pentru a actualiza datele in interfata/persistenta.
-
-
 --Lab 8--
 
 -> In branch-ul lab8
