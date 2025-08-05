@@ -12,7 +12,9 @@
 
 Interfata principala:
 <img width="2558" height="1508" alt="Captură de ecran 2025-08-05 084913" src="https://github.com/user-attachments/assets/085dd08f-b1d4-4398-a482-ee2878f85b8d" />
-Functionalitatile de Adaugare, Actualizare si Stergere eveniment:
+Functionalitate de Adaugare:
 <img width="448" height="1318" alt="Captură de ecran 2025-08-05 085035" src="https://github.com/user-attachments/assets/ac2b9d4e-86d9-46f2-967e-2b9f3276ecf7" />
+Functionalitate de Actualizare/Stergere:
 <img width="515" height="1351" alt="Captură de ecran 2025-08-05 085017" src="https://github.com/user-attachments/assets/e9d7d918-c12e-4d14-9896-9142bfb4e41c" />
+Functionalitate de Cautare dupa ID:
 <img width="2559" height="826" alt="Captură de ecran 2025-08-05 084935" src="https://github.com/user-attachments/assets/ec14eb53-1241-4765-a52c-5577727c40cb" />
