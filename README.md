@@ -12,18 +12,6 @@ Am realizat doua proiecte .csproj in cadrul .sln (root):
 Tot proiectul este legat folosind gradle: in settings.gradle se introduc modulele create pentru a putea naviga intre ele obiecte/interfete etc.
 Ambele module pot fi rulate, insa nu acest lucru se doreste,  urmand sa introduc un nou modul care imi permite rularea intregului proiect.
 
---Lab 5--
-
--> branch-ul lab5
-Am adaugat partea de Service si Controller a aplicatiei.
-1. Modificari la nivelul Model si Repository pentru a putea folosi si DTO.
-2. Service:
-- fiecare componenta din Model are partea sa de Service, care provine dintr-unul abstract.
-- in implementarea EventService, am adaugat si ce tine de Office pentru a putea face legatura cu acesta, fara a specifica efectiv toate datele legate de functionalitatea de inscriere a unui participant la un eveniment.
-3. Controller:
-- am folosit fisiere de configurare pentru locatia bazei de date si pentru logs.
-- folosesc Form de la dotnet pentru a crea ferestrele.
-- Am 5 controlleri pentru ferestrele de login, principala, adaugarea unui participant, inscrierea unui participant si lista de evenimente.
 
 --Lab 7--
 
