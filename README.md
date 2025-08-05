@@ -5,3 +5,6 @@ Principalele functionalitati sunt de:
 - filtrare participanti in functie de un eveniment,
 - stergere eveniment,
 - actualizare eveniment
+
+Limbaje folosite: Java, C#, Dart
+Framework-uri: Spring, Flutter, Hibernate, 
