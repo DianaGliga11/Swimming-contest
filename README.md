@@ -17,10 +17,10 @@ Logare client:
 <img width="615" height="808" alt="Captură de ecran 2025-08-05 090944" src="https://github.com/user-attachments/assets/7520da4b-8cbd-43c6-8157-a8213f3662bf" />
 
 Interfata principala:
+<img width="495" height="430" alt="Captură de ecran 2025-08-05 091011" src="https://github.com/user-attachments/assets/9599e53e-f67f-4115-a675-5acbcc2b650d" />
 <img width="1280" height="1020" alt="Captură de ecran 2025-08-05 091000" src="https://github.com/user-attachments/assets/b433a5e5-eec1-4dc1-84f1-5ca298b77dff" />
 
 Cautare participanti dupa un eveniment:
-<img width="546" height="462" alt="Captură de ecran 2025-08-05 091011" src="https://github.com/user-attachments/assets/de36ad61-d48f-4254-bda8-63a350c4e077" />
 <img width="1264" height="587" alt="Captură de ecran 2025-08-05 091048" src="https://github.com/user-attachments/assets/d47cfd07-65b7-4597-9c22-d92a991ba796" />
 
 Adaugare participant:
