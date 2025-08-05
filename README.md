@@ -4,7 +4,7 @@ Principalele functionalitati sunt de:
 - inscriere participant la eveniment,
 - filtrare participanti in functie de un eveniment,
 - stergere eveniment,
-- actualizare eveniment
+- actualizare eveniment.
 
 Limbaje folosite: Java, C#, Dart
 
