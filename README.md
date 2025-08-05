@@ -21,5 +21,5 @@ Am creat partea de Client, Server si Networking a aplicatiei.
 - partea de client (ServicesProxy) primeste si transmite datele tot prin serializarea Json si implementeaza IContestServices pentru a actualiza datele in interfata/persistenta.
 
 Sincronizarea pentru mai multi clienti:
-<img width="1948" height="241" alt="Captură de ecran 2025-08-05 102948" src="https://github.com/user-attachments/assets/0dbd1aa1-87fa-4a1b-8aed-6bca4c102daa" />
 <img width="1939" height="671" alt="Captură de ecran 2025-08-05 102917" src="https://github.com/user-attachments/assets/070717d3-71e0-46d9-ac64-0b9115cc7da0" />
+<img width="1948" height="241" alt="Captură de ecran 2025-08-05 102948" src="https://github.com/user-attachments/assets/0dbd1aa1-87fa-4a1b-8aed-6bca4c102daa" />
