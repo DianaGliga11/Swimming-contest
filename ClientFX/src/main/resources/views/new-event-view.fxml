@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.NewEventController"
+            style="-fx-background-color: #faf2ff;"
+            prefWidth="400" prefHeight="300">
+
+    <Rectangle width="400" height="300"
+               fill="linear-gradient(from 25% 25% to 100% 100%, #ffd6e7, #c1f0fd)"
+               opacity="0.3"/>
+
+    <VBox spacing="20"
+          style="-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 20; -fx-padding: 25;"
+          AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+        <effect>
+            <DropShadow color="#d5a8ff55" radius="10" spread="0.1"/>
+        </effect>
+
+        <Label text="NEW EVENT"
+               style="-fx-text-fill: #9370db; -fx-font-weight: bold; -fx-font-size: 18;"/>
+
+        <VBox spacing="5">
+            <Label text="Style:" style="-fx-text-fill: #6a3093; -fx-font-weight: bold;"/>
+            <TextField fx:id="styleField" promptText="Freestyle, Backstroke, etc."
+                       style="-fx-background-color: white; -fx-border-color: #d8bfd8;"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Distance (meters):" style="-fx-text-fill: #6a3093; -fx-font-weight: bold;"/>
+            <TextField fx:id="distanceField" promptText="e.g. 50, 100, 200"
+                       style="-fx-background-color: white; -fx-border-color: #d8bfd8;"/>
+        </VBox>
+
+        <Button text="Confirm"
+                style="-fx-background-color: #ba55d3; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;"
+                onAction="#onConfirmClicked"/>
+    </VBox>
+
+    <Circle centerX="350" centerY="50" radius="30" fill="#ffd6e755" stroke="#ffb6c155" strokeWidth="2"/>
+    <Circle centerX="50" centerY="250" radius="40" fill="#c1f0fd55" stroke="#add8e655" strokeWidth="2"/>
+</AnchorPane>

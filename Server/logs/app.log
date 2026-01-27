@@ -1,0 +1,86 @@
+2025-04-06 12:11:28 [main] INFO  StartServer - Server properties loaded
+2025-04-06 12:11:28 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:11:28 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:11:28 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:11:28 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:11:28 [main] INFO  StartServer - Starting server on port 55559
+2025-04-06 12:11:28 [main] INFO  Server - Waiting for a client...
+2025-04-06 12:29:20 [main] INFO  StartServer - Server properties loaded
+2025-04-06 12:29:20 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:20 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:20 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:20 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:20 [main] INFO  StartServer - Starting server on port 55559
+2025-04-06 12:29:20 [main] INFO  Server - Waiting for a client...
+2025-04-06 12:29:43 [main] INFO  StartServer - Server properties loaded
+2025-04-06 12:29:43 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:43 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:43 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:43 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-06 12:29:43 [main] INFO  StartServer - Starting server on port 55559
+2025-04-06 12:29:43 [main] INFO  Server - Waiting for a client...
+2025-04-07 10:42:38 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:42:38 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:42:38 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:42:38 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:42:38 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:42:38 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 10:42:38 [main] INFO  Server - Waiting for a client...
+2025-04-07 10:43:15 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:43:15 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:15 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:15 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:15 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:15 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 10:43:15 [main] INFO  Server - Waiting for a client...
+2025-04-07 10:43:29 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:43:29 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:29 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:29 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:29 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:43:29 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 10:43:29 [main] INFO  Server - Waiting for a client...
+2025-04-07 10:49:49 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:49:49 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:49:49 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:49:49 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:49:49 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:49:49 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 10:49:49 [main] INFO  Server - Waiting for a client...
+2025-04-07 10:50:00 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:50:00 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:00 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:00 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:00 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:00 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 10:50:00 [main] INFO  Server - Waiting for a client...
+2025-04-07 10:50:28 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:50:28 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:28 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:28 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:28 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:50:28 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 10:51:07 [main] INFO  StartServer - Server properties loaded
+2025-04-07 10:51:07 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:51:07 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:51:07 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:51:07 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 10:51:07 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 11:22:21 [main] INFO  StartServer - Server properties loaded
+2025-04-07 11:22:21 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:22:21 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:22:21 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:22:21 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:22:21 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 11:27:41 [main] INFO  StartServer - Server properties loaded
+2025-04-07 11:27:41 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:27:41 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:27:41 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:27:41 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 11:27:41 [main] INFO  StartServer - Starting server on port 55559
+2025-04-07 12:31:08 [main] INFO  StartServer - Server properties loaded
+2025-04-07 12:31:08 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 12:31:08 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 12:31:08 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 12:31:08 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {server.port=55559, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-04-07 12:31:08 [main] INFO  StartServer - Starting server on port 55559

@@ -1,0 +1,33 @@
+2025-03-24 13:23:14 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {} 
+2025-03-24 13:23:14 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {} 
+2025-03-24 13:23:14 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {} 
+2025-03-24 13:23:14 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {} 
+2025-03-24 13:23:14 [main] INFO  OfficeDBRepository - Find participant by event 1
+2025-03-24 13:23:14 [main] INFO  JdbcUtils - trying to connect to database ... null
+2025-03-24 13:23:14 [main] INFO  JdbcUtils - user: null
+2025-03-24 13:23:14 [main] INFO  JdbcUtils - pass: null
+2025-03-24 13:23:14 [main] ERROR JdbcUtils - java.sql.SQLException: The url cannot be null
+2025-03-24 14:14:54 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-24 14:14:54 [main] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-24 14:14:54 [main] INFO  JdbcUtils - user: root
+2025-03-24 14:14:54 [main] INFO  JdbcUtils - pass: null
+2025-03-24 14:14:54 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-24 14:14:54 [main] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-24 14:14:54 [main] INFO  JdbcUtils - user: root
+2025-03-24 14:14:54 [main] INFO  JdbcUtils - pass: null
+2025-03-24 14:16:15 [main] INFO  EventDBRepository - Initializing EventDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-24 14:16:15 [main] INFO  UserDBRepository - Initializing UserDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-24 14:16:15 [main] INFO  ParticipantDBRepository - Initializing ParticipantDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-24 14:16:15 [main] INFO  OfficeDBRepository - Initializing OfficeDBRepository with properties: {jdbc.password=1234, jdbc.user=root, jdbc.url=jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db} 
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - user: root
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - pass: null
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - user: root
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - pass: null
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - user: root
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - pass: null
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - trying to connect to database ... jdbc:sqlite:D:\Java programs\mpp-proiect-java-DianaGliga11\SwimingContest.db
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - user: root
+2025-03-24 14:16:15 [main] INFO  JdbcUtils - pass: null
