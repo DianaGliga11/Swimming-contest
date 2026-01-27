@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 Proiectul reprezinta o aplicatie de gestionare a inscrierilor la un concurs de inot, repartizat pe probe (evenimente).
 Principalele actiuni ale aplicatiei sunt:
 - adaugarea noilor participanti
