@@ -8,7 +8,7 @@ The system combines **client-server communication, REST services, WebSockets, mu
 
 ---
 
-![IMPORTANT : in every branch there are screenshots with the progress.](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+### IMPORTANT : in every branch there are screenshots with the progress.
 
 ## My Role
 
