@@ -1,654 +1,676 @@
 # Swimming Contest
 
-A full-stack **Swimming Competition Management System** implemented in **two technology stacks: Java and C#/.NET**. The application was designed as a multi-client competition management platform for handling swimmers, competition events, registrations, and real-time communication between clients and the server.
+A full-stack **Swimming Competition Management System** designed to manage swimmers, swimming events, registrations, and competition-related data through a multi-client architecture.
 
-The project focuses on backend development, client-server architecture, database persistence, network communication, data serialization, and real-time synchronization.
+The project was developed using **Java** and extended with a **Flutter/Dart client**, allowing the application to be accessed through different client implementations while communicating with the same backend infrastructure.
 
-Two implementations of the application were developed during the project:
+The system combines **client-server communication, REST services, WebSockets, multiple serialization protocols, database persistence, and layered architecture** to provide a complete competition management solution.
 
-* a **Java-based implementation**, focused on object-oriented programming, client-server communication, persistence, and application architecture;
-* a **C# / ASP.NET Core implementation**, extending the system with modern backend technologies, Entity Framework Core, multiple serialization protocols, and WebSocket communication.
-
-The project was developed as a university project at **Babeș-Bolyai University**.
+---
 
 ## My Role
 
-Contributed as **Backend Developer**, responsible for implementing and integrating the main functionality of the competition management system.
+I worked on the development of the application across multiple layers, with a focus on backend, networking, persistence, and client-server communication.
 
 My work included:
 
-* Designing and implementing the application domain model
-* Developing the **Java version** of the Swimming Contest application
-* Developing the **C# / ASP.NET Core version** of the application
-* Implementing CRUD operations for competition entities
-* Designing and working with the persistence layer
-* Implementing client-server communication
-* Working with relational databases
-* Implementing different data serialization approaches
-* Working with **JSON, Binary serialization, and Google Protocol Buffers**
-* Implementing **WebSocket communication** for real-time updates
-* Testing communication between multiple clients and the server
-* Debugging backend, database, and network-related issues
-* Building and maintaining the projects using the appropriate build systems
+* Developing the application using **Java**
+* Implementing the **JavaFX desktop client**
+* Developing the **Flutter/Dart client**
+* Designing and implementing the client-server communication layer
+* Working with **REST services**
+* Implementing **WebSocket communication for real-time notifications**
+* Working with **JSON, binary serialization, and Google Protocol Buffers**
+* Implementing the **Repository layer** for database access
+* Working with the competition database
+* Implementing services for managing participants, swimming events, and registrations
+* Integrating multiple clients with the same server-side infrastructure
+* Debugging communication, database, and multi-client issues
+* Using **Gradle** for project configuration and build management
+
+---
 
 ## About
 
-The Swimming Contest application provides a centralized system for managing swimming competitions.
+The Swimming Contest application provides a centralized platform for managing a swimming competition.
 
-The system allows competition organizers to manage information about:
+The system allows competition data to be managed through a structured client-server architecture. Different clients communicate with the server through dedicated networking and service layers, while the application handles persistence and real-time updates.
 
-* swimmers / participants;
-* swimming events;
-* registrations;
-* competition data;
-* client-server communication;
-* real-time updates.
+The project includes:
 
-The project was developed in two different implementations in order to explore and apply similar application requirements using different programming languages and technology ecosystems.
+* A **Java/JavaFX desktop client**
+* A **Flutter/Dart client**
+* A Java-based server-side architecture
+* REST services
+* WebSocket communication
+* Multiple serialization mechanisms
+* Repository-based database access
+* A relational/local competition database
 
-### Java Implementation
+The architecture was designed to separate responsibilities between the user interface, business logic, networking, persistence, and database layers.
 
-The Java implementation focused on applying core software engineering and object-oriented programming concepts.
-
-The application was structured around a client-server architecture, with communication between the application components and persistent storage for competition-related data.
-
-This version provided practical experience with:
-
-* Java;
-* object-oriented programming;
-* client-server communication;
-* data persistence;
-* CRUD operations;
-* application architecture;
-* database interaction.
-
-### C# / ASP.NET Core Implementation
-
-The C# implementation introduced a modern .NET-based backend using **ASP.NET Core**.
-
-This version expanded the communication layer by supporting multiple serialization formats and real-time communication through WebSockets.
-
-The implementation uses:
-
-* C#;
-* ASP.NET Core;
-* Entity Framework Core;
-* JSON serialization;
-* Binary serialization;
-* Google Protocol Buffers;
-* WebSockets;
-* MSBuild.
+---
 
 ## Main Objectives
 
 The main objectives of the project were:
 
-* Develop a complete swimming competition management system
-* Implement the same application domain using **Java and C#/.NET**
-* Apply object-oriented programming principles
-* Build a client-server architecture
-* Implement CRUD operations
-* Persist competition data in a relational database
-* Implement multiple serialization formats
-* Explore different approaches to network communication
-* Implement real-time communication using WebSockets
-* Support multiple clients connected to the same backend
-* Gain practical experience with different backend ecosystems
+* Manage swimmers participating in competitions
+* Manage swimming events
+* Register participants for events
+* Store and retrieve competition data
+* Provide multiple client applications
+* Enable communication between clients and the server
+* Support different data serialization protocols
+* Provide real-time notifications
+* Maintain a clear separation between application layers
+* Demonstrate practical implementation of distributed application concepts
+
+---
 
 ## System Architecture
 
-The application follows a **multi-client client-server architecture**.
+The application follows a layered **client-server architecture**.
 
 ```text
-                       ┌─────────────────┐
-                       │    Client 1     │
-                       └────────┬────────┘
-                                │
-                       ┌────────▼────────┐
-                       │                 │
-                       │      Server     │
-                       │                 │
-                       │ Business Logic  │
-                       │ CRUD Operations │
-                       │ Communication   │
-                       │                 │
-                       └────────┬────────┘
-                                │
-               ┌────────────────┼────────────────┐
-               │                │                │
-               ▼                ▼                ▼
-          Serialization      WebSockets      Database
-               │                                 │
-       ┌───────┼───────┐                         │
-       │       │       │                         │
-      JSON   Binary  Protobuf                    │
-               │                                 │
-               └─────────────────────────────────┘
-                               
-                       ┌─────────────────┐
-                       │    Client 2     │
-                       └─────────────────┘
-```
-
-The architecture allows multiple clients to interact with the same central server.
-
-The server is responsible for:
-
-* processing client requests;
-* executing business logic;
-* managing competition data;
-* communicating with the database;
-* serializing and deserializing data;
-* sending responses;
-* notifying connected clients about relevant changes.
-
-## Java Architecture
-
-The Java implementation follows the same general client-server concept.
-
-```text
-┌──────────────┐
-│ Java Client  │
-└──────┬───────┘
-       │
-       │ Client-Server Communication
-       ▼
-┌──────────────┐
-│ Java Server  │
-│              │
-│ Business     │
-│ Logic        │
-│ CRUD         │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│   Database   │
-└──────────────┘
-```
-
-This implementation provided the foundation for understanding the domain model and the communication between application components.
-
-## C# / ASP.NET Core Architecture
-
-The .NET version uses ASP.NET Core as the backend framework.
-
-```text
-┌──────────────────┐
-│      Client      │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────────────┐
-│      ASP.NET Core        │
-│          Server          │
-│                          │
-│ Controllers / Services   │
-│ CRUD Operations          │
-│ WebSocket Communication  │
-└────────────┬─────────────┘
+                         Swimming Contest
+                               │
+                ┌──────────────┴──────────────┐
+                │                             │
+       ┌────────▼────────┐           ┌────────▼────────┐
+       │   JavaFX Client │           │ Flutter Client  │
+       │      Java       │           │   Dart/Flutter  │
+       └────────┬────────┘           └────────┬────────┘
+                │                             │
+                └──────────────┬──────────────┘
+                               │
+                    ┌──────────▼──────────┐
+                    │ Networking / REST   │
+                    │ Communication Layer │
+                    └──────────┬──────────┘
+                               │
+                    ┌──────────▼──────────┐
+                    │       Server        │
+                    │      Service        │
+                    │   RestServices      │
+                    └──────────┬──────────┘
+                               │
+             ┌─────────────────┼─────────────────┐
+             │                 │                 │
+      ┌──────▼──────┐   ┌──────▼──────┐   ┌──────▼──────┐
+      │ Repository  │   │  WebSockets │   │   Protocol  │
+      │    Layer    │   │ Notifications│   │   Buffers   │
+      └──────┬──────┘   └─────────────┘   └─────────────┘
              │
-             ▼
-┌──────────────────────────┐
-│    Entity Framework      │
-│           Core           │
-└────────────┬─────────────┘
-             │
-             ▼
-┌──────────────────────────┐
-│        Database          │
-└──────────────────────────┘
+      ┌──────▼──────┐
+      │  Database   │
+      └─────────────┘
 ```
+
+The architecture separates the main responsibilities of the application:
+
+1. **Clients** – provide user interaction.
+2. **Networking** – handles communication between clients and the server.
+3. **Services** – implement application and business operations.
+4. **Repository** – manages database access.
+5. **Database** – stores competition information.
+6. **WebSockets** – provide real-time server-to-client notifications.
+7. **Serialization** – allows data to be exchanged using different formats.
+
+---
+
+## Clients
+
+### JavaFX Client
+
+The project includes a desktop client developed in **JavaFX**.
+
+The `ClientFX` module is responsible for providing a graphical user interface through which users can interact with the competition management system.
+
+The client communicates with the server instead of accessing the database directly.
+
+```text
+JavaFX UI
+    │
+    ▼
+Client Services
+    │
+    ▼
+Networking
+    │
+    ▼
+Server
+```
+
+---
+
+### Flutter Client
+
+The project was also extended with a **Flutter client written in Dart**.
+
+The `flutter_client` module provides an additional client implementation that communicates with the existing application infrastructure.
+
+This allowed the same competition management system to be accessed through a different technology stack and demonstrated the ability to integrate a cross-platform client with an existing backend.
+
+```text
+Flutter UI
+    │
+    ▼
+Dart Client Logic
+    │
+    ▼
+Networking / Services
+    │
+    ▼
+Server
+```
+
+The Flutter implementation also integrates with the application's communication infrastructure, including real-time notification functionality.
+
+---
+
+## Backend Architecture
+
+The server-side implementation is organized into several components:
+
+```text
+Server
+  │
+  ├── Service
+  │     └── Business operations
+  │
+  ├── RestServices
+  │     └── REST communication
+  │
+  ├── Networking
+  │     └── Client-server communication
+  │
+  ├── Repository
+  │     └── Data access
+  │
+  └── Model
+        └── Domain entities
+```
+
+This structure separates the application into logical layers, making the system easier to maintain and extend.
+
+---
 
 ## Core Functionality
 
-### 👥 Participant Management
+### Participant Management
 
-The application provides functionality for managing swimming participants.
+The application manages swimmers participating in the competition.
 
-Operations include:
+Typical operations include:
 
-* creating participants;
-* retrieving participant information;
-* updating participant information;
-* deleting participants;
-* registering participants for swimming events.
+* Adding participants
+* Retrieving participant information
+* Updating participant information
+* Removing participants
+* Associating participants with competition events
 
-### 🏊 Competition Events
+---
 
-Competition events represent the different swimming races available in the system.
+### Swimming Events
 
-The backend provides functionality for:
+The system manages the swimming events available in a competition.
 
-* creating events;
-* retrieving events;
-* modifying event information;
-* deleting events;
-* associating participants with events.
+Events can be stored and retrieved through the server-side services and associated with registered participants.
 
-### 📝 Registrations
+---
 
-Participants can register for available competition events.
+### Competition Registrations
 
-The server validates and processes registration operations before storing the resulting information in the database.
+Participants can be registered for swimming events.
 
-### 🔄 CRUD Operations
+The registration process connects swimmers with the events in which they participate and allows competition information to be maintained centrally.
 
-The main entities are managed using standard CRUD operations:
+---
 
-```text
-Create
-  ↓
-Read
-  ↓
-Update
-  ↓
-Delete
-```
+### CRUD Operations
 
-These operations provide the foundation of the competition management system.
+The application implements standard CRUD operations:
 
-## Data Serialization
+* **Create**
+* **Read**
+* **Update**
+* **Delete**
 
-A major component of the C# implementation is the support for multiple serialization formats.
+These operations are handled through the appropriate service and repository layers rather than directly from the client interface.
 
-### JSON
+---
 
-JSON provides a human-readable representation of application data.
+## Networking
 
-```json
-{
-    "id": 1,
-    "name": "100m Freestyle",
-    "distance": 100,
-    "style": "Freestyle"
-}
-```
+Networking is an important component of the application.
 
-JSON is particularly useful for interoperability and debugging because the serialized data can easily be inspected.
+The `Networking` module provides the infrastructure required for communication between clients and the server.
 
-### Binary Serialization
-
-The application also supports binary serialization.
+The project separates communication concerns from the user interface and business logic, allowing different clients to use the same backend services.
 
 ```text
-Object
-   ↓
-Serialization
-   ↓
-Binary representation
-   ↓
-Network
-   ↓
-Deserialization
-   ↓
-Object
-```
-
-This approach demonstrates how application objects can be transferred in a compact binary representation rather than as human-readable text.
-
-### Google Protocol Buffers
-
-The project also uses **Google Protocol Buffers (Protobuf)** for structured serialization.
-
-```text
-Application Object
-       ↓
-Protobuf Message
-       ↓
-Serialization
-       ↓
-Network
-       ↓
-Deserialization
-       ↓
-Application Object
-```
-
-Protobuf uses a predefined schema for representing application data and provides a structured approach to communication between components.
-
-## WebSocket Communication
-
-The C# / ASP.NET Core implementation uses **WebSockets** to support persistent, real-time communication between the server and clients.
-
-Instead of requiring clients to continuously request updated information, the server can send notifications when relevant data changes.
-
-```text
-Client A
+Client
    │
-   │ WebSocket
+   │ Request
+   ▼
+Networking
+   │
    ▼
 Server
    │
-   │ Notification
-   ├──────────────► Client B
-   │
-   └──────────────► Client C
+   │ Response
+   ▼
+Client
 ```
 
-This mechanism is useful in a competition environment where multiple clients may need to observe changes to shared competition data.
+This architecture also makes it possible to support multiple client implementations.
+
+---
+
+## REST Services
+
+The `RestServices` module provides REST-based communication between the client applications and the server.
+
+REST services are used for operations that require communication with the server for retrieving or modifying competition data.
+
+The architecture therefore separates:
+
+* Client UI
+* REST communication
+* Business logic
+* Persistence
+
+This provides a cleaner structure and makes individual components easier to develop and maintain.
+
+---
+
+## WebSocket Communication
+
+The application also implements **WebSocket communication** for real-time notifications.
+
+Unlike traditional request-response communication, WebSockets allow the server to send information to connected clients when an event occurs.
+
+```text
+                  Server
+                    │
+           ┌────────┼────────┐
+           │        │        │
+           ▼        ▼        ▼
+        Client 1  Client 2  Client 3
+           ▲        ▲        ▲
+           └────────┴────────┘
+              WebSockets
+```
+
+This functionality is particularly useful in a multi-client competition environment where changes need to be communicated to connected clients without requiring each client to continuously poll the server.
+
+---
+
+## Data Serialization
+
+The project explores multiple approaches for serializing data exchanged between application components.
+
+### JSON
+
+JSON provides a human-readable format suitable for structured data exchange.
+
+### Binary Serialization
+
+Binary serialization provides a more compact representation of application data for communication between components.
+
+### Google Protocol Buffers
+
+The project also includes a **Protocol Buffers** configuration through the `Protoconfig` module.
+
+Protocol Buffers provide a structured and efficient mechanism for serializing data exchanged between applications.
+
+The project therefore demonstrates different approaches to data representation and communication.
+
+---
 
 ## Database and Persistence
 
-The application uses a relational database to persist competition information.
-
-The C# implementation uses **Entity Framework Core** as the Object-Relational Mapping layer.
+The application uses a dedicated **Repository layer** for database access.
 
 ```text
-C# Entity
-    ↓
-Entity Framework Core
-    ↓
-Relational Database
+Service
+   │
+   ▼
+Repository
+   │
+   ▼
+Database
 ```
 
-EF Core maps C# entities to database records and provides the functionality required to create, read, update, and delete persistent data.
+The repository abstraction keeps database operations separate from the business logic.
 
-The Java implementation also works with persistent competition data and provides practical experience with database interaction from a Java application.
+The repository layer is responsible for operations such as:
 
-## Java vs C# Implementation
+* Saving entities
+* Retrieving entities
+* Updating entities
+* Deleting entities
+* Querying competition data
 
-One of the main aspects of this project was implementing the application using two different technology ecosystems.
+The repository communicates with the competition database stored in:
 
-| Aspect                  | Java Implementation                | C# Implementation                               |
-| ----------------------- | ---------------------------------- | ----------------------------------------------- |
-| Language                | Java                               | C#                                              |
-| Backend                 | Java-based server                  | ASP.NET Core                                    |
-| Architecture            | Client-Server                      | Multi-client Client-Server                      |
-| Database                | Relational database                | Relational database                             |
-| Persistence             | Database layer                     | Entity Framework Core                           |
-| Communication           | Client-Server communication        | ASP.NET Core / WebSockets                       |
-| Serialization           | Application-specific communication | JSON / Binary / Protobuf                        |
-| Real-time communication | Server communication               | WebSockets                                      |
-| Build                   | Java build tooling                 | MSBuild                                         |
-| Main focus              | OOP, architecture, persistence     | Backend, serialization, real-time communication |
+```text
+SwimingContest.db
+```
 
-Developing both versions helped demonstrate how the same application domain can be implemented using different programming languages, frameworks, and communication technologies.
+---
 
 ## Project Structure
 
-A simplified representation of the project is:
+The repository is organized into several modules and components:
 
 ```text
-SwimmingContest/
+Swimming-contest/
 │
-├── Java/
-│   ├── Client/
-│   ├── Server/
-│   ├── Model/
-│   ├── Services/
-│   └── ...
+├── ClientFX/
+│   └── JavaFX desktop client
 │
-├── CSharp/
-│   ├── Server/
-│   │   ├── Controllers/
-│   │   ├── Models/
-│   │   ├── Services/
-│   │   ├── Data/
-│   │   ├── WebSockets/
-│   │   └── Program.cs
-│   │
-│   ├── Client/
-│   └── ...
+├── Model/
+│   └── Domain models and shared application data
 │
-├── Protobuf/
-│   └── *.proto
+├── Networking/
+│   └── Client-server communication
 │
-├── Database/
+├── Protoconfig/
+│   └── Protocol Buffers configuration
 │
-└── README.md
+├── Repository/
+│   └── Database access layer
+│
+├── RestServices/
+│   └── REST services
+│
+├── Server/
+│   └── Server-side application
+│
+├── Service/
+│   └── Business logic and application services
+│
+├── flutter_client/
+│   └── Flutter/Dart client
+│
+├── SwimingContest.db
+│   └── Competition database
+│
+├── build/
+│   └── Build and generated reports
+│
+├── gradle/
+│   └── Gradle wrapper configuration
+│
+├── gradlew
+├── gradlew.bat
+└── settings.gradle
 ```
 
-The exact structure depends on the project configuration, but the implementations separate domain models, communication, persistence, and client/server functionality.
+---
 
-## Tech Stack
+## Technology Stack
 
-### Java Version
+### Programming Languages
 
-* **Language:** Java
-* **Architecture:** Client-Server
-* **Database:** Relational Database
-* **Concepts:** OOP, CRUD, persistence, networking
-* **Build:** Java build tooling
+* **Java**
+* **Dart**
 
-### C# Version
+### Client Technologies
 
-* **Language:** C#
-* **Framework:** ASP.NET Core
-* **ORM:** Entity Framework Core
-* **Communication:** WebSockets
-* **Serialization:** JSON
-* **Serialization:** Binary
-* **Serialization:** Google Protocol Buffers
-* **Build:** MSBuild
-* **Architecture:** Multi-client Client-Server
+* **JavaFX**
+* **Flutter**
 
-### Common Technologies
+### Backend & Services
 
+* Java
+* REST Services
+* WebSockets
+* Service-oriented layered architecture
+
+### Communication & Serialization
+
+* REST
+* WebSockets
+* JSON
+* Binary serialization
+* Google Protocol Buffers
+
+### Persistence
+
+* Repository pattern
+* SQLite / `.db` database
+
+### Build & Development
+
+* Gradle
 * Git
 * GitHub
-* Relational Databases
-* Client-Server Architecture
-* CRUD
-* Object-Oriented Programming
+
+---
+
+## Application Workflow
+
+A typical interaction with the application follows this flow:
+
+```text
+1. User opens a client
+        │
+        ▼
+2. Client connects to server
+        │
+        ▼
+3. User performs an operation
+        │
+        ▼
+4. Request is sent through networking/services
+        │
+        ▼
+5. Server processes the request
+        │
+        ▼
+6. Repository accesses the database
+        │
+        ▼
+7. Server returns the result
+        │
+        ▼
+8. Client updates the interface
+        │
+        ▼
+9. Relevant clients can receive
+   real-time WebSocket notifications
+```
+
+---
+
+## Multi-Client Architecture
+
+One of the main technical aspects of the project is the use of multiple clients communicating with the same backend infrastructure.
+
+```text
+                 ┌───────────────────┐
+                 │      Server       │
+                 └─────────┬─────────┘
+                           │
+             ┌─────────────┴─────────────┐
+             │                           │
+     ┌───────▼────────┐         ┌────────▼───────┐
+     │ JavaFX Client  │         │ Flutter Client │
+     │     Java       │         │  Dart/Flutter  │
+     └────────────────┘         └────────────────┘
+```
+
+This approach demonstrates how different client technologies can interact with the same server-side application.
+
+It also separates the presentation layer from the backend logic, allowing additional clients to be introduced without rewriting the entire system.
+
+---
 
 ## Development Workflow
 
-The project was developed progressively:
+The project was developed incrementally, with different modules being integrated into the final application.
 
-```text
-Domain Analysis
-      ↓
-Entity & Model Design
-      ↓
-Java Implementation
-      ↓
-Database Integration
-      ↓
-CRUD Functionality
-      ↓
-C# / ASP.NET Core Implementation
-      ↓
-Entity Framework Core
-      ↓
-Serialization
-      ↓
-WebSockets
-      ↓
-Multi-Client Communication
-      ↓
-Testing & Debugging
-```
+The development process involved:
 
-The two implementations provided an opportunity to apply the same functional requirements in different technological environments.
+1. Defining the domain model
+2. Implementing repositories
+3. Developing application services
+4. Implementing networking
+5. Adding REST services
+6. Integrating the JavaFX client
+7. Adding WebSocket notifications
+8. Implementing Protocol Buffers support
+9. Developing the Flutter/Dart client
+10. Integrating the different components
+11. Debugging database and multi-client communication
+12. Managing the project using Git and Gradle
+
+---
 
 ## Testing and Debugging
 
-Testing focused on verifying both the application functionality and communication between components.
+During development, testing and debugging focused on:
 
-The main areas tested included:
+* Client-server communication
+* Database access
+* CRUD operations
+* Multiple connected clients
+* WebSocket notifications
+* Serialization and deserialization
+* REST service behavior
+* Integration between Java and Flutter clients
+* Configuration and build issues
 
-* participant CRUD operations;
-* event CRUD operations;
-* participant registrations;
-* database persistence;
-* Java client-server communication;
-* C# client-server communication;
-* JSON serialization and deserialization;
-* Binary serialization and deserialization;
-* Protobuf serialization and deserialization;
-* WebSocket connections;
-* communication between multiple clients;
-* synchronization of shared competition data.
+The project also involved debugging situations related to database configuration and running multiple clients simultaneously.
 
-Debugging involved tracing operations through the different layers of the application, from the client to the server, database, and communication components.
+---
 
 ## How to Run
 
 ### Prerequisites
 
-For the Java implementation:
+Make sure the development environment includes:
 
-* JDK
-* Java-compatible IDE
-* Required database configuration
-* Git
+* Java JDK
+* Gradle / Gradle Wrapper
+* JavaFX-compatible environment
+* Flutter SDK
+* Dart SDK
+* A configured local database
 
-For the C# implementation:
+### Java Version
 
-* .NET SDK
-* Visual Studio or another C# IDE
-* Git
-* Required database configuration
-
-### Clone the Repository
+Clone the repository:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd SwimmingContest
+git clone https://github.com/DianaGliga11/Swimming-contest.git
+cd Swimming-contest
 ```
 
-### Run the Java Version
-
-Open the Java project in the preferred IDE and:
-
-1. Configure the database connection.
-2. Build the project.
-3. Start the Java server.
-4. Start one or more Java clients.
-5. Test competition management and client-server communication.
-
-### Run the C# Version
-
-Build the project using:
+Build the project using the Gradle wrapper:
 
 ```bash
-dotnet build
+./gradlew build
 ```
 
-Run the ASP.NET Core server:
+On Windows:
 
 ```bash
-dotnet run
+gradlew.bat build
 ```
 
-Then start one or more configured clients.
+Run the server and then start the JavaFX client according to the project configuration.
 
-Multiple clients can be launched simultaneously to test the multi-client and real-time communication functionality.
+### Flutter Client
 
-## Example Application Workflow
+Navigate to the Flutter client:
 
-```text
-Start Server
-     ↓
-Connect Clients
-     ↓
-Load Competition Data
-     ↓
-Create Swimming Events
-     ↓
-Register Participants
-     ↓
-Persist Data
-     ↓
-Notify Connected Clients
-     ↓
-Update Client Data
+```bash
+cd flutter_client
 ```
 
-The server acts as the central point responsible for processing operations and maintaining consistent competition information.
+Install dependencies:
+
+```bash
+flutter pub get
+```
+
+Run the application:
+
+```bash
+flutter run
+```
+
+The Flutter client must be configured to communicate with the running server.
+
+---
 
 ## Technical Concepts Demonstrated
 
-This project combines several important software engineering concepts.
+This project combines several important software engineering concepts:
 
-### Object-Oriented Programming
+* Object-Oriented Programming
+* Layered architecture
+* Client-server architecture
+* Multi-client systems
+* Separation of concerns
+* Repository pattern
+* CRUD operations
+* REST APIs
+* WebSocket communication
+* Real-time notifications
+* Data serialization
+* JSON
+* Binary serialization
+* Protocol Buffers
+* Database persistence
+* JavaFX application development
+* Flutter/Dart application development
+* Gradle build automation
+* Git version control
 
-Both implementations use object-oriented programming to model competition entities and application behavior.
-
-### Client-Server Architecture
-
-Clients communicate with a centralized backend responsible for business logic and persistence.
-
-### Database Management
-
-Competition entities are persisted in a relational database and accessed through application-specific persistence layers.
-
-### Serialization
-
-The project explores several ways of representing data for network communication:
-
-* JSON;
-* Binary;
-* Protocol Buffers.
-
-### Real-Time Communication
-
-WebSockets provide persistent connections between clients and the server, allowing information to be propagated without requiring continuous polling.
-
-### Multi-Client Systems
-
-The architecture allows multiple clients to communicate with the same backend and work with shared competition data.
+---
 
 ## What I Learned
 
-The Swimming Contest project provided practical experience with both **Java and C#/.NET backend development**.
+Through this project, I gained practical experience with:
 
-Through this project, I gained experience with:
+* Designing multi-layered applications
+* Developing client-server systems
+* Building applications with multiple clients
+* Working with JavaFX
+* Developing cross-platform interfaces using Flutter and Dart
+* Implementing REST-based communication
+* Working with WebSockets and real-time notifications
+* Designing repository and service layers
+* Working with databases and persistence
+* Comparing different serialization approaches
+* Using Protocol Buffers for structured communication
+* Debugging distributed application components
+* Managing a larger project using Gradle and Git
 
-* Java application development;
-* C# development;
-* ASP.NET Core;
-* object-oriented programming;
-* client-server architectures;
-* multi-client systems;
-* relational databases;
-* Entity Framework Core;
-* CRUD operations;
-* JSON serialization;
-* Binary serialization;
-* Google Protocol Buffers;
-* WebSockets;
-* real-time communication;
-* backend architecture;
-* database persistence;
-* network communication;
-* debugging distributed application components;
-* Git and collaborative development.
+---
 
-Implementing the same application in two technology stacks also provided a practical comparison between the Java and .NET ecosystems and helped reinforce the importance of separating business logic, persistence, communication, and presentation concerns.
+## Future Improvements
 
-## Future Development
+Potential improvements for the project include:
 
-Potential future improvements include:
+* Adding authentication and authorization
+* Improving the Flutter user interface
+* Adding more advanced competition statistics
+* Implementing richer participant and event filtering
+* Improving error handling and validation
+* Adding automated tests across all layers
+* Containerizing the backend
+* Improving deployment configuration
+* Adding more real-time competition features
+* Extending the system with additional client applications
 
-* authentication and authorization;
-* administrator and participant roles;
-* competition scheduling;
-* automatic race result calculation;
-* live race timing;
-* participant statistics;
-* competition dashboards;
-* advanced real-time synchronization;
-* automated unit and integration testing;
-* Docker-based deployment;
-* cloud deployment;
-* improved error handling and validation;
-* automated CI/CD pipelines.
+---
 
-## Academic Context
 
-**Swimming Contest — Competition Management System** was developed as a university project at **Babeș-Bolyai University**.
-
-The project combines concepts from:
-
-* backend development;
-* object-oriented programming;
-* distributed systems;
-* database management;
-* network communication;
-* serialization;
-* real-time applications;
-* multi-client architectures.
-
-A key aspect of the project was the implementation of the same competition-management domain using **both Java and C#/.NET**, providing hands-on experience with different programming languages, backend frameworks, persistence technologies, and communication mechanisms.
+Computer Science Graduate
+Babeș-Bolyai University
