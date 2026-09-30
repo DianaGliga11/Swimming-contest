@@ -8,6 +8,7 @@ The system combines **client-server communication, REST services, WebSockets, mu
 
 ---
 
+### IMPORTANT : in every branch there are screenshots with the progress.
 ## My Role
 
 I worked on the development of the application across multiple layers, with a focus on backend, networking, persistence, and client-server communication.
